@@ -6,7 +6,9 @@
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "start": "node dist/server.js",
     "dev": "nodemon --watch src --exec ts-node src/server.ts"
   },
@@ -17,6 +19,7 @@
     "@types/express": "^5.0.0",
     "@types/morgan": "^1.9.9",
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -30,6 +33,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/jest": "^29.5.14",
