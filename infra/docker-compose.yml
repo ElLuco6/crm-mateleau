@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mateleau-crm-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: ../mateleau-crm-backend
+      dockerfile: Dockerfile
+    container_name: mateleau-crm-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mateleau-crm
+      - PORT=5000
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ../mateleau-crm-frontend
+      dockerfile: Dockerfile
+    container_name: mateleau-crm-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
