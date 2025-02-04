@@ -14,6 +14,10 @@ import divingGroupRoutes from './routes/divingGroupRoutes';
 import diverRoutes from './routes/diverRoutes';
 import equipmentRoutes from './routes/equipmentRoutes';
 import e from 'express';
+import { createExpressMiddleware } from '@trpc/server/adapters/express';
+import { appRouter } from './trpc';
+const createContext = ({ req, res }: { req: Request; res: Response }) => ({ req, res });
+
 
 // Create an instance of Express
 const app: Application = express();
@@ -27,6 +31,7 @@ app.use(cors({
 app.use(morgan('dev')); // Log HTTP requests
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
 app.use(cookieParser()); // Parse cookies
+app.use('/trpc', createExpressMiddleware({ router: appRouter, createContext }));
 
 // Setup Swagger
 setupSwagger(app);
