@@ -1,0 +1,30 @@
+<div class="kanban-board">
+    <div *ngFor="let col of columns; let i = index" class="kanban-column">
+      <!-- Édition du nom des colonnes -->
+      <h3 *ngIf="!col.editing" (click)="col.editing = true">{{ col.name }}</h3>
+      <input *ngIf="col.editing" [value]="col.name" 
+             (blur)="col.editing = false" 
+             (keydown.enter)="col.editing = false" autofocus>
+  
+      <!-- Liste des tâches avec drag & drop -->
+      <div cdkDropList [cdkDropListData]="col.tasks" 
+      class="kanban-column"[cdkDropListConnectedTo]="getConnectedLists()"
+      (cdkDropListDropped)="drop($event)"
+           id="list-{{ i }}">
+        <div *ngFor="let task of col.tasks; let j = index" cdkDrag class="kanban-item">
+          <!-- Édition des tâches -->
+          <span *ngIf="!task.editing" (click)="startEditingTask(i, j)">{{ task.title }}</span>
+          <input *ngIf="task.editing" [value]="task.title" 
+                 (blur)="finishEditingTask(i, j, $event)" 
+                 (keydown.enter)="finishEditingTask(i, j, $event)" autofocus>
+  
+          <!-- Supprimer une tâche -->
+          <button class="delete-btn" (click)="deleteTask(i, j)">🗑️</button>
+        </div>
+      </div>
+  
+      <!-- Ajouter une tâche -->
+      <button class="add-task-btn" (click)="addTask(i)">+ Ajouter une tâche</button>
+    </div>
+  </div>
+  

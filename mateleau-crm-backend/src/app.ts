@@ -21,7 +21,7 @@ const app: Application = express();
 // Middleware
 app.use(express.json()); // Parse incoming JSON requests
 app.use(cors({
-  origin: 'http://localhost:4200',
+  origin: ['http://localhost:4200' , 'http://localhost'],
   credentials: true // Si vous utilisez des cookies d'authentification
 })); // Enable Cross-Origin Resource Sharing
 app.use(morgan('dev')); // Log HTTP requests

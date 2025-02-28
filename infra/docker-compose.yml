@@ -28,8 +28,21 @@ services:
       dockerfile: Dockerfile
     container_name: mateleau-crm-frontend
     ports:
+      - "4200:4200"
+    volumes:
+    - ../mateleau-crm-frontend:/usr/src/app
+    depends_on:
+      - backend
+    restart: always
+  nginx:
+    build:
+      context: ../  # Le contexte devient le dossier parent
+      dockerfile: nginx/Dockerfile
+    container_name: mateleau-crm-nginx
+    ports:
       - "80:80"
     depends_on:
+      - frontend
       - backend
 
 volumes:
