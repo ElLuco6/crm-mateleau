@@ -13,6 +13,8 @@ import boatRoutes from './routes/boatRoutes'; // Importer les routes de Boat
 import divingGroupRoutes from './routes/divingGroupRoutes';
 import diverRoutes from './routes/diverRoutes';
 import equipmentRoutes from './routes/equipmentRoutes';
+import availabilityRoutes from './routes/availabityRoutes';
+
 import e from 'express';
 
 // Create an instance of Express
@@ -39,6 +41,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/diving-groups', divingGroupRoutes);
 app.use('/api/divers', diverRoutes);
 app.use('/api/equipment', equipmentRoutes);
+app.use('/api/availability', availabilityRoutes);
 
 // Serve static files (if needed for frontend)
 app.use(express.static(path.join(__dirname, 'public')));
