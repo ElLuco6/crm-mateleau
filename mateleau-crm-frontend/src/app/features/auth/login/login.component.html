@@ -9,5 +9,6 @@
       <input type="password" id="password" name="password" [(ngModel)]="password" required>
     </div>
     <button type="submit" [disabled]="!loginForm.form.valid">Login</button>
+    <a class="noAccount" [routerLink]="['/register']" routerLinkActive="router-link-active" >No account yet ?</a>
   </form>
 </div>

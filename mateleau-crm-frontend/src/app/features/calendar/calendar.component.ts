@@ -11,6 +11,10 @@ import interactionPlugin from '@fullcalendar/interaction';
 })
 export class CalendarComponent implements OnInit {
   constructor() { }
+  /*
+  Faire le model diving 
+  au click sur une plonége existante on prend id de la plongée et on la modifie 
+  */
   calendarOptions = {
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin, interactionPlugin],

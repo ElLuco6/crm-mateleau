@@ -49,12 +49,10 @@ const router = express.Router();
  *         description: Invalid input
  */
 router.post("/", (req: Request, res: Response) => {
-  checkAdminRole(req, res, () => {
     checkEmailUnique(req, res, () => {
       encryptPassword(req, res, () => {
         createUser(req, res);
       });
-    });
   });
 });
 

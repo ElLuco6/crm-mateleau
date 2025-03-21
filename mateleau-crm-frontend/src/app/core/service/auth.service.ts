@@ -1,19 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { User } from '../../models/User';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:5000/api/auth/'; 
   constructor(private http: HttpClient) { }
 
 
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}login`, { email, password }).pipe(
+    return this.http.post<any>(`${environment.apiAuth}login`, { email, password }).pipe(
       tap(response => {
         // Stockez le token et d'autres informations d'authentification si nécessaire
         localStorage.setItem('token', response.token);
@@ -28,6 +29,10 @@ export class AuthService {
     localStorage.removeItem('userId');
     localStorage.removeItem('role');
  
-    return this.http.post(`${this.apiUrl}logout`, {});
+    return this.http.post(`${environment.apiAuth}logout`, {});
+  }
+
+  register(user: User): Observable<User> {
+    return this.http.post<User>(`${environment.apiUsers}`, user);
   }
 }
