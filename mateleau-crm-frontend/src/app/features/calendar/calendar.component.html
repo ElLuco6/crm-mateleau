@@ -1,4 +1,51 @@
 <div class="calendar-container px-6 py-4">
-    <full-calendar [options]="calendarOptions"></full-calendar>
+  <full-calendar [options]="calendarOptions"></full-calendar>
 
+  <!-- Modale pour dateClick -->
+  @if (showDateModal) {
+
+
+  <div class="fixed z-10 inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="bg-white p-6 rounded shadow-lg w-96">
+        <h2 class="text-xl font-bold mb-4">Créer une nouvelle plongée</h2>
+        <p class="mb-4">Date sélectionnée : {{ selectedDate }}</p>
+        <div class="flex justify-end space-x-2">
+          <button (click)="closeDateModal()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+            Annuler
+          </button>
+          <button (click)="confirmCreateDive()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Créer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Modale pour eventClick -->
+  @if (showEventModal) {
+
+
+  <div class="fixed z-10 inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="bg-white p-6 rounded shadow-lg w-96">
+        <h2 class="text-xl font-bold mb-4">{{ selectedEvent?.title }}</h2>
+        <p>Date : {{ selectedEvent?.date }}</p>
+        <p class="mb-4">Description : {{ selectedEvent?.description }}</p>
+        <div class="flex flex-col space-y-2">
+          <button (click)="deleteEvent()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+            Supprimer
+          </button>
+          <button (click)="goToEventDetail()" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+            Détails / Modifier
+          </button>
+          <button (click)="closeEventModal()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+            Fermer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
 </div>
