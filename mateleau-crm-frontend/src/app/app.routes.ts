@@ -10,5 +10,9 @@ export const routes: Routes = [
         path: 'kanban',
         loadComponent: () => import('./features/kanban/kanban.component').then(m => m.KanbanComponent)
     },
+    {
+        path: 'create-dive',
+        loadComponent: () => import('./features/dive-wizard/dive-wizard.component').then(m => m.DiveWizardComponent)
+    },
     {path: '', component: CalendarComponent},
 ];
