@@ -72,6 +72,6 @@ jobs:
             -Dsonar.branch.name=master \
             -Dsonar.organization=elluco6 \
             -Dsonar.automaticAnalysis=false \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
