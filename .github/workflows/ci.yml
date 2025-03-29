@@ -28,11 +28,15 @@ jobs:
       - name: Run Angular tests with coverage
         run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless --code-coverage
         working-directory: mateleau-crm-frontend
+
+      - name: Debug coverage files
+        run: ls -R mateleau-crm-frontend/coverage/
+
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage/
+          path: mateleau-crm-frontend/coverage/
 
   sonar:
     needs: test-frontend
