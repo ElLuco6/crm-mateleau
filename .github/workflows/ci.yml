@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -20,6 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: mateleau-crm-frontend
 
       - name: Run Angular tests with coverage
         run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless --code-coverage
