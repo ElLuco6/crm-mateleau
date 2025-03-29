@@ -18,7 +18,7 @@ export class LoginComponent {
   onSubmit() {
     this.authService.login(this.email, this.password).subscribe(
       () => {
-        this.router.navigate(['/dashboard']); // Redirigez vers la page de tableau de bord après la connexion réussie
+        this.router.navigate(['/']); // Redirigez vers la page de tableau de bord après la connexion réussie
       },
       (error) => {
         console.error('Login failed', error);
