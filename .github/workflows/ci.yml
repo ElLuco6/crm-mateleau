@@ -33,5 +33,5 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.branch.name=master \
             -Dsonar.organization=Elluco6 \
-            -Dsonar.automaticAnalysis=false \
+            -Dsonar.automaticAnalysis=false \ 
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
