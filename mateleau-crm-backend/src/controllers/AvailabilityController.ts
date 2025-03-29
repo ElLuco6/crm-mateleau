@@ -9,7 +9,7 @@ export const getAvailableBoats = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Date and duration are required" });
     }
 
-    const availableBoats = await AvailabilityService.getAvailableBoats(date as string, Number(duration));
+    const availableBoats = await AvailabilityService.getAvailableBoats(date as string);
     res.json(availableBoats);
   } catch (error) {
     const errorMessage = (error instanceof Error) ? error.message : 'An unknown error occurred';
@@ -25,7 +25,7 @@ export const getAvailableDivingGroups = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Date and duration are required" });
     }
 
-    const availableGroups = await AvailabilityService.getAvailableDivingGroups(date as string, Number(duration));
+    const availableGroups = await AvailabilityService.getAvailableDivingGroups(date as string);
     res.json(availableGroups);
   } catch (error) {
     const errorMessage = (error instanceof Error) ? error.message : 'An unknown error occurred';
@@ -41,7 +41,7 @@ export const getAvailableEquipment = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Date and duration are required" });
     }
 
-    const availableEquipment = await AvailabilityService.getAvailableEquipment(date as string, Number(duration));
+    const availableEquipment = await AvailabilityService.getAvailableEquipment(date as string);
     res.json(availableEquipment);
   } catch (error) {
     const errorMessage = (error instanceof Error) ? error.message : 'An unknown error occurred';
@@ -57,7 +57,7 @@ export const getAvailableDivers = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Date and duration are required" });
     }
 
-    const availableDivers = await AvailabilityService.getAvailableDivers(date as string, Number(duration));
+    const availableDivers = await AvailabilityService.getAvailableDivers(date as string);
     res.json(availableDivers);
   } catch (error) {
     const errorMessage = (error instanceof Error) ? error.message : 'An unknown error occurred';
