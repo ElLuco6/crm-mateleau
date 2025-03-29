@@ -31,4 +31,5 @@ jobs:
             -Dsonar.projectKey=mateleau-crm \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.organization=elluco6 \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
