@@ -7,13 +7,43 @@ on:
     branches: [master]
 
 jobs:
-  sonar:
+  test-frontend:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17 (nécessaire pour SonarScanner)
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Angular tests with coverage
+        run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless --code-coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/
+
+  sonar:
+    needs: test-frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download coverage report
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/
+
+      - name: Set up JDK 17 (required for SonarQube)
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -35,3 +65,5 @@ jobs:
             -Dsonar.organization=elluco6 \
             -Dsonar.automaticAnalysis=false \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+
