@@ -16,12 +16,21 @@ export const createDive = async (req: Request, res: Response) => {
       name,
       location,
       date,
-      duration,
+      endDate,    
       maxDepth,
       divingGroups,
       boat,
       driver,
     } = req.body;
+
+    // Get the duration in minutes
+    const startDate = new Date(date);
+    const endDateObj = new Date(endDate);
+    const duration = Math.floor((endDateObj.getTime() - startDate.getTime()) / 60000); // Différence en minutes
+
+    if (duration <= 0) {
+      return res.status(400).json({ message: "endDate must be after date" });
+    }
 
     // Verify the boat
     const boatExists = await Boat.findById(boat);
@@ -86,7 +95,7 @@ export const createDive = async (req: Request, res: Response) => {
 
 
     // Check availability
-    const endDate = new Date(new Date(date).getTime() + duration * 60000);
+   // const endDate = new Date(new Date(date).getTime() + duration * 60000);
     const overlappingDives = await Dive.find({
       $and: [
         {
@@ -122,6 +131,7 @@ export const createDive = async (req: Request, res: Response) => {
       name,
       location,
       date,
+      endDate,
       duration,
       maxDepth,
       divingGroups,

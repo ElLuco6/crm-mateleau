@@ -14,7 +14,7 @@ export class AuthService {
 
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${environment.apiAuth}login`, { email, password }).pipe(
+    return this.http.post<any>(`${environment.apiAuth}login`, { email, password } ,{ withCredentials: true }).pipe(
       tap(response => {
         // Stockez le token et d'autres informations d'authentification si nécessaire
         localStorage.setItem('token', response.token);

@@ -22,15 +22,13 @@ const app: Application = express();
 
 // Middleware
 app.use(express.json()); // Parse incoming JSON requests
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:4200"); // Autorise uniquement ton frontend
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true"); // Important pour les cookies ou JWT
-
- 
-  next();
-}); // Enable Cross-Origin Resource Sharing
+app.use(cors({
+  origin: "http://localhost:4200", // Autorise uniquement votre frontend
+  methods: "GET, POST, PUT, DELETE, OPTIONS",
+  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+  credentials: true // Important pour les cookies ou JWT
+}));
+ // Enable Cross-Origin Resource Sharing
 app.use(morgan('dev')); // Log HTTP requests
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
 app.use(cookieParser()); // Parse cookies

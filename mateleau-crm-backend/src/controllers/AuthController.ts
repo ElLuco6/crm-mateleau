@@ -8,7 +8,7 @@ export const loginUser = async (req: Request, res: Response) => {
         res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
         res.cookie('userId', userId, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
         res.cookie('role', role, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-        res.status(200).json({ message: 'Logged in successfully' });
+        res.status(200).json({ message: 'Logged in successfully', token, userId, role });
     } catch (error) {
         const errorMessage = (error instanceof Error) ? error.message : 'An unknown error occurred';
         res.status(400).json({ message: errorMessage });

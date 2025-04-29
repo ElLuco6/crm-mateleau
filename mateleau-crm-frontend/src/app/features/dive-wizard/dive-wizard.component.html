@@ -1,1 +1,40 @@
-<p>dive-wizard works!</p>
+<mat-horizontal-stepper #stepper>
+    <!-- Étape 1: Sélection de la date/heure et du bateau -->
+    <mat-step [stepControl]="step1FormGroup">
+      <form [formGroup]="step1FormGroup">
+        <ng-template matStepLabel>Sélection Date/Horaire & Bateau</ng-template>
+        <!-- Insérer le composant dédié pour l'étape 1 -->
+        <app-select-schedule [formGroup]="step1FormGroup"></app-select-schedule>
+        <div>
+          <button mat-button matStepperNext [disabled]="step1FormGroup.invalid">Suivant</button>
+        </div>
+      </form>
+    </mat-step>
+  
+    <!-- Étape 2: Création de la palanquée -->
+    <mat-step [stepControl]="step2FormGroup">
+      <form [formGroup]="step2FormGroup">
+        <ng-template matStepLabel>Création de la palanquée</ng-template>
+        <!-- Insérer le composant dédié pour l'étape 2 -->
+        <app-create-dive-group [formGroup]="step2FormGroup"></app-create-dive-group>
+        <div>
+          <button mat-button matStepperPrevious>Précédent</button>
+          <button mat-button matStepperNext [disabled]="step2FormGroup.invalid">Suivant</button>
+        </div>
+      </form>
+    </mat-step>
+  
+    <!-- Étape 3: Attribution du matériel -->
+    <mat-step [stepControl]="step3FormGroup">
+      <form [formGroup]="step3FormGroup">
+        <ng-template matStepLabel>Attribution du Matériel</ng-template>
+        <!-- Insérer le composant dédié pour l'étape 3 -->
+        <app-assign-equipment [formGroup]="step3FormGroup"></app-assign-equipment>
+        <div>
+          <button mat-button matStepperPrevious>Précédent</button>
+          <button mat-button (click)="submitWizard()" [disabled]="step3FormGroup.invalid">Finaliser</button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
+  
