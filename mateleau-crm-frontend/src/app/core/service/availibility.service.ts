@@ -11,7 +11,7 @@ import { Dive } from '../../models/Dive';
 export class AvailibilityService {
   constructor(private http: HttpClient) {}
 
-  getAvailableBoat(date: Date, duration: number): Observable<Boat[]> {
+  getAvailableBoat(date: string, duration: number): Observable<Boat[]> {
     return this.http.get<Boat[]>(
       `${environment.apiAviability}/boats?date=${date}&duration=${duration}`,
       { withCredentials: true }

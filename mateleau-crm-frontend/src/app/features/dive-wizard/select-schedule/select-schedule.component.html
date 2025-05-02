@@ -9,10 +9,20 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Heure de début</mat-label>
-    <input matInput type="time" formControlName="startTime" required>
-    <mat-timepicker-toggle matIconSuffix [for]="timePicker"></mat-timepicker-toggle>
-    <mat-timepicker #timePicker></mat-timepicker>
+    <input
+      matInput
+      [ngxMatTimepicker]="timePicker"
+      formControlName="startTime"
+      ngxMatTimepickerFormat="HH:mm"
+      placeholder="Choisir l'heure"
+      required
+      readonly
+      [format]="24"
+    />
+    <ngx-mat-timepicker-toggle matSuffix [for]="timePicker"></ngx-mat-timepicker-toggle>
+    <ngx-mat-timepicker #timePicker ></ngx-mat-timepicker>
   </mat-form-field>
+  
   
 
   <mat-form-field appearance="fill">
@@ -20,29 +30,25 @@
     <input matInput type="number" formControlName="duration" required min="1">
   </mat-form-field>
 
-  <button mat-raised-button color="primary" type="submit" [disabled]="scheduleForm.invalid || loadingBoats">
-    Rechercher les bateaux
-  </button>
-</form>
-
-  
+ 
   <!-- Affiche la liste des bateaux disponibles -->
   @if (availableBoats.length > 0) {
-  <div  class="available-boats">
-    <mat-form-field appearance="fill">
-      <mat-label>Select your boat</mat-label>
-      <mat-select formControlName="boat">
-        <mat-option *ngFor="let boat of availableBoats" [value]="boat._id">
-          {{ boat.name }} -  Place availiable : {{boat.numberMaxPlaces}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-}
-
-<button mat-raised-button color="accent" (click)="showBoatForm()" *ngIf="!boatForm">
-  Ajouter un bateau
-</button>
+    <div  class="available-boats">
+      <mat-form-field appearance="fill">
+        <mat-label>Select your boat</mat-label>
+        <mat-select formControlName="boat">
+          <mat-option *ngFor="let boat of availableBoats" [value]="boat._id">
+            {{ boat.name }} -  Place availiable : {{boat.numberMaxPlaces}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="accent" (click)="showBoatForm()" *ngIf="!boatForm">
+      Ajouter un bateau
+    </button>
+  }
+  
+</form>
 
 
   <!--Add Boats-->

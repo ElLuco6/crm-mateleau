@@ -7,11 +7,13 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { BoatService } from '../../../core/service/boat.service';
 import { Boat } from '../../../models/Boat';
-import { firstValueFrom } from 'rxjs';
+import { debounce, debounceTime, filter, finalize, firstValueFrom } from 'rxjs';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import {MatTimepickerModule} from '@angular/material/timepicker';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+
 
 @Component({
   selector: 'app-select-schedule',
@@ -22,7 +24,8 @@ import { ActivatedRoute, Router } from '@angular/router';
     MatSelectModule,
     ReactiveFormsModule,
     MatDatepickerModule,
-    MatTimepickerModule],
+    MatTimepickerModule,
+    NgxMatTimepickerModule],
     providers: [provideNativeDateAdapter()],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './select-schedule.component.html',
@@ -38,7 +41,6 @@ export class SelectScheduleComponent implements OnInit {
   startDate: Date = new Date(); // Date par défaut récupérer dans l'url
 /**
  * Les truc a faire :
- * avoir un select pour l'heure 
  * Ne plus dépendre du bouton rechercher qauand une date + h + durée et valide lancer la recherche des bateaux
  * la date dans le form est préremplie avec la date passé en paramètre
  * refaire un peu de style car le formulaire est moche
@@ -72,6 +74,13 @@ export class SelectScheduleComponent implements OnInit {
       duration: [null, [Validators.required, Validators.min(1)]],
       boat: [''] // tu l'utiliseras peut-être plus tard
     });
+    this.scheduleForm.valueChanges.pipe(
+      debounceTime(300),
+      filter(() => this.scheduleForm.valid) // uniquement quand le formulaire est valide
+    )
+    .subscribe(() => {
+      this.fetchAvailableBoats();
+    });
   }
 
   async addNewBoat() {
@@ -95,30 +104,64 @@ export class SelectScheduleComponent implements OnInit {
 
   // Appel à l'API pour récupérer les bateaux disponibles
   fetchAvailableBoats(): void {
-    if (this.scheduleForm.invalid) return;
+    if (this.scheduleForm.invalid) return; 
+    
+    const { startDate, startTime, duration } = this.scheduleForm.value;
+
+    const rawDate = startDate instanceof Date ? startDate : new Date(startDate);
+
+    if (isNaN(rawDate.getTime())) {
+      console.error('Date invalide');
+      return;
+    }
   
-    const date: Date = this.scheduleForm.get('startDate')?.value;
-    const time: string = this.scheduleForm.get('startTime')?.value; // format "HH:mm"
-    const duration: number = this.scheduleForm.get('duration')?.value;
-  
-    // Fusion date + heure
-    const [hours, minutes] = time.split(':').map(Number);
-    const fullDate = new Date(date);
-    fullDate.setHours(hours, minutes, 0, 0);
-  
+    
+    // 1. Fusion date + heure
+    const fixedStartTime = startTime.replace('h', ':');
+    
+    
+    if (!/^\d{1,2}:\d{2}$/.test(fixedStartTime)) {
+      console.error('Heure invalide', fixedStartTime);
+      return;
+    }
+
+    const [hours, minutes] = fixedStartTime.split(':').map(Number);
+    if (isNaN(hours) || isNaN(minutes)) {
+      console.error('Heure ou minute non numérique', hours, minutes);
+      return;
+    }
+    const combinedDate = new Date(rawDate);
+
+    combinedDate.setHours(hours);
+   
+    combinedDate.setMinutes(minutes);
+   
+    combinedDate.setSeconds(0);
+    
+    combinedDate.setMilliseconds(0);
+   
+
+    
+    // 2. Conversion en UTC ISO string
+    const isoDateUTC = combinedDate.toISOString();
+
+    // 3. Format final pour backend
+    const payload = {
+      date: isoDateUTC, // format 2025-03-10T10:00:00Z
+      duration: duration
+    };
+
+    console.log('Payload à envoyer au backend :', payload);
     this.loadingBoats = true;
     this.errorMessage = '';
   
-    this.availibilityService.getAvailableBoat(fullDate, duration)
-      .subscribe({
-        next: (boats) => {
-          this.availableBoats = boats;
-          this.loadingBoats = false;
-        },
-        error: (err) => {
-          this.errorMessage = 'Erreur lors de la récupération des bateaux: ' + err.message;
-          this.loadingBoats = false;
-        }
-      });
+    this.availibilityService.getAvailableBoat(payload.date, duration)
+  .pipe(finalize(() => this.loadingBoats = false))
+  .subscribe({
+    next: (boats) => this.availableBoats = boats,
+    error: (err) => {
+      this.errorMessage = 'Erreur lors de la récupération des bateaux: ' + err.message;
+    }
+  });
   }
 }
