@@ -12,6 +12,7 @@
     </mat-step>
   
     <!-- Étape 2: Création de la palanquée -->
+     @if (stepper.selectedIndex >= 1) {
     <mat-step [stepControl]="step2FormGroup">
       <form [formGroup]="step2FormGroup">
         <ng-template matStepLabel>Création de la palanquée</ng-template>
@@ -23,6 +24,7 @@
         </div>
       </form>
     </mat-step>
+  }
   
     <!-- Étape 3: Attribution du matériel -->
     <mat-step [stepControl]="step3FormGroup">

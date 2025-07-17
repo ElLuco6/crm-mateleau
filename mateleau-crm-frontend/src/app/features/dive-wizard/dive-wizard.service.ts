@@ -6,7 +6,17 @@ import { Observable } from 'rxjs';
 })
 export class DiveWizardService {
 
+  private payload: any = {};
   constructor() { }
+
+ setPayload(payload: any) {
+    this.payload = payload;
+  }
+
+  getPayload() {
+    console.log('Payload récupéré:', this.payload);
+    return this.payload;
+  }
 
 
   submitWizard(formData: any):Observable<any> {
@@ -18,6 +28,7 @@ export class DiveWizardService {
       observer.next(formData);
     })
   }
+
 
   
 }

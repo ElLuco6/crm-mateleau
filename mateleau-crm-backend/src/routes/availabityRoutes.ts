@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { authenticateToken } from '../middleware/authMiddleware';
-import { getAvailableBoats, getAvailableDivers, getAvailableDivingGroups, getAvailableEquipment} from '../controllers/AvailabilityController';
+import { getAvailableBoats, getAvailableDivers, getAvailableDivingGroups, getAvailableEquipment, getAvailableUsers} from '../controllers/AvailabilityController';
 
 const router = express.Router();
 
@@ -135,5 +135,45 @@ router.get('/equipment', (req: Request, res: Response) => {
     getAvailableEquipment(req, res);
   });
 });
+
+/**
+ * @swagger
+ * /availability/users:
+ *   get:
+ *     summary: Get available users (moniteurs)
+ *     tags: [Availability]
+ *     parameters:
+ *       - in: query
+ *         name: date
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The date to check availability (ISO format)
+ *       - in: query
+ *         name: duration
+ *         schema:
+ *           type: number
+ *         required: true
+ *         description: The duration to check availability (in minutes)
+ *     responses:
+ *       200:
+ *         description: List of available users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Date and duration are required
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/users', (req: Request, res: Response) => {
+  authenticateToken(req, res, () => {
+    getAvailableUsers(req, res);
+  });
+});
+
 
 export default router;

@@ -64,3 +64,21 @@ export const getAvailableDivers = async (req: Request, res: Response) => {
     res.status(500).json({ message: errorMessage });
   }
 };
+
+
+
+export const getAvailableUsers = async (req: Request, res: Response) => {
+  try {
+    const { date, duration } = req.query;
+
+    if (!date || !duration) {
+      return res.status(400).json({ message: "Date and duration are required" });
+    }
+
+    const availableUsers = await AvailabilityService.getAvailableUsers(date as string);
+    res.json(availableUsers);
+  } catch (error) {
+    const errorMessage = (error instanceof Error) ? error.message : 'An unknown error occurred';
+    res.status(500).json({ message: errorMessage });
+  }
+};

@@ -3,6 +3,7 @@ import { Boat } from '../models/Boat';
 import { DivingGroup } from '../models/DivingGroup';
 import { Equipment } from '../models/Equipment';
 import { Diver } from '../models/Diver';
+import { User } from '../models/User';
 
 export const getAvailableBoats = async (date: string) => {
   const parsedDate = new Date(date);
@@ -50,4 +51,15 @@ export const getAvailableEquipment = async (date: string) => {
   }).distinct('divingGroups.rentedEquipment.equipmentIds');
 
   return Equipment.find({ _id: { $nin: occupiedEquipment } });
+}; 
+
+export const getAvailableUsers = async (date: string) => {
+  const parsedDate = new Date(date);
+
+  const occupiedUsers = await Dive.find({
+    date: { $lte: parsedDate },
+    endDate: { $gte: parsedDate }
+  }).distinct('User');
+
+  return User.find({ _id: { $nin: occupiedUsers } });
 };

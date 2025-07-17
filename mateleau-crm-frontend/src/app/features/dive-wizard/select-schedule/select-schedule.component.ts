@@ -13,6 +13,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import {MatTimepickerModule} from '@angular/material/timepicker';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { DiveWizardService } from '../dive-wizard.service';
 
 
 @Component({
@@ -48,7 +49,8 @@ export class SelectScheduleComponent implements OnInit {
   constructor(  private availibilityService:AvailibilityService, 
                 private fb: FormBuilder,
                 private boatService: BoatService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private wizardService: DiveWizardService ) {
                   this.scheduleForm = this.fb.group({
                     startDate: ['', Validators.required],
                     startTime: ['', Validators.required],
@@ -151,11 +153,11 @@ export class SelectScheduleComponent implements OnInit {
       duration: duration
     };
 
-    console.log('Payload à envoyer au backend :', payload);
+    this.wizardService.setPayload(payload);
     this.loadingBoats = true;
     this.errorMessage = '';
-  
-    this.availibilityService.getAvailableBoat(payload.date, duration)
+
+    this.availibilityService.getAvailableBoat(this.wizardService.getPayload().date, this.wizardService.getPayload().duration)
   .pipe(finalize(() => this.loadingBoats = false))
   .subscribe({
     next: (boats) => this.availableBoats = boats,

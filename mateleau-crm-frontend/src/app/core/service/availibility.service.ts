@@ -4,6 +4,7 @@ import { Boat } from '../../models/Boat';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Dive } from '../../models/Dive';
+import { User } from '../../models/User';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +18,8 @@ export class AvailibilityService {
       { withCredentials: true }
     );
   }
-  getAvailableUsers(date: Date, duration: number): Observable<Boat[]> {
-    return this.http.get<Boat[]>(
+  getAvailableUsers(date: Date, duration: number): Observable<User[]> {
+    return this.http.get<User[]>(
       `${environment.apiAviability}/users?date=${date}&duration=${duration}`,
       { withCredentials: true }
     );

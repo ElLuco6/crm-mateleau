@@ -11,6 +11,15 @@
         </mat-option>
       </mat-select>
     </mat-form-field> -->
+    @for (moniteur of moniteurs; track $index) {
+      <div class="moniteur-card">
+        <h3>{{ moniteur.name }}</h3>
+        <p>Niveau de plongée : {{ moniteur.divingLvl }}</p>
+        <button mat-raised-button color="primary" >
+          Sélectionner
+        </button>
+      </div>
+    }
   </div>
 
   <div class="container-teams">
