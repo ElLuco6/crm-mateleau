@@ -3,7 +3,7 @@ import { Boat } from './Boat';
 import { User } from './User';
 
 export class Dive {
-  id: string; 
+  _id: string; 
   name: string;
   location: string;
   date: Date;
@@ -14,7 +14,7 @@ export class Dive {
   driver: User;
 
   constructor(
-    id: string,
+    _id: string,
     name: string,
     location: string,
     date: Date,
@@ -24,7 +24,7 @@ export class Dive {
     boat: Boat,
     driver: User
   ) {
-    this.id = id;
+    this._id = _id;
     this.name = name;
     this.location = location;
     this.date = date;

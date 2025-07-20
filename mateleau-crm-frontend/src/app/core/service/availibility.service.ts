@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Dive } from '../../models/Dive';
 import { User } from '../../models/User';
+import { Diver } from '../../models/Diver';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +25,9 @@ export class AvailibilityService {
       { withCredentials: true }
     );
   }
-  getAvailableDivers(date: Date, duration: number): Observable<Boat[]> {
-    return this.http.get<Boat[]>(
-      `${environment.apiAviability}/diver?date=${date}&duration=${duration}`,
+  getAvailableDivers(date: Date, duration: number): Observable<Diver[]> {
+    return this.http.get<Diver[]>(
+      `${environment.apiAviability}/divers?date=${date}&duration=${duration}`,
       { withCredentials: true }
     );
   }

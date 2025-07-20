@@ -1,0 +1,11 @@
+.container-teams {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+
+.selected-team{
+    border: solid 2px aqua;
+}

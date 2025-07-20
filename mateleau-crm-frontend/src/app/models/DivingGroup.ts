@@ -8,14 +8,14 @@ export interface RentedEquipment {
 }
 
 export class DivingGroup {
-    id: string; // ID du groupe
+    _id: string; // ID du groupe
     guide: User; // Guide du groupe
     divers: Diver[]; // Liste des plongeurs
     rentedEquipment: RentedEquipment[]; // Matériel loué par plongeur
     groupSize: number; // Taille du groupe
 
-    constructor(id:string, guide: User, divers: Diver[], rentedEquipment: RentedEquipment[] = []) {
-        this.id = id;
+    constructor(_id:string, guide: User, divers: Diver[], rentedEquipment: RentedEquipment[] = []) {
+        this._id = _id;
         this.guide = guide;
         this.divers = divers;
         this.rentedEquipment = rentedEquipment;
@@ -31,7 +31,7 @@ export class DivingGroup {
             throw new Error('Group size cannot exceed 5 members (including the guide).');
         }
 
-        const diverIds = new Set(this.divers.map(diver => diver.id));
+        const diverIds = new Set(this.divers.map(diver => diver._id));
         if (diverIds.size !== this.divers.length) {
             throw new Error('Divers must be unique within the group.');
         }
@@ -44,7 +44,7 @@ export class DivingGroup {
 
         for (const assignment of this.rentedEquipment) {
             for (const equipmentId of assignment.equipmentIds) {
-                const equipment = equipments.find(eq => eq.id === equipmentId);
+                const equipment = equipments.find(eq => eq._id === equipmentId);
                 if (!equipment) {
                     throw new Error(`Equipment with ID ${equipmentId} not found`);
                 }

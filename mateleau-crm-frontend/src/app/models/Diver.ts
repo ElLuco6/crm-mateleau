@@ -1,7 +1,7 @@
 import { Equipment } from "./Equipment";
 
 export class Diver{
-    id: string;
+    _id: string;
     firstName: string;
     lastName: string;
     divingLvl: 0 | 1 | 2 | 3 | 4 | 5;
@@ -12,7 +12,7 @@ export class Diver{
     rentedEquipment:Equipment[]; // Références aux équipements loués
 
     constructor(
-        id: string,
+        _id: string,
         firstName: string,
         lastName: string,
         divingLvl: 0 | 1 | 2 | 3 | 4 | 5,
@@ -22,7 +22,7 @@ export class Diver{
         additionalInfo: string = '',
         rentedEquipment: Equipment[] = []
     ) {
-        this.id = id;
+        this._id = _id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.divingLvl = divingLvl;
