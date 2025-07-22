@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Equipment } from '../../../models/Equipment';
 
 @Component({
   selector: 'app-assign-equipment',
@@ -6,6 +7,12 @@ import { Component } from '@angular/core';
   templateUrl: './assign-equipment.component.html',
   styleUrl: './assign-equipment.component.scss'
 })
-export class AssignEquipmentComponent {
+export class AssignEquipmentComponent implements OnInit{
+
+  equipmentList:Equipment [] = []
+  constructor() {}
+  ngOnInit(): void {
+
+  }
 
 }

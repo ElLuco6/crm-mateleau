@@ -1,5 +1,10 @@
-import { AfterContentInit, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AfterContentInit, Component, Input, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { AvailibilityService } from '../../../core/service/availibility.service';
 import { User } from '../../../models/User';
 import { DiveWizardService } from '../dive-wizard.service';
@@ -19,7 +24,9 @@ export class CreateDiveGroupComponent implements OnInit, AfterContentInit {
   teams: Team[] = [{ moniteur: undefined, members: [] }]; // faire le model palanquée (diving group sans le matériel)
   selectedTeam: number = 0;
   initialDivers: Diver[] = [];
-initialMoniteurs: User[] = [];
+  initialMoniteurs: User[] = [];
+  @Input() dataForm1!: FormGroup;
+  boatLimit: number = 0;
   constructor(
     private formBuilder: FormBuilder,
     private availabilityService: AvailibilityService,
@@ -56,6 +63,12 @@ initialMoniteurs: User[] = [];
       'Composant CreateDiveGroup initialisé avec les moniteurs:',
       this.moniteurs
     );
+
+    console.log(this.dataForm1);
+
+    const boat = this.dataForm1.get('boat')?.value;
+    this.boatLimit = boat.numberMaxPlaces || 0;
+    console.log('Boat limit:', this.boatLimit, 'Boat:', boat);
   }
 
   addTeam() {
@@ -71,7 +84,13 @@ initialMoniteurs: User[] = [];
     const palanquee: Team = this.teams[this.selectedTeam];
     if (!palanquee) return;
 
-      if (diver) {
+    const currentTotal = this.getCurrentTeamSize();
+    if (currentTotal >= this.boatLimit) {
+      console.warn('Capacité maximale du bateau atteinte.');
+      return;
+    }
+
+    if (diver) {
       if (palanquee.members.length >= 3) {
         console.warn('Limite de 3 plongeurs atteinte.');
         return;
@@ -81,20 +100,20 @@ initialMoniteurs: User[] = [];
         return;
       }
       palanquee.members.push(diver);
-      this.divers = this.divers.filter(d => d._id !== diver._id);
+      this.divers = this.divers.filter((d) => d._id !== diver._id);
     } else if (moniteurs) {
-     if (palanquee.moniteur?._id === moniteurs._id) {
-      console.warn('Ce moniteur est déjà dans l’équipe.');
-      return;
-    }
-    if (palanquee.moniteur) {
-      this.moniteurs.push(palanquee.moniteur);
-    }
+      if (palanquee.moniteur?._id === moniteurs._id) {
+        console.warn('Ce moniteur est déjà dans l’équipe.');
+        return;
+      }
+      if (palanquee.moniteur) {
+        this.moniteurs.push(palanquee.moniteur);
+      }
       // Remplace par le nouveau
-    palanquee.moniteur = moniteurs;
+      palanquee.moniteur = moniteurs;
 
-    // Supprime de la liste des moniteurs dispo
-    this.moniteurs = this.moniteurs.filter(m => m._id !== moniteurs._id);
+      // Supprime de la liste des moniteurs dispo
+      this.moniteurs = this.moniteurs.filter((m) => m._id !== moniteurs._id);
     }
   }
 
@@ -111,6 +130,15 @@ initialMoniteurs: User[] = [];
       palanquee.moniteur = undefined;
       this.moniteurs.push(moniteur);
     }
+  }
+
+  getCurrentTeamSize(): number {
+    let count = 0;
+    for (const team of this.teams) {
+      count += team.members.length;
+      if (team.moniteur) count += 1;
+    }
+    return count;
   }
 }
 /**

@@ -63,7 +63,9 @@
 
  <div class="max-w-7xl mx-auto p-6 bg-white rounded-xl shadow-xl">
   <h2 class="text-3xl font-bold text-center text-blue-700 mb-8">Création des palanquées</h2>
-
+<p class="text-sm text-gray-600">
+  Capacité utilisée : {{ getCurrentTeamSize() }} / {{ boatLimit }}
+</p>
   <div class="flex flex-col md:flex-row gap-6">
     
     <!-- Moniteurs -->
@@ -90,35 +92,57 @@
       <div class="flex flex-col gap-4">
         @for (team of teams; track $index) {
           <div 
-            class="bg-white border p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer"
-            [ngClass]="{ 'border-blue-500 ring-2 ring-blue-300': selectedTeam === $index }"
-            (click)="selectTeam($index)">
-            
-            <h4 class="text-lg font-bold mb-2">Équipe {{ $index + 1 }}</h4>
+  class="p-4 rounded-lg shadow hover:bg-gray-100 transition bg-white border p-5 rounded-2xl shadow-md hover:shadow-lg transition cursor-pointer group"
+  [ngClass]="{ 'border-blue-600 ring-2 ring-blue-300': selectedTeam === $index }"
+  (click)="selectTeam($index)">
 
-            <div class="text-sm mb-2">
-              @if (team.moniteur) {
-                <p class="text-green-700 font-medium">👨‍🏫 {{ team.moniteur.name }}</p> 
-                <button (click)="removeFromSelectedTeam(undefined, team.moniteur)">Retirer</button>
-              } @else {
-                <p class="text-red-600">⚠️ Aucun moniteur</p>
-              }
-            </div>
+  <!-- Titre équipe -->
+  <h4 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-700 transition">
+     Équipe {{ $index + 1 }}
+  </h4>
 
-            <div>
-              <p class="text-gray-700 font-medium mb-1">👥 Membres :</p>
-              <ul class="list-disc list-inside text-sm text-gray-600">
-                @for (member of team.members; track $index) {
-                  <li>{{ member.firstName }} – {{ member.divingLvl }}</li>
-                   <button (click)="removeFromSelectedTeam(member)">Retirer</button>
-                }
-              </ul>
-            </div>
-          </div>
+  <!-- Moniteur -->
+  <div class="mb-4">
+    @if (team.moniteur) {
+      <div class="flex items-center justify-between bg-green-50 p-3 rounded-md">
+        <p class="text-green-800 font-medium flex items-center gap-2">
+           {{ team.moniteur.name }}
+        </p>
+        <button
+          class="text-sm text-white-600 hover:underline hover:text-white-800"
+          (click)="removeFromSelectedTeam(undefined, team.moniteur); $event.stopPropagation()">
+          Retirer
+        </button>
+      </div>
+    } @else {
+      <p class="text-white-600 font-medium italic"> Aucun moniteur assigné</p>
+    }
+  </div>
+
+  <!-- Membres -->
+  <div>
+    <p class="text-gray-700 font-semibold mb-2"> Membres :</p>
+    <ul class="space-y-2">
+      @for (member of team.members; track $index) {
+        <li class="flex justify-between items-center bg-gray-50 p-2 rounded-md">
+          <span class="text-sm text-gray-700">
+            {{ member.firstName }} – {{ member.divingLvl }}
+          </span>
+          <button
+            class="text-sm text-white-500 hover:text-white-700 hover:underline"
+            (click)="removeFromSelectedTeam(member); $event.stopPropagation()">
+            Retirer
+          </button>
+        </li>
+      }
+    </ul>
+  </div>
+
+</div>
         }
 
         <button 
-          class="bg-green-600 hover:bg-green-700 text-white py-2 mt-2 rounded font-semibold"
+          class="bg-green-500 hover:bg-green-600 text-white py-2 mt-2 rounded font-semibold"
           (click)="addTeam()">
           ➕ Ajouter une équipe
         </button>

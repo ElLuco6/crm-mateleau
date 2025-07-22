@@ -1,5 +1,8 @@
 <div class="schedule-container">
-<form [formGroup]="scheduleForm" (ngSubmit)="fetchAvailableBoats()"  class="schedule-form">
+  @if (formGroup) {
+   
+  
+<div [formGroup]="formGroup"  class="schedule-form">
   <mat-form-field appearance="fill">
     <mat-label>Date de début</mat-label>
     <input matInput [matDatepicker]="picker" formControlName="startDate" required>
@@ -32,12 +35,12 @@
 
  
   <!-- Affiche la liste des bateaux disponibles -->
-  @if (availableBoats.length > 0) {
+  @if (boats.length > 0) {
     <div  class="available-boats">
       <mat-form-field appearance="fill">
         <mat-label>Select your boat</mat-label>
         <mat-select formControlName="boat">
-          <mat-option *ngFor="let boat of availableBoats" [value]="boat._id">
+          <mat-option *ngFor="let boat of boats" [value]="boat">
             {{ boat.name }} -  Place availiable : {{boat.numberMaxPlaces}}
           </mat-option>
         </mat-select>
@@ -48,7 +51,7 @@
     </button>
   }
   
-</form>
+</div>
 
 
   <!--Add Boats-->
@@ -78,5 +81,6 @@
   </div>
 
 }
+  }
 
 </div>

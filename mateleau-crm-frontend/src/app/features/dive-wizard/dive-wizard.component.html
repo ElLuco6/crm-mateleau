@@ -1,12 +1,12 @@
 <mat-horizontal-stepper #stepper>
     <!-- Étape 1: Sélection de la date/heure et du bateau -->
-    <mat-step [stepControl]="step1FormGroup">
-      <form [formGroup]="step1FormGroup">
+    <mat-step [stepControl]="scheduleForm">
+      <form [formGroup]="scheduleForm">
         <ng-template matStepLabel>Sélection Date/Horaire & Bateau</ng-template>
         <!-- Insérer le composant dédié pour l'étape 1 -->
-        <app-select-schedule [formGroup]="step1FormGroup"></app-select-schedule>
+        <app-select-schedule [formGroup]="scheduleForm" (triggerBoatSearch)="fetchAvailableBoats()" [boats]="availableBoats"></app-select-schedule>
         <div class="stepper-actions">
-          <button mat-button matStepperNext [disabled]="step1FormGroup.invalid">Suivant</button>
+          <button mat-button matStepperNext [disabled]="scheduleForm.invalid">Suivant</button>
         </div>
       </form>
     </mat-step>
@@ -17,7 +17,7 @@
       <form [formGroup]="step2FormGroup">
         <ng-template matStepLabel>Création de la palanquée</ng-template>
         <!-- Insérer le composant dédié pour l'étape 2 -->
-        <app-create-dive-group [formGroup]="step2FormGroup"></app-create-dive-group>
+        <app-create-dive-group [formGroup]="step2FormGroup" [dataForm1]="scheduleForm"></app-create-dive-group>
         <div>
           <button mat-button matStepperPrevious>Précédent</button>
           <button mat-button matStepperNext [disabled]="step2FormGroup.invalid">Suivant</button>
