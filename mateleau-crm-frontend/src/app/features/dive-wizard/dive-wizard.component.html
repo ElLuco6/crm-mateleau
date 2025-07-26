@@ -1,18 +1,18 @@
-<mat-horizontal-stepper #stepper>
+<mat-horizontal-stepper (selectionChange)="currentStep = $event.selectedIndex" #stepper>
     <!-- Étape 1: Sélection de la date/heure et du bateau -->
     <mat-step [stepControl]="scheduleForm">
       <form [formGroup]="scheduleForm">
         <ng-template matStepLabel>Sélection Date/Horaire & Bateau</ng-template>
         <!-- Insérer le composant dédié pour l'étape 1 -->
-        <app-select-schedule [formGroup]="scheduleForm" (triggerBoatSearch)="fetchAvailableBoats()" [boats]="availableBoats"></app-select-schedule>
+        <app-select-schedule [formGroup]="scheduleForm"  [boats]="availableBoats"></app-select-schedule>
         <div class="stepper-actions">
-          <button mat-button matStepperNext [disabled]="scheduleForm.invalid">Suivant</button>
+          <button mat-button matStepperNext (click)="onNextStep()" [disabled]="scheduleForm.invalid">Suivant</button>
         </div>
       </form>
     </mat-step>
   
     <!-- Étape 2: Création de la palanquée -->
-     @if (stepper.selectedIndex >= 1) {
+     <!-- <div *ngIf="currentStep >= 1"> -->
     <mat-step [stepControl]="step2FormGroup">
       <form [formGroup]="step2FormGroup">
         <ng-template matStepLabel>Création de la palanquée</ng-template>
@@ -20,23 +20,28 @@
         <app-create-dive-group [formGroup]="step2FormGroup" [dataForm1]="scheduleForm"></app-create-dive-group>
         <div>
           <button mat-button matStepperPrevious>Précédent</button>
-          <button mat-button matStepperNext [disabled]="step2FormGroup.invalid">Suivant</button>
+          <button mat-button matStepperNext (click)="onNextStep()" [disabled]="step2FormGroup.invalid">Suivant</button>
         </div>
       </form>
     </mat-step>
-  }
+ <!--  </div> -->
   
     <!-- Étape 3: Attribution du matériel -->
+    <!--  <div *ngIf="currentStep >= 2"> -->
     <mat-step [stepControl]="step3FormGroup">
       <form [formGroup]="step3FormGroup">
         <ng-template matStepLabel>Attribution du Matériel</ng-template>
         <!-- Insérer le composant dédié pour l'étape 3 -->
-        <app-assign-equipment [formGroup]="step3FormGroup"></app-assign-equipment>
+        <app-assign-equipment [formGroup]="step3FormGroup" [dataForm]="step2FormGroup"></app-assign-equipment>
         <div>
           <button mat-button matStepperPrevious>Précédent</button>
           <button mat-button (click)="submitWizard()" [disabled]="step3FormGroup.invalid">Finaliser</button>
         </div>
       </form>
     </mat-step>
-  </mat-horizontal-stepper>
+   <!--  </div>  -->
   
+  </mat-horizontal-stepper>
+  <pre>Nombre d'étapes visibles : {{ stepper.steps.length }}</pre>
+    <pre>{{ scheduleForm.value | json }}</pre>
+  <pre>{{ step2FormGroup.value.groups | json }}</pre>

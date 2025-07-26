@@ -33,7 +33,7 @@ import { DiveWizardService } from '../dive-wizard.service';
     styleUrl: './select-schedule.component.scss',
     standalone: true
 })
-export class SelectScheduleComponent implements OnInit {
+export class SelectScheduleComponent {
   @Input() formGroup!: FormGroup;
   @Input() boats: any[] = [];
  
@@ -42,7 +42,7 @@ export class SelectScheduleComponent implements OnInit {
   boatForm = false;
   newBoatForm: FormGroup;
   startDate: Date = new Date(); // Date par défaut récupérer dans l'url
-  @Output() triggerBoatSearch = new EventEmitter<void>();
+ 
 /**
  * Les truc a faire :
  * Ne plus dépendre du bouton rechercher qauand une date + h + durée et valide lancer la recherche des bateaux
@@ -66,16 +66,7 @@ export class SelectScheduleComponent implements OnInit {
                  }
 
 
-   ngOnInit(): void {
-   
-    if (this.formGroup) {
-    this.formGroup.valueChanges
-      .pipe(debounceTime(300), filter(() => this.formGroup.valid))
-      .subscribe(() => {
-        this.triggerBoatSearch.emit(); 
-      });
-  }
-  }
+ 
 
   async addNewBoat() {
 

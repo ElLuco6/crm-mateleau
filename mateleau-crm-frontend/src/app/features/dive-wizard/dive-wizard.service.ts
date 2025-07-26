@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, filter, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,9 +8,11 @@ export class DiveWizardService {
 
   private payload: any = {};
   constructor() { }
+private payloadSubject = new BehaviorSubject<any | null>(null);
 
  setPayload(payload: any) {
     this.payload = payload;
+    this.payloadSubject.next(this.payload);
   }
 
   getPayload() {
@@ -18,6 +20,11 @@ export class DiveWizardService {
     return this.payload;
   }
 
+  onPayloadReady(): Observable<any> {
+  return this.payloadSubject.asObservable().pipe(
+    filter((p): p is any => !!p) // filtre les null
+  );
+}
 
   submitWizard(formData: any):Observable<any> {
     // Logique pour soumettre les données du wizard
@@ -28,6 +35,7 @@ export class DiveWizardService {
       observer.next(formData);
     })
   }
+
 
 
   

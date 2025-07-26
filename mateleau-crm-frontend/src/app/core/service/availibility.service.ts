@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { Dive } from '../../models/Dive';
 import { User } from '../../models/User';
 import { Diver } from '../../models/Diver';
+import { Equipment } from '../../models/Equipment';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +35,12 @@ export class AvailibilityService {
   getDiveMonth(date: Date): Observable<Dive[]> {
     return this.http.get<Dive[]>(
       `${environment.apiAviability}/dive/month?date=${date}`,
+      { withCredentials: true }
+    );
+  }
+  getAvailableEquipment(date: Date, duration: number): Observable<Equipment[]> {
+    return this.http.get<Equipment[]>(
+      `${environment.apiAviability}/equipment?date=${date}&duration=${duration}`,
       { withCredentials: true }
     );
   }

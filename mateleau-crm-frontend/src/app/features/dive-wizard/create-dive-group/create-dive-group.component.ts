@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, Input, OnInit } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, Input, OnChanges, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './create-dive-group.component.html',
   styleUrl: './create-dive-group.component.scss',
 })
-export class CreateDiveGroupComponent implements OnInit, AfterContentInit {
+export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
   moniteurs: User[] = [];
   divers: Diver[] = [];
   teams: Team[] = [{ moniteur: undefined, members: [] }]; // faire le model palanquée (diving group sans le matériel)
@@ -26,6 +26,9 @@ export class CreateDiveGroupComponent implements OnInit, AfterContentInit {
   initialDivers: Diver[] = [];
   initialMoniteurs: User[] = [];
   @Input() dataForm1!: FormGroup;
+  @Input() formGroup!: FormGroup;
+
+
   boatLimit: number = 0;
   constructor(
     private formBuilder: FormBuilder,
@@ -33,11 +36,48 @@ export class CreateDiveGroupComponent implements OnInit, AfterContentInit {
     private wizardService: DiveWizardService
   ) {}
 
-  ngOnInit(): void {}
 
-  ngAfterContentInit(): void {
+
+  ngAfterViewInit(): void {
     //Get the available users (moniteurs) based on the date and duration from the wizard service
+
+    this.wizardService.onPayloadReady().subscribe((payload) => {
+      console.log(payload.formValue1);
+
+      this.boatLimit = payload.formValue1.boat.numberMaxPlaces || 0;
+
+      //  payload.formValue.
+       if (this.dataForm1?.get('boat')?.value) {
+      const boat = this.dataForm1.get('boat')!.value;
+      console.log('Boat selected:', boat);
+      
+      this.boatLimit = boat.numberMaxPlaces || 0;
+      console.log('✅ Boat limit:', this.boatLimit);
+     }
+
+      this.availabilityService
+      .getAvailableUsers(
+        this.wizardService.getPayload().date,
+        this.wizardService.getPayload().duration
+      )
+      .subscribe((moniteurs) => {
+        this.moniteurs = moniteurs;
+        console.log('Moniteurs disponibles:', this.moniteurs);
+        this.initialMoniteurs = [...this.moniteurs];
+      });
+
     this.availabilityService
+      .getAvailableDivers(
+        this.wizardService.getPayload().date,
+        this.wizardService.getPayload().duration
+      )
+      .subscribe((divers) => {
+        this.divers = divers;
+        console.log('Divers disponibles:', this.divers);
+        this.initialDivers = [...this.divers];
+      });
+    })
+   /*  this.availabilityService
       .getAvailableUsers(
         this.wizardService.getPayload().date,
         this.wizardService.getPayload().duration
@@ -64,15 +104,55 @@ export class CreateDiveGroupComponent implements OnInit, AfterContentInit {
       this.moniteurs
     );
 
-    console.log(this.dataForm1);
+    console.log(this.dataForm1); */
+
 
     const boat = this.dataForm1.get('boat')?.value;
     this.boatLimit = boat.numberMaxPlaces || 0;
     console.log('Boat limit:', this.boatLimit, 'Boat:', boat);
+    this.formGroup.get('teams')?.setValue(this.teams);
+  }
+
+  ngOnChanges() {
+    if (this.dataForm1?.get('boat')?.value) {
+      const boat = this.dataForm1.get('boat')!.value;
+      this.boatLimit = boat.numberMaxPlaces || 0;
+      console.log('✅ Boat limit:', this.boatLimit);
+      this.fetchDiversAndMoniteurs();
+    }
+  }
+
+  fetchDiversAndMoniteurs() {
+    console.log('Data Form 1:', this.dataForm1);
+
+   
+    this.availabilityService
+      .getAvailableUsers(
+        this.wizardService.getPayload().date,
+        this.wizardService.getPayload().duration
+      )
+      .subscribe((moniteurs) => {
+        this.moniteurs = moniteurs;
+        console.log('Moniteurs disponibles:', this.moniteurs);
+        this.initialMoniteurs = [...this.moniteurs];
+      });
+
+    this.availabilityService
+      .getAvailableDivers(
+        this.wizardService.getPayload().date,
+        this.wizardService.getPayload().duration
+      )
+      .subscribe((divers) => {
+        this.divers = divers;
+        console.log('Divers disponibles:', this.divers);
+        this.initialDivers = [...this.divers];
+      }); 
+    
   }
 
   addTeam() {
     this.teams.push({ moniteur: undefined, members: [] });
+    this.formGroup.get('groups')?.setValue(this.teams);
   }
 
   selectTeam(teamIndex: number) {
@@ -115,6 +195,7 @@ export class CreateDiveGroupComponent implements OnInit, AfterContentInit {
       // Supprime de la liste des moniteurs dispo
       this.moniteurs = this.moniteurs.filter((m) => m._id !== moniteurs._id);
     }
+    this.formGroup.get('groups')?.setValue(this.teams);
   }
 
   removeFromSelectedTeam(diver?: Diver, moniteur?: User) {
@@ -140,6 +221,7 @@ export class CreateDiveGroupComponent implements OnInit, AfterContentInit {
     }
     return count;
   }
+  
 }
 /**
  * Interface représentant une équipe de plongée sans le matériel c'est le stade intermédiaire.
@@ -148,3 +230,7 @@ export interface Team {
   moniteur?: User;
   members: Diver[];
 }
+function ngAfterViewInit() {
+  throw new Error('Function not implemented.');
+}
+
