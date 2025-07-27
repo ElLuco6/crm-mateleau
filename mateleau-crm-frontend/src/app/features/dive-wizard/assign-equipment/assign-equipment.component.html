@@ -1,11 +1,9 @@
-<div class="max-w-7xl mx-auto p-6 bg-white rounded-xl shadow-xl">
+<!-- <div *ngIf="teams.length > 0" class="max-w-7xl mx-auto p-6 bg-white rounded-xl shadow-xl">
   <h2 class="text-3xl font-bold text-center text-blue-700 mb-8">Atribution du matériel</h2>
 
   <div [formGroup]="step3FormGroup" class="flex flex-col md:flex-row gap-6">
 
-
-
-    <!-- Équipes -->
+    <!-- Équipes --
     <div class="w-full md:w-2/3">
 
       <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">Équipes</h3>
@@ -17,11 +15,10 @@
           </div>
         </div>
       </div>
-
     </div>
 
 
-    <!-- Matériel groupé par nature -->
+    <!-- Matériel groupé par nature --
     <div class="w-full md:w-1/3">
       <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">Matériel</h3>
       <div class="flex flex-col gap-6">
@@ -42,4 +39,77 @@
     </div>
 
   </div>
+</div>
+ -->
+
+ <div *ngIf="teams.length > 0" class="max-w-7xl mx-auto p-6 bg-white rounded-xl shadow-xl">
+  <h2 class="text-3xl font-bold text-center text-blue-700 mb-8">Attribution du matériel</h2>
+
+  <form [formGroup]="step3FormGroup" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    
+    <!-- 📘 Équipes -->
+    <div class="md:col-span-2 space-y-6">
+      <div *ngFor="let team of teams" class="bg-gray-100 p-4 rounded-xl shadow-md">
+        <h3 class="text-lg font-bold text-blue-800 mb-2">Équipe</h3>
+
+        <!-- 👨‍🏫 Moniteur -->
+        <div *ngIf="team.moniteur" class="bg-green-50 p-3 rounded-md mb-4">
+          <span class="text-green-800 font-semibold">
+            🧑‍🏫 Moniteur : {{ team.moniteur.name }} {{ team.moniteur.divingLvl }}
+          </span>
+
+          <!-- Select matériel pour le moniteur -->
+          <div [formGroup]="step3FormGroup.get('equipmentAssignments')">
+            <label class="block mt-2 text-sm font-medium text-gray-700">Matériel :</label>
+            <select multiple class="w-full mt-1 p-2 border rounded"
+              [formControlName]="team.moniteur._id">
+              @for (nature of (groupedEquipment | keyvalue); track nature.key) {
+                <optgroup [label]="nature.key">
+                  @for (equipment of nature.value; track equipment._id) {
+                    <option [value]="equipment._id">{{ equipment.reference }}</option>
+                  }
+                </optgroup>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- 🧍‍♂️ Membres -->
+        <div class="space-y-4">
+          <div *ngFor="let member of team.members" class="bg-white p-3 rounded shadow-sm">
+            <div class="font-semibold text-gray-800">{{ member.firstName }} {{ member.lastName }}</div>
+
+            <!-- Select matériel pour le membre -->
+            <div [formGroup]="step3FormGroup.get('equipmentAssignments')">
+              <label class="block mt-1 text-sm font-medium text-gray-700">Matériel :</label>
+              <select multiple class="w-full mt-1 p-2 border rounded"
+                [formControlName]="member._id">
+                @for (nature of (groupedEquipment | keyvalue); track nature.key) {
+                  <optgroup [label]="nature.key">
+                    @for (equipment of nature.value; track equipment._id) {
+                      <option [value]="equipment._id">{{ equipment.reference }}</option>
+                    }
+                  </optgroup>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📦 Matériel disponible (juste info visuelle) -->
+    <div class="space-y-6">
+      <h3 class="text-xl font-semibold text-center text-gray-700">Matériel disponible</h3>
+
+      <div *ngFor="let nature of (groupedEquipment | keyvalue)" class="bg-gray-100 p-4 rounded shadow">
+        <h4 class="text-lg font-bold text-blue-700 mb-2">{{ nature.key }}</h4>
+        <ul class="space-y-1">
+          <li *ngFor="let equipment of nature.value" class="text-sm text-gray-700">
+            • {{ equipment.reference }} <span class="text-xs text-gray-500">({{ equipment.nextMaintenanceDate }})</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </form>
 </div>

@@ -28,14 +28,14 @@
   
     <!-- Étape 3: Attribution du matériel -->
     <!--  <div *ngIf="currentStep >= 2"> -->
-    <mat-step [stepControl]="step3FormGroup">
-      <form [formGroup]="step3FormGroup">
+    <mat-step >
+      <form >
         <ng-template matStepLabel>Attribution du Matériel</ng-template>
         <!-- Insérer le composant dédié pour l'étape 3 -->
-        <app-assign-equipment [formGroup]="step3FormGroup" [dataForm]="step2FormGroup"></app-assign-equipment>
+        <app-assign-equipment  [dataForm]="step2FormGroup"></app-assign-equipment>
         <div>
           <button mat-button matStepperPrevious>Précédent</button>
-          <button mat-button (click)="submitWizard()" [disabled]="step3FormGroup.invalid">Finaliser</button>
+          <button mat-button (click)="submitWizard()" >Finaliser</button>
         </div>
       </form>
     </mat-step>

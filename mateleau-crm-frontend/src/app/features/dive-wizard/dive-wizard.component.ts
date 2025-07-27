@@ -111,10 +111,7 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
       // Champs pour la création de la palanquée
       groups: [[], [Validators.required, this.validTeamsValidator]],
     });
-    this.step3FormGroup = this._formBuilder.group({
-      // Champs pour l'attribution du matériel
-      equipmentAssignments: this._formBuilder.group({})
-    });
+   
   }
 
       ngAfterViewInit(): void {
@@ -125,7 +122,7 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
     const wizardData = {
       ...this.scheduleForm.value,
       ...this.step2FormGroup.value,
-      ...this.step3FormGroup.value,
+      //...this.step3FormGroup.value,
     };
 
     // Utilise le service pour partager les données et/ou envoyer au backend
@@ -226,7 +223,7 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
     ...currentPayload,
     formValue1: this.scheduleForm.value,
     teams: this.step2FormGroup.value.groups,
-    equipment: this.step3FormGroup.value.equipmentAssignments, // Ajoute les équipements sélectionnés
+    //equipment: this.step3FormGroup.value.equipmentAssignments, // Ajoute les équipements sélectionnés
   };
 
   this.wizardService.setPayload(updatedPayload);
