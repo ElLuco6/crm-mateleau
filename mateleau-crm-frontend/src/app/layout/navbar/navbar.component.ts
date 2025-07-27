@@ -20,4 +20,8 @@ export class NavbarComponent  {
     });
   }
 
+  isLoggedIn(): boolean {
+  return !!localStorage.getItem('token');
+}
+
 }

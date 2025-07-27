@@ -59,7 +59,7 @@
           </span>
 
           <!-- Select matériel pour le moniteur -->
-          <div [formGroup]="step3FormGroup.get('equipmentAssignments')">
+          <div [formGroup]="equipmentAssignmentsForm">
             <label class="block mt-2 text-sm font-medium text-gray-700">Matériel :</label>
             <select multiple class="w-full mt-1 p-2 border rounded"
               [formControlName]="team.moniteur._id">
@@ -80,7 +80,7 @@
             <div class="font-semibold text-gray-800">{{ member.firstName }} {{ member.lastName }}</div>
 
             <!-- Select matériel pour le membre -->
-            <div [formGroup]="step3FormGroup.get('equipmentAssignments')">
+            <div [formGroup]="equipmentAssignmentsForm">
               <label class="block mt-1 text-sm font-medium text-gray-700">Matériel :</label>
               <select multiple class="w-full mt-1 p-2 border rounded"
                 [formControlName]="member._id">

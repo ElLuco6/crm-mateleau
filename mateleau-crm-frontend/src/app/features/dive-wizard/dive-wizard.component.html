@@ -18,9 +18,15 @@
         <ng-template matStepLabel>Création de la palanquée</ng-template>
         <!-- Insérer le composant dédié pour l'étape 2 -->
         <app-create-dive-group [formGroup]="step2FormGroup" [dataForm1]="scheduleForm"></app-create-dive-group>
-        <div>
-          <button mat-button matStepperPrevious>Précédent</button>
-          <button mat-button matStepperNext (click)="onNextStep()" [disabled]="step2FormGroup.invalid">Suivant</button>
+         <div class="flex justify-between items-center w-full mt-4">
+          <button mat-button class="px-4 py-2 rounded font-semibold
+           bg-blue-500 text-white 
+           disabled:bg-gray-300 disabled:text-gray-500
+           hover:bg-blue-600" matStepperPrevious>Précédent</button>
+          <button mat-button class="px-4 py-2 rounded font-semibold
+           bg-green-500 text-white 
+           disabled:bg-gray-300 disabled:text-gray-500
+           hover:bg-green-600" matStepperNext (click)="onNextStep()" [disabled]="step2FormGroup.invalid">Suivant</button>
         </div>
       </form>
     </mat-step>
@@ -33,9 +39,15 @@
         <ng-template matStepLabel>Attribution du Matériel</ng-template>
         <!-- Insérer le composant dédié pour l'étape 3 -->
         <app-assign-equipment  [dataForm]="step2FormGroup"></app-assign-equipment>
-        <div>
-          <button mat-button matStepperPrevious>Précédent</button>
-          <button mat-button (click)="submitWizard()" >Finaliser</button>
+        <div class="flex justify-between items-center w-full mt-4">
+          <button mat-button  class="px-4 py-2 rounded font-semibold
+           bg-blue-500 text-white 
+           disabled:bg-gray-300 disabled:text-gray-500
+           hover:bg-blue-600" matStepperPrevious>Précédent</button>
+          <button mat-button class="px-4 py-2 rounded font-semibold
+           bg-green-500 text-white 
+           disabled:bg-gray-300 disabled:text-gray-500
+           hover:bg-green-600" (click)="submitWizard()" >Finaliser</button>
         </div>
       </form>
     </mat-step>

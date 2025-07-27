@@ -110,5 +110,9 @@ export class AssignEquipmentComponent implements  AfterViewInit{
     
     console.log('Teams:', this.teams);
   }
+
+get equipmentAssignmentsForm(): FormGroup {
+  return this.step3FormGroup.get('equipmentAssignments') as FormGroup;
+}
    
 }
