@@ -42,8 +42,10 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
     //Get the available users (moniteurs) based on the date and duration from the wizard service
 
     this.wizardService.onPayloadReady().subscribe((payload) => {
-      console.log(payload.formValue1);
-
+      console.log('payload create group',payload);
+      if (payload) {
+        
+      
       this.boatLimit = payload.formValue1.boat.numberMaxPlaces || 0;
 
       //  payload.formValue.
@@ -76,7 +78,9 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
         console.log('Divers disponibles:', this.divers);
         this.initialDivers = [...this.divers];
       });
+    }
     })
+  
    /*  this.availabilityService
       .getAvailableUsers(
         this.wizardService.getPayload().date,
@@ -108,8 +112,12 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
 
 
     const boat = this.dataForm1.get('boat')?.value;
-    this.boatLimit = boat.numberMaxPlaces || 0;
-    console.log('Boat limit:', this.boatLimit, 'Boat:', boat);
+    if (boat) {
+      this.boatLimit = boat.numberMaxPlaces || 0;
+      
+      console.log('Boat limit:', this.boatLimit, 'Boat:', boat);
+    }
+  
     this.formGroup.get('teams')?.setValue(this.teams);
   }
 

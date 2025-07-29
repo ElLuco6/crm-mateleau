@@ -3,8 +3,10 @@ import { Equipment } from '../../../models/Equipment';
 import { AvailibilityService } from '../../../core/service/availibility.service';
 import { DiveWizardService } from '../dive-wizard.service';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Team } from '../create-dive-group/create-dive-group.component';
+import { Diver } from '../../../models/Diver';
+import { User } from '../../../models/User';
 
 @Component({
   selector: 'app-assign-equipment',
@@ -19,7 +21,8 @@ export class AssignEquipmentComponent implements  AfterViewInit{
   @Input() dataForm!: FormGroup;
   @Input() step3FormGroup!: FormGroup;
   teams:Team[]= [];
-  
+  equipmentOwnership: { [equipmentId: string]: string } = {};
+selectedUserId:any;
 
   constructor(private availabilityService: AvailibilityService,
     private wizardService: DiveWizardService,
@@ -114,5 +117,71 @@ export class AssignEquipmentComponent implements  AfterViewInit{
 get equipmentAssignmentsForm(): FormGroup {
   return this.step3FormGroup.get('equipmentAssignments') as FormGroup;
 }
-   
+
+assignEquipmentTo(userId: string, equipment: Equipment) {
+  const assignGroup = this.step3FormGroup.get('equipmentAssignments') as FormGroup;
+  const userControl = assignGroup.get(userId) as FormControl;
+  const current: Equipment[] = userControl?.value || [];
+
+  const alreadyAssigned = this.equipmentOwnership[equipment._id];
+
+  if (alreadyAssigned && alreadyAssigned !== userId) return;
+
+  const hasIt = current.find(eq => eq._id === equipment._id);
+  if (hasIt) {
+    userControl.setValue(current.filter(eq => eq._id !== equipment._id));
+    delete this.equipmentOwnership[equipment._id];
+  } else {
+    userControl.setValue([...current, equipment]);
+    this.equipmentOwnership[equipment._id] = userId;
+  }
+}
+
+
+getAllUsers(): (Diver | User)[] {
+  return this.teams.flatMap(team => {
+    const users: (Diver | User)[] = [...team.members];
+    if (team.moniteur) users.push(team.moniteur);
+    return users;
+  });
+}
+
+  getShortName(userId: string): string {
+  const all = this.getAllUsers();
+  const user = all.find(u => u._id === userId);
+
+  if (!user) return '???';
+
+  if ('firstName' in user && 'lastName' in user) {
+    return `${user.firstName} ${user.lastName}`;
+  } else if ('name' in user) {
+    return user.name;
+  }
+
+  return '???';
+}
+
+getUserById(userId: string): Diver | User | undefined {
+  return this.getAllUsers().find(u => u._id === userId);
+}
+
+assignEquipmentToSelected(equipmentId: string) {
+  if (!this.selectedUserId) return;
+
+  const control = this.equipmentAssignmentsForm.get(this.selectedUserId);
+  if (control) {
+    control.setValue([equipmentId]); // exclusif
+  }
+}
+isAlreadyAssigned(equipmentId: string): boolean {
+  return Object.values(this.equipmentAssignmentsForm.controls).some(ctrl => {
+    const value = ctrl.value as string[];
+    return value?.includes(equipmentId);
+  });
+}
+
+getAssignedEquipment(userId: string): Equipment[] {
+  const ids = this.equipmentAssignmentsForm.get(userId)?.value || [];
+  return this.equipmentList.filter(eq => ids.includes(eq._id));
+}
 }
