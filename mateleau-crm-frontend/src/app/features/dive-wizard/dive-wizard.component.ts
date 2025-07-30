@@ -60,7 +60,6 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
   availableBoats: any[] = [];
   loadingBoats = false;
   errorMessage: string = '';
-
   currentStep = 0;
   startDate: Date = new Date();
   constructor(
@@ -70,10 +69,7 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
     private availibilityService: AvailibilityService
   ) {}
 
-  ngOnInit(): void {
-    
-    
-  
+  ngOnInit(): void {  
     this.startDate = this.route.snapshot.queryParams['date']
       ? new Date(this.route.snapshot.queryParams['date'])
       : new Date();
@@ -82,12 +78,16 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
       startDate: [this.startDate, Validators.required],
       startTime: ['', Validators.required],
       duration: [null, [Validators.required, Validators.min(1)]],
-      boat: [], // tu l'utiliseras peut-être plus tard
+      boat: [], // tu l'utiliseras peut-être plus tard,
+      maxDepth: [null, Validators.required], // Ajout de la profondeur maximale
+      location: ['', Validators.required], // Ajout du champ pour la localisation
     });
  combineLatest([
   this.scheduleForm.get('startDate')!.valueChanges.pipe(startWith(this.scheduleForm.get('startDate')!.value)),
   this.scheduleForm.get('startTime')!.valueChanges.pipe(startWith(this.scheduleForm.get('startTime')!.value)),
   this.scheduleForm.get('duration')!.valueChanges.pipe(startWith(this.scheduleForm.get('duration')!.value)),
+  this.scheduleForm.get('maxDepth')!.valueChanges.pipe(startWith(this.scheduleForm.get('maxDepth')!.value)),
+  this.scheduleForm.get('location')!.valueChanges.pipe(startWith(this.scheduleForm.get('location')!.value)),
 ])
       .pipe(
         debounceTime(300),
@@ -95,7 +95,9 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
     const date = this.scheduleForm.get('startDate')?.value;
     const time = this.scheduleForm.get('startTime')?.value;
     const duration = this.scheduleForm.get('duration')?.value;
-    return !!date && !!time && !!duration;
+    const maxDepth = this.scheduleForm.get('maxDepth')?.value;
+    const location = this.scheduleForm.get('location')?.value;
+    return !!date && !!time && !!duration && !!maxDepth && !!location;
   }))
       .subscribe(() => {
         console.log('🟢 Recherche bateau déclenchée');
@@ -119,21 +121,61 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
 
     submitWizard() {
     // Récupère toutes les données du wizard
-    const wizardData = {
-      ...this.scheduleForm.value,
-      ...this.step2FormGroup.value,
-      //...this.step3FormGroup.value,
+ /*    const payload = this.wizardService.getPayload();
+  const driver = payload.driver; // ✅ c'est un User complet
+  const boat = payload.boat;
+  const date = new Date(payload.date); // ou new Date(payload.date + 'T' + payload.time) si séparés
+  const duration = payload.duration;
+  const maxDepth = payload.maxDepth;
+  const location = payload.location;
+
+  const divingGroups = payload.teams.map(team => {
+    const group: any = {
+      guide: team.moniteur._id,
+      divers: team.members.map((diver: any) => diver._id),
+      rentedEquipment: [],
+      groupSize: team.members.length + 1
     };
 
-    // Utilise le service pour partager les données et/ou envoyer au backend
-    this.wizardService.submitWizard(wizardData).subscribe(
-      (response) => {
-        // Traitement après soumission
-      },
-      (error) => {
-        // Gestion d'erreur
+    for (const member of team.members) {
+      const assignedEquipments = this.step3FormGroup.value[member._id];
+      if (assignedEquipments?.length) {
+        group.rentedEquipment.push({
+          diverId: member._id,
+          equipmentIds: assignedEquipments
+        });
       }
-    );
+    }
+
+    if (team.moniteur) {
+      const guideEquipments = this.step3FormGroup.value[team.moniteur._id];
+      if (guideEquipments?.length) {
+        group.rentedEquipment.push({
+          diverId: team.moniteur._id,
+          equipmentIds: guideEquipments
+        });
+      }
+    }
+
+    return group;
+  });
+
+  const finalPayload = {
+    name: `${location} ${new Date(date).toLocaleDateString('fr-FR')}`,
+    location,
+    date,
+    duration,
+    maxDepth,
+    boat: boat._id,
+    driver: driver._id,
+    divingGroups
+  };
+
+  console.log('📦 Payload prêt à l\'envoi :', finalPayload);
+ */
+const finalPayload = {}
+    // Utilise le service pour partager les données et/ou envoyer au backend
+    this.wizardService.submitWizard(finalPayload);
   }
 
   validTeamsValidator(control: AbstractControl): ValidationErrors | null {

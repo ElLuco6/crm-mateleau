@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +9,7 @@ import { BehaviorSubject, filter, Observable } from 'rxjs';
 export class DiveWizardService {
 
   private payload: any = {};
-  constructor() { }
+  constructor(private http: HttpClient) { }
 private payloadSubject = new BehaviorSubject<any | null>(null);
 
  setPayload(payload: any) {
@@ -26,14 +28,23 @@ private payloadSubject = new BehaviorSubject<any | null>(null);
   );
 }
 
-  submitWizard(formData: any):Observable<any> {
-    // Logique pour soumettre les données du wizard
-    // Cela pourrait être un appel HTTP à votre backend pour enregistrer les données
-    console.log('Données du wizard soumises:', formData);
-    // return this.http.post('/api/dive-wizard', formData);
-    return new Observable(observer => {
-      observer.next(formData);
-    })
+sendFinalReservation(payload:any): Observable<any> {
+  return this.http.post(`${environment.apiDives}`, payload);
+}
+
+  submitWizard(payload: any): any {
+    
+    
+    this.sendFinalReservation(payload).subscribe({
+    next: (res) => {
+      console.log("✅ Enregistré avec succès", res);
+      return res;
+    },
+    error: (err) => {
+      console.error("❌ Erreur à l'envoi", err);
+      throw err;
+    }
+  });
   }
 
 

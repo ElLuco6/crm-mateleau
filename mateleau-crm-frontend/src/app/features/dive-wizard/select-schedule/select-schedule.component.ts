@@ -42,7 +42,9 @@ export class SelectScheduleComponent {
   boatForm = false;
   newBoatForm: FormGroup;
   startDate: Date = new Date(); // Date par défaut récupérer dans l'url
- 
+  location = ['rocher sorcière', 'arche', 'canyon', 'tombant', 'épave', 'plongée de nuit'];
+
+
 /**
  * Les truc a faire :
  * Ne plus dépendre du bouton rechercher qauand une date + h + durée et valide lancer la recherche des bateaux
@@ -64,6 +66,8 @@ export class SelectScheduleComponent {
                   
 
                  }
+
+      
 
 
  

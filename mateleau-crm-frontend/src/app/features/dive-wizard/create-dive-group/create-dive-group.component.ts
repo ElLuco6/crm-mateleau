@@ -25,6 +25,7 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
   selectedTeam: number = 0;
   initialDivers: Diver[] = [];
   initialMoniteurs: User[] = [];
+  selectedDriver: User | null = null;
   @Input() dataForm1!: FormGroup;
   @Input() formGroup!: FormGroup;
 
@@ -43,9 +44,8 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
 
     this.wizardService.onPayloadReady().subscribe((payload) => {
       console.log('payload create group',payload);
-      if (payload) {
-        
-      
+      if (!payload) return;
+
       this.boatLimit = payload.formValue1.boat.numberMaxPlaces || 0;
 
       //  payload.formValue.
@@ -78,7 +78,7 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
         console.log('Divers disponibles:', this.divers);
         this.initialDivers = [...this.divers];
       });
-    }
+    
     })
   
    /*  this.availabilityService
@@ -129,34 +129,56 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
       this.fetchDiversAndMoniteurs();
     }
   }
+  onSelectDriver(driver: User) {
+  // Si un driver était déjà sélectionné, on le remet dans la liste
+  if (this.selectedDriver) {
+    this.moniteurs.push(this.selectedDriver);
+  }
+
+  // Retirer ce driver des moniteurs dispo
+  this.moniteurs = this.moniteurs.filter(m => m._id !== driver._id);
+  this.selectedDriver = driver;
+
+  // Stocker dans le formGroup (accessible depuis le parent)
+  this.formGroup.get('driver')?.setValue(driver._id);
+
+  // Nettoyage si le conducteur était déjà dans une équipe
+  this.teams = this.teams.map(team => ({
+    ...team,
+    moniteur: team.moniteur?._id === driver._id ? undefined : team.moniteur,
+  }));
+}
 
   fetchDiversAndMoniteurs() {
     console.log('Data Form 1:', this.dataForm1);
 
-   
+   const payload = this.wizardService.getPayload();
+
     this.availabilityService
-      .getAvailableUsers(
-        this.wizardService.getPayload().date,
-        this.wizardService.getPayload().duration
-      )
+      .getAvailableUsers(payload.date, payload.duration)
       .subscribe((moniteurs) => {
-        this.moniteurs = moniteurs;
-        console.log('Moniteurs disponibles:', this.moniteurs);
-        this.initialMoniteurs = [...this.moniteurs];
+        this.initialMoniteurs = moniteurs;
+        this.moniteurs = this.selectedDriver
+          ? moniteurs.filter((m) => m._id !== this.selectedDriver!._id)
+          : moniteurs;
       });
 
     this.availabilityService
-      .getAvailableDivers(
-        this.wizardService.getPayload().date,
-        this.wizardService.getPayload().duration
-      )
+      .getAvailableDivers(payload.date, payload.duration)
       .subscribe((divers) => {
         this.divers = divers;
-        console.log('Divers disponibles:', this.divers);
-        this.initialDivers = [...this.divers];
-      }); 
-    
+        this.initialDivers = [...divers];
+      });
   }
+
+  setDriver(driver: User) {
+    this.selectedDriver = driver;
+    this.formGroup.get('driver')?.setValue(driver);
+
+    // Mise à jour des moniteurs disponibles
+    this.moniteurs = this.initialMoniteurs.filter((m) => m._id !== driver._id);
+  }
+
 
   addTeam() {
     this.teams.push({ moniteur: undefined, members: [] });
@@ -190,10 +212,13 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
       palanquee.members.push(diver);
       this.divers = this.divers.filter((d) => d._id !== diver._id);
     } else if (moniteurs) {
+      if (moniteurs._id === this.selectedDriver?._id) return;
+
       if (palanquee.moniteur?._id === moniteurs._id) {
         console.warn('Ce moniteur est déjà dans l’équipe.');
         return;
       }
+
       if (palanquee.moniteur) {
         this.moniteurs.push(palanquee.moniteur);
       }
@@ -227,6 +252,7 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
       count += team.members.length;
       if (team.moniteur) count += 1;
     }
+     if (this.selectedDriver) count++; 
     return count;
   }
   
@@ -238,7 +264,3 @@ export interface Team {
   moniteur?: User;
   members: Diver[];
 }
-function ngAfterViewInit() {
-  throw new Error('Function not implemented.');
-}
-

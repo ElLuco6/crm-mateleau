@@ -25,6 +25,13 @@
     <ngx-mat-timepicker-toggle matSuffix [for]="timePicker"></ngx-mat-timepicker-toggle>
     <ngx-mat-timepicker #timePicker ></ngx-mat-timepicker>
   </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Localisation</mat-label>
+    <mat-select formControlName="location" required>
+      <mat-option *ngFor="let loc of location" [value]="loc">{{ loc }}</mat-option>
+    </mat-select>
+  </mat-form-field>
   
   
 
@@ -33,7 +40,12 @@
     <input matInput type="number" formControlName="duration" required min="1">
   </mat-form-field>
 
- 
+  <mat-form-field appearance="fill">
+    <mat-label>Profondeur maximale (m)</mat-label>
+    <input matInput formControlName="maxDepth" required>
+
+  </mat-form-field>
+
   <!-- Affiche la liste des bateaux disponibles -->
   @if (boats.length > 0) {
     <div  class="available-boats">
