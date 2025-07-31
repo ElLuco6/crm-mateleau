@@ -40,12 +40,6 @@ jobs:
         with:
           name: coverage-report
           path: mateleau-crm-frontend/coverage/
-    debug-env:        
-      - name: Debug env
-        run: |
-          echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}"
-          echo "projectKey=ElLuco6_crm-mateleau"
-          echo "organization=elluco6"
 
   sonar:
     needs: test-frontend
@@ -77,7 +71,7 @@ jobs:
           echo "🔐 SONAR_TOKEN is defined: ${{ secrets.SONAR_TOKEN != '' }}"
           echo "📦 projectKey: ElLuco6_crm-mateleau"
           echo "🏢 organization: elluco6"
-          
+
       - name: Run SonarQube Scan
         run: |
           sonar-scanner \
