@@ -55,6 +55,9 @@ typings/
 # dotenv environment variables file
 .env
 
+# sonarcloud
+.scannerwork/
+
 # Angular specific
 .angular/cache/
 .angular/cli/
