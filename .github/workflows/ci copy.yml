@@ -25,17 +25,14 @@ jobs:
         run: npm install
         working-directory: mateleau-crm-frontend
 
-      - name: TEMP: Skip Angular tests
-        run: echo "skip tests for now"
+      - name: Run Angular tests with coverage
+        run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless --code-coverage
         working-directory: mateleau-crm-frontend
 
       - name: Debug coverage files
-        run: echo "no coverage yet"
+        run: ls -R mateleau-crm-frontend/coverage/
 
-      - name: Upload dummy coverage report
-        run: mkdir -p mateleau-crm-frontend/coverage && touch mateleau-crm-frontend/coverage/lcov.info
-
-      - name: Upload coverage artifact
+      - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
@@ -78,35 +75,3 @@ jobs:
             -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
-  release-changelog:
-    needs: [sonar]
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Important pour les tags Git
-
-      - name: Setup Git user
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Generate changelog & version bump
-        run: |
-          npx standard-version
-
-      - name: Push changelog and new tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git push --follow-tags origin master
