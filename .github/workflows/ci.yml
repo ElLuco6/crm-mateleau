@@ -72,6 +72,13 @@ jobs:
           unzip sonar-scanner.zip
           echo "$(pwd)/sonar-scanner-5.0.1.3006-linux/bin" >> $GITHUB_PATH
 
+      - name: Debug Sonar env
+        run: |
+          echo "🔐 SONAR_TOKEN length: ${#SONAR_TOKEN}"
+          echo "📦 projectKey: ElLuco6_crm-mateleau"
+          echo "🏢 organization: elluco6"
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Run SonarQube Scan
         run: |
           sonar-scanner \
