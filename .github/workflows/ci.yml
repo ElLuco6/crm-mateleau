@@ -40,7 +40,7 @@ jobs:
         with:
           name: coverage-report
           path: mateleau-crm-frontend/coverage/
-  debug-env:        
+    debug-env:        
       - name: Debug env
         run: |
           echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}"
