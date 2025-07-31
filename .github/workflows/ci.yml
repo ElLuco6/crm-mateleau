@@ -76,13 +76,14 @@ jobs:
         run: |
           sonar-scanner \
             -Dsonar.projectKey=ElLuco6_crm-mateleau \
-            -Dsonar.sources=. \
+            -Dsonar.sources=mateleau-crm-frontend/src,mateleau-crm-backend/src \
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.spec.ts,**/*.test.ts,**/*.stories.ts,**/coverage/** \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.branch.name=master \
             -Dsonar.organization=elluco6  \
             -Dsonar.automaticAnalysis=false \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.javascript.lcov.reportPaths=mateleau-crm-frontend/coverage/lcov.info
 
   release-changelog:
     needs: [sonar]
