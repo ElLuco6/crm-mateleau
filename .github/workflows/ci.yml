@@ -25,7 +25,7 @@ jobs:
         run: npm install
         working-directory: mateleau-crm-frontend
 
-      - name: TEMP: Skip Angular tests
+      - name: TEMP Skip Angular tests
         run: echo "skip tests for now"
         working-directory: mateleau-crm-frontend
 
