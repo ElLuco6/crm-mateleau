@@ -79,7 +79,7 @@ jobs:
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.branch.name=master \
-            -Dsonar.organization=ElLuco6 \
+            -Dsonar.organization=elluco6  \
             -Dsonar.automaticAnalysis=false \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
