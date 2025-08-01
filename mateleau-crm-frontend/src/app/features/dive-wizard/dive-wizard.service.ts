@@ -35,6 +35,7 @@ sendFinalReservation(payload:any): Observable<any> {
   submitWizard(payload: any): any {
     
     
+    
     this.sendFinalReservation(payload).subscribe({
     next: (res) => {
       console.log("✅ Enregistré avec succès", res);

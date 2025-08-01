@@ -26,6 +26,8 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
   initialDivers: Diver[] = [];
   initialMoniteurs: User[] = [];
   selectedDriver: User | null = null;
+  isDriverSelectionMode: boolean = false;
+  selectingDriver = false;
   @Input() dataForm1!: FormGroup;
   @Input() formGroup!: FormGroup;
 
@@ -119,6 +121,8 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
     }
   
     this.formGroup.get('teams')?.setValue(this.teams);
+    this.formGroup.addControl('driver', this.formBuilder.control(null));
+
   }
 
   ngOnChanges() {
@@ -129,6 +133,50 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
       this.fetchDiversAndMoniteurs();
     }
   }
+
+  removeTeam(index: number) {
+  const team = this.teams[index];
+  if (!team) return;
+
+  // Remet les membres dans la liste des plongeurs
+  team.members.forEach(diver => {
+    if (!this.divers.some(d => d._id === diver._id)) {
+      this.divers.push(diver);
+    }
+  });
+
+  // Remet le moniteur s’il n’est pas le conducteur
+  if (team.moniteur && team.moniteur._id !== this.selectedDriver?._id) {
+    if (!this.moniteurs.some(m => m._id === team.moniteur!._id)) {
+      this.moniteurs.push(team.moniteur);
+    }
+  }
+
+  // Supprime l'équipe
+  this.teams.splice(index, 1);
+
+  // Si c'était l'équipe sélectionnée, on reset
+  if (this.selectedTeam === index) {
+    this.selectedTeam = 0;
+  } else if (this.selectedTeam > index) {
+    this.selectedTeam -= 1; // décale les index
+  }
+
+  this.formGroup.get('groups')?.setValue(this.teams);
+}
+
+
+  getAvailableDrivers(): User[] {
+  const assignedMoniteurIds = this.teams
+    .map(team => team.moniteur?._id)
+    .filter(id => !!id);
+
+  return this.initialMoniteurs.filter(moniteur =>
+    moniteur._id !== this.selectedDriver?._id &&
+    !assignedMoniteurIds.includes(moniteur._id)
+  );
+}
+
   onSelectDriver(driver: User) {
   // Si un driver était déjà sélectionné, on le remet dans la liste
   if (this.selectedDriver) {
@@ -148,6 +196,26 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
     moniteur: team.moniteur?._id === driver._id ? undefined : team.moniteur,
   }));
 }
+
+selectDriver(moniteur: User) {
+  if (this.selectingDriver) {
+    this.selectedDriver = moniteur;
+    this.selectingDriver = false;
+
+    // Supprimer le driver des moniteurs si jamais il est listé
+    this.moniteurs = this.moniteurs.filter(m => m._id !== moniteur._id);
+
+    // Supprimer ce moniteur des équipes s’il y était
+    this.teams.forEach(team => {
+      if (team.moniteur && team.moniteur._id === moniteur._id) {
+        team.moniteur = undefined;
+      }
+    });
+
+    this.formGroup.get('driver')?.setValue(moniteur);
+  }
+}
+
 
   fetchDiversAndMoniteurs() {
     console.log('Data Form 1:', this.dataForm1);
@@ -171,13 +239,25 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
       });
   }
 
-  setDriver(driver: User) {
-    this.selectedDriver = driver;
-    this.formGroup.get('driver')?.setValue(driver);
+setDriver(moniteur: User) {
+  this.selectedDriver = moniteur;
 
-    // Mise à jour des moniteurs disponibles
-    this.moniteurs = this.initialMoniteurs.filter((m) => m._id !== driver._id);
-  }
+  // Le retirer des équipes s’il y était
+  this.teams.forEach(team => {
+    if (team.moniteur && team.moniteur._id === moniteur._id) {
+      team.moniteur = undefined;
+    }
+  });
+
+  // Retirer le conducteur de la liste des moniteurs assignables
+  this.moniteurs = this.initialMoniteurs.filter(m => m._id !== moniteur._id);
+
+  this.formGroup.get('driver')?.setValue(moniteur);
+}
+
+activateDriverSelection() {
+  this.isDriverSelectionMode = true;
+}
 
 
   addTeam() {
@@ -191,6 +271,8 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
   }
 
   AddOnSelectedTeam(diver?: Diver, moniteurs?: User) {
+    if (this.isDriverSelectionMode || !moniteurs && !diver) return;
+
     const palanquee: Team = this.teams[this.selectedTeam];
     if (!palanquee) return;
 
@@ -212,7 +294,7 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
       palanquee.members.push(diver);
       this.divers = this.divers.filter((d) => d._id !== diver._id);
     } else if (moniteurs) {
-      if (moniteurs._id === this.selectedDriver?._id) return;
+     if (moniteurs._id === this.selectedDriver?._id) return;
 
       if (palanquee.moniteur?._id === moniteurs._id) {
         console.warn('Ce moniteur est déjà dans l’équipe.');
@@ -231,30 +313,37 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
     this.formGroup.get('groups')?.setValue(this.teams);
   }
 
-  removeFromSelectedTeam(diver?: Diver, moniteur?: User) {
-    const palanquee: Team = this.teams[this.selectedTeam];
-    if (!palanquee) return;
+ removeFromSelectedTeam(diver?: Diver, moniteur?: User, teamIndex?: number) {
+  const palanquee: Team = typeof teamIndex === 'number' ? this.teams[teamIndex] : this.teams[this.selectedTeam];
+  if (!palanquee) return;
 
-    if (diver) {
-      palanquee.members = palanquee.members.filter(
-        (member) => member._id !== diver._id
-      );
-      this.divers.push(diver);
-    } else if (moniteur) {
+  if (diver) {
+    palanquee.members = palanquee.members.filter(
+      (member) => member._id !== diver._id
+    );
+    this.divers.push(diver);
+  }
+
+  if (moniteur) {
+    if (moniteur._id !== this.selectedDriver?._id) {
       palanquee.moniteur = undefined;
-      this.moniteurs.push(moniteur);
+      // éviter les doublons dans la liste
+      if (!this.moniteurs.some(m => m._id === moniteur._id)) {
+        this.moniteurs.push(moniteur);
+      }
     }
   }
+}
 
   getCurrentTeamSize(): number {
-    let count = 0;
-    for (const team of this.teams) {
-      count += team.members.length;
-      if (team.moniteur) count += 1;
-    }
-     if (this.selectedDriver) count++; 
-    return count;
+  let count = this.selectedDriver ? 1 : 0;
+  for (const team of this.teams) {
+    count += team.members.length;
+    if (team.moniteur) count += 1;
   }
+  return count;
+}
+
   
 }
 /**
