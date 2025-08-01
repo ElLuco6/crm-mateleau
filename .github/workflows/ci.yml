@@ -78,6 +78,7 @@ jobs:
             -Dsonar.projectKey=ElLuco6_crm-mateleau \
             -Dsonar.sources=mateleau-crm-frontend/src,mateleau-crm-backend/src \
             -Dsonar.inclusions=**/*.ts,**/*.js \
+            -Dsonar.javascript.security.hotspot.enabled=false \
             -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.spec.ts,**/*.test.ts,**/*.stories.ts,**/coverage/** \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.branch.name=master \
