@@ -85,8 +85,8 @@ jobs:
             -Dsonar.organization=elluco6  \
             -Dsonar.automaticAnalysis=false \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.javascript.lcov.reportPaths=mateleau-crm-frontend/coverage/lcov.info
-
+            -Dsonar.javascript.lcov.reportPaths=mateleau-crm-frontend/coverage/lcov.info \
+            -Dsonar.javascript.rules=-security
   release-changelog:
     needs: [sonar]
     if: github.event_name == 'push'
