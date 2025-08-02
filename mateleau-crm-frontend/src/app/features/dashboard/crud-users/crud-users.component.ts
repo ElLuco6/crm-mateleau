@@ -3,9 +3,13 @@ import { User } from '../../../models/User';
 import { UsersServiceService } from '../../../core/service/users-service.service';
 import {MatTableModule} from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
+import { userFields } from '../../../shared/form/form-config';
+import { MatDialog } from '@angular/material/dialog';
+import { GenericFormDialogComponent } from '../../../shared/generic-form-dialog/generic-form-dialog.component';
+import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-crud-users',
-  imports: [MatTableModule, MatIconModule],
+  imports: [MatTableModule, MatIconModule, MatButtonModule],
   templateUrl: './crud-users.component.html',
   styleUrl: './crud-users.component.scss'
 })
@@ -13,7 +17,9 @@ export class CrudUsersComponent implements OnInit {
   users: User[] = [];
   columnsToDisplay = ['name', 'email', 'role', 'actions'];
 
-  constructor(private userService: UsersServiceService) {}
+  constructor(private userService: UsersServiceService,
+              private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -25,17 +31,33 @@ export class CrudUsersComponent implements OnInit {
     });
   }
 
-  openForm() {
-    // Ouvre un mat-dialog ou une section inline
-  }
+   openForm(user?: User) {
+    const fields = userFields(!!user);
 
-  editUser(user: User) {
-    // Préremplit le formulaire
-  }
+    this.dialog.open(GenericFormDialogComponent, {
+      width: '400px',
+      data: {
+        title: user ? 'Modifier un utilisateur' : 'Créer un utilisateur',
+        fields,
+        values: user
+      }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        const action = user
+          ? this.userService.update(result)
+          : this.userService.create(result);
 
-  deleteUser(userId: string) {
-    this.userService.delete(userId).subscribe(() => {
-      this.loadUsers();
+        action.subscribe(() => this.loadUsers());
+      }
     });
+  }
+
+  deleteUser(id: string) {
+    if (confirm('Supprimer cet utilisateur ?')) {
+      this.userService.delete(id).subscribe(() => this.loadUsers());
+    }
+  }
+  editUser(user: User) {
+    this.openForm(user);
   }
 }

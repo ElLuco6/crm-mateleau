@@ -14,4 +14,11 @@ export class DivingService {
   getAllDiving() :Observable<Dive[]>{
     return this.http.get<Dive[]>(`${environment.apiDives}`);
   }
+  createDivingGroup(payload: any): Observable<any> {
+    return this.http.post(`${environment.apiDivingGroup}`, payload, {
+      withCredentials: true
+    });
+
+  }
+
 }

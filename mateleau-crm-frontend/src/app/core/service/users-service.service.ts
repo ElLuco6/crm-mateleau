@@ -24,6 +24,8 @@ export class UsersServiceService {
   }
 
   update(user: User) {
+    console.log(`Updating user with ID: ${user._id}`, user);
+    
     return this.http.put<User>(`${environment.apiUsers}/${user._id}`, user, {
       withCredentials: true
     });

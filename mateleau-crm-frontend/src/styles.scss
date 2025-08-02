@@ -5,6 +5,7 @@
 html, body { height: 100%; }
 // 🎨 Styles globaux personnalisés
 body {
+  overflow-x: hidden;
   @apply bg-white-soft text-gray-dark font-body;
 }
 

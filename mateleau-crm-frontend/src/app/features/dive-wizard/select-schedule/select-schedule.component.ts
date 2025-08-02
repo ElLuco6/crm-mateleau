@@ -76,7 +76,7 @@ export class SelectScheduleComponent {
 
     const newBoat: Boat = this.newBoatForm.value;
     try {
-      const response = await firstValueFrom(this.boatService.addBoat(newBoat));
+      const response = await firstValueFrom(this.boatService.create(newBoat));
       console.log('Bateau ajouté avec succès', response);
       this.boatForm = false;
       this.newBoatForm.reset();

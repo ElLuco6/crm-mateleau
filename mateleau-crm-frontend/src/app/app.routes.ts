@@ -31,6 +31,10 @@ export const routes: Routes = [
       ),
       canActivate: [AuthGuard]
   },
-  { path: '', component: CalendarComponent, canActivate: [AuthGuard] },
+  { 
+    path: '',
+     component: CalendarComponent,
+      canActivate: [AuthGuard] 
+  },
   
 ];

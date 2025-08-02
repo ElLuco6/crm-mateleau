@@ -19,7 +19,7 @@ export class AssignEquipmentComponent implements  AfterViewInit{
   equipmentList:Equipment [] = []
   groupedEquipment: { [nature: string]: Equipment[] } = {};
   @Input() dataForm!: FormGroup;
-  @Input() step3FormGroup!: FormGroup;
+ @Input() formGroup!: FormGroup;
   teams:Team[]= [];
   equipmentOwnership: { [equipmentId: string]: string } = {};
 selectedUserId:any;
@@ -29,12 +29,20 @@ selectedUserId:any;
     private fb: FormBuilder
   ) {
 
-     this.step3FormGroup = this.fb.group({
+     this.formGroup = this.fb.group({
       equipmentAssignments: this.fb.group({})
     });
 
 
   }
+get form(): FormGroup {
+    return this.formGroup;
+  }
+
+  getAssignedEquipmentMap(): Record<string, string[]> {
+  const assignmentGroup = this.formGroup.get('equipmentAssignments') as FormGroup;
+  return assignmentGroup?.value || {};
+}
 
 
  /*  ngOnChanges(): void { */
@@ -77,11 +85,11 @@ selectedUserId:any;
   } */
   
     ngAfterViewInit(): void {
-  if (this.step3FormGroup?.get('equipmentAssignments')) {
+  if (this.formGroup?.get('equipmentAssignments')) {
     this.wizardService.onPayloadReady().subscribe((payload) => {
       this.teams = payload.teams || [];
 
-      const assignEquipment = this.step3FormGroup.get('equipmentAssignments') as FormGroup;
+      const assignEquipment = this.formGroup.get('equipmentAssignments') as FormGroup;
       for (const team of this.teams) {
         if (team.moniteur) {
           assignEquipment.addControl(team.moniteur._id, this.fb.control([]));
@@ -115,11 +123,11 @@ selectedUserId:any;
   }
 
 get equipmentAssignmentsForm(): FormGroup {
-  return this.step3FormGroup.get('equipmentAssignments') as FormGroup;
+  return this.formGroup.get('equipmentAssignments') as FormGroup;
 }
 
 assignEquipmentTo(userId: string, equipment: Equipment) {
-  const assignGroup = this.step3FormGroup.get('equipmentAssignments') as FormGroup;
+  const assignGroup = this.formGroup.get('equipmentAssignments') as FormGroup;
   const userControl = assignGroup.get(userId) as FormControl;
   const current: Equipment[] = userControl?.value || [];
 

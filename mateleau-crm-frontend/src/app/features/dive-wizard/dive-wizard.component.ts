@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -17,7 +23,7 @@ import {
 } from './create-dive-group/create-dive-group.component';
 import { DiveWizardService } from './dive-wizard.service';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, debounceTime, filter, finalize, startWith } from 'rxjs';
+import { combineLatest, debounceTime, filter, finalize, firstValueFrom, startWith } from 'rxjs';
 import { AvailibilityService } from '../../core/service/availibility.service';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,6 +33,7 @@ import { MatTimepickerModule } from '@angular/material/timepicker';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { DivingService } from '../../core/service/diving.service';
 
 @Component({
   selector: 'app-dive-wizard',
@@ -57,6 +64,9 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
   step2FormGroup!: FormGroup;
   step3FormGroup!: FormGroup;
 
+  @ViewChild(AssignEquipmentComponent)
+  assignEquipmentComponent!: AssignEquipmentComponent;
+
   availableBoats: any[] = [];
   loadingBoats = false;
   errorMessage: string = '';
@@ -66,10 +76,11 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
     private _formBuilder: FormBuilder,
     private wizardService: DiveWizardService,
     private route: ActivatedRoute,
-    private availibilityService: AvailibilityService
+    private availibilityService: AvailibilityService,
+    private divingService: DivingService
   ) {}
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     this.startDate = this.route.snapshot.queryParams['date']
       ? new Date(this.route.snapshot.queryParams['date'])
       : new Date();
@@ -81,30 +92,57 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
       boat: [], // tu l'utiliseras peut-être plus tard,
       maxDepth: [null, Validators.required], // Ajout de la profondeur maximale
       location: ['', Validators.required], // Ajout du champ pour la localisation
+      diveName: ['', Validators.required], // Nom de la plongée
     });
- combineLatest([
-  this.scheduleForm.get('startDate')!.valueChanges.pipe(startWith(this.scheduleForm.get('startDate')!.value)),
-  this.scheduleForm.get('startTime')!.valueChanges.pipe(startWith(this.scheduleForm.get('startTime')!.value)),
-  this.scheduleForm.get('duration')!.valueChanges.pipe(startWith(this.scheduleForm.get('duration')!.value)),
-  this.scheduleForm.get('maxDepth')!.valueChanges.pipe(startWith(this.scheduleForm.get('maxDepth')!.value)),
-  this.scheduleForm.get('location')!.valueChanges.pipe(startWith(this.scheduleForm.get('location')!.value)),
-])
+    combineLatest([
+      this.scheduleForm
+        .get('startDate')!
+        .valueChanges.pipe(
+          startWith(this.scheduleForm.get('startDate')!.value)
+        ),
+      this.scheduleForm
+        .get('startTime')!
+        .valueChanges.pipe(
+          startWith(this.scheduleForm.get('startTime')!.value)
+        ),
+      this.scheduleForm
+        .get('duration')!
+        .valueChanges.pipe(startWith(this.scheduleForm.get('duration')!.value)),
+      this.scheduleForm
+        .get('maxDepth')!
+        .valueChanges.pipe(startWith(this.scheduleForm.get('maxDepth')!.value)),
+      this.scheduleForm
+        .get('location')!
+        .valueChanges.pipe(startWith(this.scheduleForm.get('location')!.value)),
+      this.scheduleForm
+        .get('diveName')!
+        .valueChanges.pipe(startWith(this.scheduleForm.get('diveName')!.value)),
+    ])
       .pipe(
         debounceTime(300),
-       filter(() => {
-    const date = this.scheduleForm.get('startDate')?.value;
-    const time = this.scheduleForm.get('startTime')?.value;
-    const duration = this.scheduleForm.get('duration')?.value;
-    const maxDepth = this.scheduleForm.get('maxDepth')?.value;
-    const location = this.scheduleForm.get('location')?.value;
-    return !!date && !!time && !!duration && !!maxDepth && !!location;
-  }))
+        filter(() => {
+          const date = this.scheduleForm.get('startDate')?.value;
+          const time = this.scheduleForm.get('startTime')?.value;
+          const duration = this.scheduleForm.get('duration')?.value;
+          const maxDepth = this.scheduleForm.get('maxDepth')?.value;
+          const location = this.scheduleForm.get('location')?.value;
+          const diveName = this.scheduleForm.get('diveName')?.value;
+          return (
+            !!date &&
+            !!time &&
+            !!duration &&
+            !!maxDepth &&
+            !!location &&
+            !!diveName
+          );
+        })
+      )
       .subscribe(() => {
         console.log('🟢 Recherche bateau déclenchée');
         this.fetchAvailableBoats();
       });
-  
- /*  this.scheduleForm.get('duration')!.valueChanges.subscribe((duration) => {
+
+    /*  this.scheduleForm.get('duration')!.valueChanges.subscribe((duration) => {
     this.fetchAvailableBoats();
   })
  */
@@ -113,72 +151,149 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
       // Champs pour la création de la palanquée
       groups: [[], [Validators.required, this.validTeamsValidator]],
     });
-   
+
+    this.step3FormGroup = this._formBuilder.group({
+      equipmentAssignments: this._formBuilder.group({
+
+      })
+    });
   }
 
-      ngAfterViewInit(): void {
+  ngAfterViewInit(): void {}
+
+ /*  submitWizard() {
+    // Récupère toutes les données du wizard
+    const payload = this.wizardService.getPayload();
+    const equipmentAssignments = this.step3FormGroup.value.equipmentAssignments;
+
+    const driver = payload.driver; // ✅ c'est un User complet
+    const boat = payload.formValue1.boat;
+    const date = new Date(payload.date); // ou new Date(payload.date + 'T' + payload.time) si séparés
+    const duration = payload.duration;
+    const maxDepth = payload.formValue1.maxDepth;
+    const location = payload.formValue1.location;
+
+    const divingGroups = payload.teams.map((team: Team) => {
+      const group: any = {
+        guide: team.moniteur ? team.moniteur._id : undefined, // Assure que le guide est un User complet
+        divers: team.members.map((diver: any) => diver._id),
+        rentedEquipment: [],
+        groupSize: team.members.length + 1,
+      };
+
+      if (!equipmentAssignments) {
+        console.error("Formulaire d'équipement introuvable");
+        return;
       }
 
-    submitWizard() {
-    // Récupère toutes les données du wizard
- /*    const payload = this.wizardService.getPayload();
-  const driver = payload.driver; // ✅ c'est un User complet
-  const boat = payload.boat;
-  const date = new Date(payload.date); // ou new Date(payload.date + 'T' + payload.time) si séparés
-  const duration = payload.duration;
-  const maxDepth = payload.maxDepth;
-  const location = payload.location;
+      for (const member of team.members) {
+        const assignedEquipments = equipmentAssignments?.[member._id];
+        if (assignedEquipments?.length) {
+          group.rentedEquipment.push({
+            diverId: member._id,
+            equipmentIds: assignedEquipments.map((e: any) => e._id), // juste les ID
+          });
+        }
+      }
 
-  const divingGroups = payload.teams.map(team => {
-    const group: any = {
-      guide: team.moniteur._id,
-      divers: team.members.map((diver: any) => diver._id),
-      rentedEquipment: [],
-      groupSize: team.members.length + 1
+      if (team.moniteur) {
+        const guideEquipments = equipmentAssignments?.[team.moniteur._id];
+        if (guideEquipments?.length) {
+          group.rentedEquipment.push({
+            diverId: team.moniteur._id,
+            equipmentIds: guideEquipments.map((e: any) => e._id),
+          });
+        }
+      }
+
+      return group;
+    });
+
+    const finalPayload = {
+      name: `${location} ${new Date(date).toLocaleDateString('fr-FR')}`,
+      location,
+      date,
+      duration,
+      maxDepth,
+      boat: boat._id,
+      driver: driver._id,
+      divingGroups,
     };
 
-    for (const member of team.members) {
-      const assignedEquipments = this.step3FormGroup.value[member._id];
-      if (assignedEquipments?.length) {
-        group.rentedEquipment.push({
-          diverId: member._id,
-          equipmentIds: assignedEquipments
+    console.log("📦 Payload prêt à l'envoi :", finalPayload);
+
+    // Utilise le service pour partager les données et/ou envoyer au backend
+    this.wizardService.submitWizard(finalPayload);
+  } */
+
+ 
+ async submitWizard() {
+  const payload = this.wizardService.getPayload();
+  const driver = payload.driver;
+  const boat = payload.formValue1.boat;
+  const date = new Date(payload.date);
+  const duration = payload.duration;
+  const endDate = new Date(date.getTime() + duration * 60000);
+
+  const maxDepth = payload.formValue1.maxDepth;
+  const location = payload.formValue1.location;
+  const assignments = payload.equipmentAssignments; // Map { diverId: Equipment[] }
+
+  const divingGroupIds: string[] = [];
+
+  for (const team of payload.teams) {
+    const groupPayload: any = {
+      guide: team.moniteur._id,
+      divers: team.members.map((m: any) => m._id),
+      groupSize: team.members.length + 1,
+      equipmentAssignments: [],
+    };
+
+    // Ajout équipements pour le moniteur
+    const guideEquip = assignments?.[team.moniteur._id] || [];
+    if (guideEquip.length > 0) {
+      groupPayload.equipmentAssignments.push({
+        diverId: team.moniteur._id,
+        equipmentIds: guideEquip.map((eq: any) => eq._id || eq),
+      });
+    }
+
+    // Ajout équipements pour les membres
+    for (const diver of team.members) {
+      const diverEquip = assignments?.[diver._id] || [];
+      if (diverEquip.length > 0) {
+        groupPayload.equipmentAssignments.push({
+          diverId: diver._id,
+          equipmentIds: diverEquip.map((eq: any) => eq._id || eq),
         });
       }
     }
 
-    if (team.moniteur) {
-      const guideEquipments = this.step3FormGroup.value[team.moniteur._id];
-      if (guideEquipments?.length) {
-        group.rentedEquipment.push({
-          diverId: team.moniteur._id,
-          equipmentIds: guideEquipments
-        });
-      }
+    try {
+      const groupRes = await firstValueFrom(this.divingService.createDivingGroup(groupPayload));
+      divingGroupIds.push(groupRes._id);
+    } catch (error) {
+      console.error("❌ Erreur à la création d’un groupe :", error);
+      return; // stoppe tout si un groupe échoue
     }
-
-    return group;
-  });
+  }
 
   const finalPayload = {
     name: `${location} ${new Date(date).toLocaleDateString('fr-FR')}`,
     location,
-    date,
+    date: date,
+    endDate,
     duration,
     maxDepth,
     boat: boat._id,
     driver: driver._id,
-    divingGroups
+    divingGroups: divingGroupIds,
   };
 
-  console.log('📦 Payload prêt à l\'envoi :', finalPayload);
- */
-const finalPayload = {}
-    // Utilise le service pour partager les données et/ou envoyer au backend
-    this.wizardService.submitWizard(finalPayload);
-  }
+  this.wizardService.submitWizard(finalPayload);
+}
 
-  validTeamsValidator(control: AbstractControl): ValidationErrors | null {
+    validTeamsValidator(control: AbstractControl): ValidationErrors | null {
     const teams = control.value as Team[];
     if (!Array.isArray(teams) || teams.length === 0) return { noTeams: true };
 
@@ -193,7 +308,7 @@ const finalPayload = {}
   // Appel à l'API pour récupérer les bateaux disponibles
   fetchAvailableBoats(): void {
     console.log('🔵 Récupération des bateaux disponibles');
-   // if (this.scheduleForm.invalid) return;
+    // if (this.scheduleForm.invalid) return;
 
     const { startDate, startTime, duration } = this.scheduleForm.value;
 
@@ -257,18 +372,32 @@ const finalPayload = {}
 
   onStepChange(event: StepperSelectionEvent): void {
     this.currentStep = event.selectedIndex;
-    
   }
-  onNextStep(){
-     const currentPayload = this.wizardService.getPayload();
-  const updatedPayload = {
-    ...currentPayload,
-    formValue1: this.scheduleForm.value,
-    teams: this.step2FormGroup.value.groups,
-    //equipment: this.step3FormGroup.value.equipmentAssignments, // Ajoute les équipements sélectionnés
-  };
+  onNextStep() {
+    const currentPayload = this.wizardService.getPayload();
 
-  this.wizardService.setPayload(updatedPayload);
-  console.log('Payload mis à jour :', updatedPayload);
-}
+    // Mise à jour du payload avec les données des étapes 1 & 2
+    let updatedPayload = {
+      ...currentPayload,
+      formValue1: this.scheduleForm.value,
+      teams: this.step2FormGroup.value.groups,
+      driver: this.step2FormGroup.value.driver, // Assure que le driver est un User complet
+    };
+
+    // Si on est à l'étape 3, on ajoute aussi les équipements
+    if (this.currentStep === 2 && this.assignEquipmentComponent) {
+      const equipmentAssignments =
+        this.assignEquipmentComponent.getAssignedEquipmentMap();
+      updatedPayload = {
+        ...updatedPayload,
+        equipmentAssignments,
+      };
+
+      console.log('🎒 Payload avec équipements :', updatedPayload);
+    }
+
+    // Mise à jour finale du payload dans le service
+    this.wizardService.setPayload(updatedPayload);
+    console.log('✅ Payload mis à jour :', updatedPayload);
+  }
 }

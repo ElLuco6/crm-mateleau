@@ -6,5 +6,8 @@ export const environment = {
     apiDives: 'http://localhost:5000/api/dives/',
     apiBoats: 'http://localhost:5000/api/boats/',
     apiAviability: 'http://localhost:5000/api/availability/',
+    apiDiver: 'http://localhost:5000/api/divers/',
+    apiEquipment: 'http://localhost:5000/api/equipment/',
+    apiDivingGroup: 'http://localhost:5000/api/diving-groups/',
   };
   

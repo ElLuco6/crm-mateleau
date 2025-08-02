@@ -29,11 +29,14 @@ private payloadSubject = new BehaviorSubject<any | null>(null);
 }
 
 sendFinalReservation(payload:any): Observable<any> {
-  return this.http.post(`${environment.apiDives}`, payload);
+  return this.http.post(`${environment.apiDives}`, payload,{
+    withCredentials: true
+  });
 }
 
   submitWizard(payload: any): any {
     
+    console.log("🟢 Envoi de la réservation avec les données du wizard", payload);
     
     
     this.sendFinalReservation(payload).subscribe({

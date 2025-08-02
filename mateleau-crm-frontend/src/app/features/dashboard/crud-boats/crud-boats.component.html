@@ -1,1 +1,80 @@
-boat
+<div class="p-6 rounded-2xl bg-white shadow-md">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-xl font-semibold text-gray-800">Bateaux</h3>
+    <button
+      mat-raised-button
+      color="primary"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg"
+      (click)="openForm()"
+    >
+      + Créer un bateau
+    </button>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table
+      mat-table
+      [dataSource]="boats"
+      class="w-full border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+      matSort
+    >
+      <!-- Nom -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+          Nom
+        </th>
+        <td mat-cell *matCellDef="let boat" class="p-3">{{ boat.name }}</td>
+      </ng-container>
+
+      <!-- Places -->
+      <ng-container matColumnDef="numberMaxPlaces">
+        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+          Places max
+        </th>
+        <td mat-cell *matCellDef="let boat" class="p-3">{{ boat.numberMaxPlaces }}</td>
+      </ng-container>
+
+      <!-- Révision -->
+      <ng-container matColumnDef="revisionDate">
+        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+          Révision
+        </th>
+        <td mat-cell *matCellDef="let boat" class="p-3">
+          {{ boat.revisionDate | date: 'dd/MM/yyyy' }}
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+          Actions
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let boat"
+          class="p-3 flex gap-2 items-center min-h-[52px]"
+        >
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="openForm(boat)"
+            class="!w-7 !h-7"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="deleteBoat(boat._id)"
+            class="!w-7 !h-7"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

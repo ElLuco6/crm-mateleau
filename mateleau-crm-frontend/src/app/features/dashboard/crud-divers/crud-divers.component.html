@@ -1,1 +1,86 @@
-<p>crud-divers works!</p>
+<div class="p-6 rounded-2xl bg-white shadow-md">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-xl font-semibold text-gray-800">Plongeurs</h3>
+    <button
+      mat-raised-button
+      color="primary"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg"
+      (click)="openForm()"
+    >
+      + Créer un plongeur
+    </button>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table
+      mat-table
+      [dataSource]="divers"
+      class="w-full border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+      matSort
+    >
+      <!-- Prénom -->
+      <ng-container matColumnDef="firstName">
+        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+          Prénom
+        </th>
+        <td mat-cell *matCellDef="let diver" class="p-3">{{ diver.firstName }}</td>
+      </ng-container>
+
+      <!-- Nom -->
+      <ng-container matColumnDef="lastName">
+        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+          Nom
+        </th>
+        <td mat-cell *matCellDef="let diver" class="p-3">{{ diver.lastName }}</td>
+      </ng-container>
+
+      <!-- Niveau -->
+      <ng-container matColumnDef="divingLvl">
+        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+          Niveau
+        </th>
+        <td mat-cell *matCellDef="let diver" class="p-3">Niveau {{ diver.divingLvl }}</td>
+      </ng-container>
+
+      <!-- Email -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+          Email
+        </th>
+        <td mat-cell *matCellDef="let diver" class="p-3">{{ diver.email }}</td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+          Actions
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let diver"
+          class="p-3 flex gap-2 items-center min-h-[52px]"
+        >
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="openForm(diver)"
+            class="!w-7 !h-7"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="deleteDiver(diver._id)"
+            class="!w-7 !h-7"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

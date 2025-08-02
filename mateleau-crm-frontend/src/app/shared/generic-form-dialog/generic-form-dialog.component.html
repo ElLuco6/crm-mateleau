@@ -1,1 +1,52 @@
-<p>generic-form-dialog works!</p>
+<h2 mat-dialog-title class="text-xl font-semibold text-gray-800">
+  {{ data.title }}
+</h2>
+
+<mat-dialog-content
+  [formGroup]="form"
+  class="flex flex-col space-y-4 mt-4 w-full max-w-lg mx-auto"
+>
+
+  <ng-container *ngFor="let field of processedFields">
+    <mat-form-field *ngIf="!field.hidden" appearance="fill" class="w-full">
+      <mat-label>{{ field.label }}</mat-label>
+
+      <ng-container [ngSwitch]="field.type">
+
+        <input *ngSwitchCase="'text'" matInput [formControlName]="field.key" type="text" />
+        <input *ngSwitchCase="'email'" matInput [formControlName]="field.key" type="email" />
+        <input *ngSwitchCase="'password'" matInput [formControlName]="field.key" type="password" />
+        <input *ngSwitchCase="'number'" matInput [formControlName]="field.key" type="number" />
+        <input *ngSwitchCase="'date'" matInput [formControlName]="field.key" type="date" />
+
+        <mat-select *ngSwitchCase="'select'" [formControlName]="field.key">
+          <mat-option *ngFor="let opt of field.options" [value]="opt.value">
+            {{ opt.label }}
+          </mat-option>
+        </mat-select>
+
+      </ng-container>
+    </mat-form-field>
+  </ng-container>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="mt-6 space-x-2 px-4 pb-2">
+  <button
+    mat-button
+    class="text-gray-700 hover:underline hover:text-black transition"
+    (click)="cancel()"
+  >
+    Annuler
+  </button>
+
+  <button
+    mat-raised-button
+    color="primary"
+    class="rounded-lg px-4 py-2 text-white font-medium shadow-sm"
+    (click)="submit()"
+    [disabled]="form.invalid"
+  >
+    {{ isEditMode ? 'Modifier' : 'Créer' }}
+  </button>
+</mat-dialog-actions>
