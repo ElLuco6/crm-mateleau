@@ -22,7 +22,7 @@ import {
   Team,
 } from './create-dive-group/create-dive-group.component';
 import { DiveWizardService } from './dive-wizard.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, debounceTime, filter, finalize, firstValueFrom, startWith } from 'rxjs';
 import { AvailibilityService } from '../../core/service/availibility.service';
 import { CommonModule } from '@angular/common';
@@ -34,6 +34,7 @@ import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { DivingService } from '../../core/service/diving.service';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dive-wizard',
@@ -53,6 +54,7 @@ import { DivingService } from '../../core/service/diving.service';
     SelectScheduleComponent,
     AssignEquipmentComponent,
     CreateDiveGroupComponent,
+    MatSnackBarModule
   ],
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,7 +69,11 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
   @ViewChild(AssignEquipmentComponent)
   assignEquipmentComponent!: AssignEquipmentComponent;
 
-  availableBoats: any[] = [];
+ @ViewChild(CreateDiveGroupComponent)
+createGroupComponent!: CreateDiveGroupComponent;
+
+
+    availableBoats: any[] = [];
   loadingBoats = false;
   errorMessage: string = '';
   currentStep = 0;
@@ -77,7 +83,9 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
     private wizardService: DiveWizardService,
     private route: ActivatedRoute,
     private availibilityService: AvailibilityService,
-    private divingService: DivingService
+    private divingService: DivingService,
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -93,7 +101,8 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
       maxDepth: [null, Validators.required], // Ajout de la profondeur maximale
       location: ['', Validators.required], // Ajout du champ pour la localisation
       diveName: ['', Validators.required], // Nom de la plongée
-    });
+    },
+  { updateOn: 'change' });
     combineLatest([
       this.scheduleForm
         .get('startDate')!
@@ -228,7 +237,21 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
 
  
  async submitWizard() {
-  const payload = this.wizardService.getPayload();
+  let payload = this.wizardService.getPayload();
+
+  if (this.assignEquipmentComponent) {
+    const equipmentAssignments =
+      this.assignEquipmentComponent.getAssignedEquipmentMap();
+
+    payload = {
+      ...payload,
+      equipmentAssignments,
+    };
+
+    this.wizardService.setPayload(payload); // ✅ met à jour pour cohérence
+    console.log('🎒 Payload final avec équipements :', payload);
+  }
+
   const driver = payload.driver;
   const boat = payload.formValue1.boat;
   const date = new Date(payload.date);
@@ -249,14 +272,6 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
       equipmentAssignments: [],
     };
 
-    // Ajout équipements pour le moniteur
-    const guideEquip = assignments?.[team.moniteur._id] || [];
-    if (guideEquip.length > 0) {
-      groupPayload.equipmentAssignments.push({
-        diverId: team.moniteur._id,
-        equipmentIds: guideEquip.map((eq: any) => eq._id || eq),
-      });
-    }
 
     // Ajout équipements pour les membres
     for (const diver of team.members) {
@@ -290,7 +305,29 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
     divingGroups: divingGroupIds,
   };
 
-  this.wizardService.submitWizard(finalPayload);
+ this.wizardService.sendFinalReservation(finalPayload).subscribe({
+    next: (res) => {
+      console.log("✅ Enregistré avec succès", res);
+      
+      // ✅ Snackbar succès
+      this.snackBar.open('Plongée créée avec succès !', 'Fermer', {
+        duration: 3000,
+        panelClass: ['snackbar-success'], // optionnel : ajoute un style custom si tu veux
+      });
+
+      // ✅ Redirection vers dashboard
+      this.router.navigate(['/dashboard']);
+    },
+    error: (err) => {
+      console.error("❌ Erreur à l'envoi", err);
+
+      // ❌ Snackbar d'erreur
+      this.snackBar.open('Erreur lors de la création de la plongée.', 'Fermer', {
+        duration: 4000,
+        panelClass: ['snackbar-error'],
+      });
+    }
+  });
 }
 
     validTeamsValidator(control: AbstractControl): ValidationErrors | null {
@@ -374,7 +411,17 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
     this.currentStep = event.selectedIndex;
   }
   onNextStep() {
+    const currentFormValue = this.scheduleForm?.value;
+if (!currentFormValue) {
+  console.warn('🔴 Formulaire non prêt');
+  return;
+}
+
     const currentPayload = this.wizardService.getPayload();
+     if (this.currentStep === 1 && this.createGroupComponent) {
+    this.createGroupComponent.init(); 
+  }
+
 
     // Mise à jour du payload avec les données des étapes 1 & 2
     let updatedPayload = {

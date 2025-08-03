@@ -31,7 +31,15 @@ export const routes: Routes = [
       ),
       canActivate: [AuthGuard]
   },
-  { 
+  {
+    path: 'edit-dive/:id',
+    loadComponent: () =>
+      import('./features/update-diving/update-diving.component').then(
+        (m) => m.UpdateDivingComponent
+      ),
+      canActivate: [AuthGuard]
+  },
+  {
     path: '',
      component: CalendarComponent,
       canActivate: [AuthGuard] 

@@ -28,19 +28,13 @@ selectedUserId:any;
     private wizardService: DiveWizardService,
     private fb: FormBuilder
   ) {
-
-     this.formGroup = this.fb.group({
-      equipmentAssignments: this.fb.group({})
-    });
-
-
   }
 get form(): FormGroup {
     return this.formGroup;
   }
 
   getAssignedEquipmentMap(): Record<string, string[]> {
-  const assignmentGroup = this.formGroup.get('equipmentAssignments') as FormGroup;
+  const assignmentGroup = this.formGroup?.get('equipmentAssignments') as FormGroup;
   return assignmentGroup?.value || {};
 }
 

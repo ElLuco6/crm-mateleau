@@ -18,8 +18,10 @@ private payloadSubject = new BehaviorSubject<any | null>(null);
   }
 
   getPayload() {
-    console.log('Payload récupéré:', this.payload);
-    return this.payload;
+    if (!this.payload || Object.keys(this.payload).length === 0) {
+    console.warn('🟠 Payload vide ou non initialisé');
+  }
+  return this.payload || {};
   }
 
   onPayloadReady(): Observable<any> {

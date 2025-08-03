@@ -36,6 +36,8 @@ import { DiveWizardService } from '../dive-wizard.service';
 export class SelectScheduleComponent {
   @Input() formGroup!: FormGroup;
   @Input() boats: any[] = [];
+
+
  
   loadingBoats = false;
   errorMessage: string = '';
@@ -44,18 +46,9 @@ export class SelectScheduleComponent {
   startDate: Date = new Date(); // Date par défaut récupérer dans l'url
   location = ['rocher sorcière', 'arche', 'canyon', 'tombant', 'épave', 'plongée de nuit'];
 
-
-/**
- * Les truc a faire :
- * Ne plus dépendre du bouton rechercher qauand une date + h + durée et valide lancer la recherche des bateaux
- * la date dans le form est préremplie avec la date passé en paramètre
- * refaire un peu de style car le formulaire est moche
- */
-  constructor(  private availibilityService:AvailibilityService, 
-                private fb: FormBuilder,
+  constructor(  private fb: FormBuilder,
                 private boatService: BoatService,
-                private route: ActivatedRoute,
-                private wizardService: DiveWizardService ) {
+                ) {
                 
 
                   this.newBoatForm = this.fb.group({
@@ -67,10 +60,6 @@ export class SelectScheduleComponent {
 
                  }
 
-      
-
-
- 
 
   async addNewBoat() {
 
@@ -85,9 +74,6 @@ export class SelectScheduleComponent {
       console.error('Erreur lors de l\'ajout du bateau', err);
     }
   }
-
- 
-
 
   showBoatForm(){
     this.boatForm = true;

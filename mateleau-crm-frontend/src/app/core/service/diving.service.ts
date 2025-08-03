@@ -12,13 +12,33 @@ export class DivingService {
   constructor(private http : HttpClient) { }
 
   getAllDiving() :Observable<Dive[]>{
-    return this.http.get<Dive[]>(`${environment.apiDives}`);
+    return this.http.get<Dive[]>(`${environment.apiDives}`,{
+      withCredentials: true
+    });
   }
   createDivingGroup(payload: any): Observable<any> {
     return this.http.post(`${environment.apiDivingGroup}`, payload, {
       withCredentials: true
     });
 
+  }
+
+  delete(id: string):Observable<void>{
+    return this.http.delete<void>(`${environment.apiDives}/${id}`, {
+      withCredentials: true
+    });
+  }
+
+  getDiveById(id: string): Observable<Dive> {
+    return this.http.get<Dive>(`${environment.apiDives}/${id}`, {
+      withCredentials: true
+    });
+  }
+
+  updateDive(id: string, payload: any): Observable<Dive> {
+    return this.http.put<Dive>(`${environment.apiDives}/${id}`, payload, {
+      withCredentials: true
+    });
   }
 
 }

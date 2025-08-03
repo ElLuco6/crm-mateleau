@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './create-dive-group.component.html',
   styleUrl: './create-dive-group.component.scss',
 })
-export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
+export class CreateDiveGroupComponent implements  OnChanges  {
   moniteurs: User[] = [];
   divers: Diver[] = [];
   teams: Team[] = [{ moniteur: undefined, members: [] }]; // faire le model palanquée (diving group sans le matériel)
@@ -41,7 +41,7 @@ export class CreateDiveGroupComponent implements AfterViewInit, OnChanges  {
 
 
 
-  ngAfterViewInit(): void {
+  public init(): void {
     //Get the available users (moniteurs) based on the date and duration from the wizard service
 
     this.wizardService.onPayloadReady().subscribe((payload) => {

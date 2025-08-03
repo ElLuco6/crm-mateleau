@@ -4,7 +4,10 @@ import { Router, RouterModule } from '@angular/router';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
-import { EventClickArg } from '@fullcalendar/core';
+import { DivingService } from '../../core/service/diving.service';
+import { EventInput } from '@fullcalendar/core';
+import { Dive } from '../../models/Dive';
+import { NotificationService } from '../../core/service/notification.service';
 
 @Component({
   selector: 'app-calendar',
@@ -21,10 +24,8 @@ export class CalendarComponent implements OnInit {
   selectedDate: string = '';
   showEventModal: boolean = false;
   selectedEvent: any = null;
-  events = [
-    { id:'1',title: 'Plongée Matin', start: '2025-03-05', className: 'event-diving',  extendedProps: { description: 'Excursion dans les eaux de Bali' } },
-    {id:'2', title: 'Maintenance Matériel', start: '2025-03-07', className: 'event-maintenance' ,extendedProps: { description: 'Aventure dans les Caraïbes' }}
-  ];
+  events: EventInput[] = [];
+
   calendarOptions = {
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin, interactionPlugin],
@@ -33,11 +34,51 @@ export class CalendarComponent implements OnInit {
    events : this.events
   };
  
-  constructor(public router: Router) { }
+  constructor(public router: Router,
+    private divingService: DivingService,
+    private notificationService: NotificationService
+  ) { }
   
   ngOnInit(): void {
-      
+      this.loadDives();
   }
+
+
+  loadDives() {
+ this.divingService.getAllDiving().subscribe((dives: Dive[]) => {
+  
+  
+  this.events = dives
+  .map(dive => {
+    const start = new Date(dive.date);
+    if (isNaN(start.getTime())) {
+      console.warn('Date invalide pour la plongée :', dive);
+      return null;
+    }
+    const end = new Date(start.getTime() + dive.duration * 60000);
+
+    if (isNaN(end.getTime())) {
+      console.warn('Date invalide pour la plongée :', dive);
+      return null;
+    }
+    return {
+      id: dive._id,
+      title: dive.name,
+      start: start.toISOString(),
+      end: end.toISOString(),
+      className: 'event-diving',
+      extendedProps: { dive }
+    } as EventInput;
+  })
+  .filter((event): event is EventInput => event !== null); // <-- filtre les null
+
+  this.calendarOptions = {
+    ...this.calendarOptions,
+    events: this.events
+  };
+});
+
+}
   // Lors du clic sur un événement : ouvre la modale d'information
   handleEventClick(arg: any): void {
     this.selectedEvent = {
@@ -68,13 +109,25 @@ export class CalendarComponent implements OnInit {
     this.showEventModal = false;
   }
   deleteEvent(): void {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
-      // Exemple de suppression locale, à adapter selon votre service/API
-      this.events = this.events.filter(event => event.id !== this.selectedEvent.id);
-      // Mise à jour des événements dans le calendrier
-      this.calendarOptions = { ...this.calendarOptions, events: this.events };
-      this.showEventModal = false;
-    }
+    if (!this.selectedEvent?.id) return;
+
+  if (window.confirm('Êtes-vous sûr de vouloir supprimer cette plongée ?')) {
+    this.divingService.delete(this.selectedEvent.id).subscribe({
+      next: () => {
+        // Mise à jour locale après suppression
+        this.events = this.events.filter(event => event.id !== this.selectedEvent.id);
+        this.calendarOptions = { ...this.calendarOptions, events: this.events };
+        this.showEventModal = false;
+        this.notificationService.show('Plongée supprimée avec succès', 'success');
+
+      },
+      error: (err) => {
+        console.error('Erreur lors de la suppression :', err);
+        
+        this.notificationService.show('Échec de la suppression de la plongée', 'error');
+      }
+    });
+  }
   }
   goToEventDetail(): void {
     this.showEventModal = false;
