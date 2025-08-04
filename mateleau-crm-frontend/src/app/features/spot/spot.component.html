@@ -1,0 +1,36 @@
+<div #mapContainer id="map" style="height: 400px;"></div>
+
+<div class="flex gap-2">
+  <input type="text" [(ngModel)]="newSpot.name" placeholder="Nom du spot"
+         class="border p-2 rounded w-full">
+  <button (click)="createSpot()" class="bg-blue-600 text-white px-4 py-2 rounded">
+    Enregistrer
+  </button>
+</div>
+
+<ul class="mt-4 list-disc pl-5 text-sm text-gray-600">
+  <li *ngFor="let spot of Spots">
+    {{ spot.name }} ({{ spot.latitude | number: '1.4-4' }}, {{ spot.longitude | number: '1.4-4' }})
+  </li>
+</ul>
+
+
+<ul class="mt-4 list-disc pl-5 text-sm text-gray-600">
+  @for (spot of Spots; track spot._id; let i = $index) {
+    <li>
+      <div class="flex items-center gap-2">
+        <span *ngIf="editIndex !== i">
+          {{ spot.name }} ({{ spot.latitude | number:'1.4-4' }}, {{ spot.longitude | number:'1.4-4' }})
+        </span>
+
+        <input *ngIf="editIndex === i" type="text" [(ngModel)]="newSpot.name"
+               class="border p-1 rounded text-sm w-1/2" />
+
+        <button *ngIf="editIndex !== i" class="text-blue-600 text-xs" (click)="startEditing(i)">✏️</button>
+        <button *ngIf="editIndex === i" class="text-green-600 text-xs" (click)="updateSpot()">💾</button>
+
+        <button class="text-red-500 text-xs" (click)="deleteSpot(spot._id!, i)">🗑️</button>
+      </div>
+    </li>
+  }
+</ul>

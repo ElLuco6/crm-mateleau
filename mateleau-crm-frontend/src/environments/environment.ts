@@ -11,5 +11,6 @@ export const environment = {
     apiDivingGroup: 'http://localhost:5000/api/diving-groups/',
     apiDashboard: 'http://localhost:5000/api/dashboard/',
     apiTasks: 'http://localhost:5000/api/tasks/',
+    apiSpots: 'http://localhost:5000/api/spots/',
   };
   

@@ -6,10 +6,11 @@ import { CrudEquipmentsComponent } from './crud-equipments/crud-equipments.compo
 import {MatTabsModule} from '@angular/material/tabs';
 import { CrudDiversComponent } from './crud-divers/crud-divers.component';
 import { TodayComponent } from './today/today.component';
+import { SpotComponent } from '../spot/spot.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CalendarComponent,TodayComponent,CrudBoatsComponent,CrudUsersComponent,CrudEquipmentsComponent,MatTabsModule,CrudDiversComponent],
+  imports: [CalendarComponent,TodayComponent,CrudBoatsComponent,CrudUsersComponent,CrudEquipmentsComponent,MatTabsModule,CrudDiversComponent,SpotComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
