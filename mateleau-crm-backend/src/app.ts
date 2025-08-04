@@ -14,6 +14,8 @@ import divingGroupRoutes from './routes/divingGroupRoutes';
 import diverRoutes from './routes/diverRoutes';
 import equipmentRoutes from './routes/equipmentRoutes';
 import availabilityRoutes from './routes/availabityRoutes';
+import dashboardRoutes from './routes/dashboardRoute'; // Importer les routes de Today
+import taskRoutes from './routes/taskRoutes';
 
 import e from 'express';
 
@@ -45,6 +47,9 @@ app.use('/api/diving-groups', divingGroupRoutes);
 app.use('/api/divers', diverRoutes);
 app.use('/api/equipment', equipmentRoutes);
 app.use('/api/availability', availabilityRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/tasks', taskRoutes);
+
 
 // Serve static files (if needed for frontend)
 app.use(express.static(path.join(__dirname, 'public')));

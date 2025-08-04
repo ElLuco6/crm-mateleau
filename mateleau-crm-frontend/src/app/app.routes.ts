@@ -34,8 +34,8 @@ export const routes: Routes = [
   {
     path: 'edit-dive/:id',
     loadComponent: () =>
-      import('./features/update-diving/update-diving.component').then(
-        (m) => m.UpdateDivingComponent
+      import('./features/edit-wizard/edit-wizard.component').then(
+        (m) => m.EditWizardComponent
       ),
       canActivate: [AuthGuard]
   },

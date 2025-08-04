@@ -1,0 +1,94 @@
+<section class="bg-white shadow rounded-xl p-6 mb-8" >
+  <h2 class="text-2xl font-bold text-blue-700 mb-4">📅 Aujourd’hui</h2>
+
+  @if (todayDives.length) {
+    <div class="mb-4">
+      <h3 class="font-semibold text-gray-700">Plongées prévues :</h3>
+      <ul class="list-disc list-inside text-gray-600 text-sm">
+        @for (dive of todayDives; track dive._id) {
+          <li>{{ dive.name }} – {{ dive.location }} à {{ dive.date | date:'shortTime' }}</li>
+        }
+      </ul>
+    </div>
+  }
+  @else {
+    <p class="text-sm text-gray-500 italic">Pas de plongée prévu pour aujourd’hui.</p>
+  }
+
+  @if (todayEquipment.length) {
+    <div class="mb-4">
+      <h3 class="font-semibold text-gray-700">Matériel à réviser :</h3>
+      <ul class="list-disc list-inside text-gray-600 text-sm">
+        @for (eq of todayEquipment; track eq._id) {
+          <li>{{ eq.name }}</li>
+        }
+      </ul>
+    </div>
+  }
+  @else {
+    <p class="text-sm text-gray-500 italic">Pas de matériel à réviser pour aujourd’hui.</p>
+  }
+
+  @if (todayBoats.length) {
+    <div>
+      <h3 class="font-semibold text-gray-700">Bateaux à réviser :</h3>
+      <ul class="list-disc list-inside text-gray-600 text-sm">
+        @for (boat of todayBoats; track boat._id) {
+          <li>{{ boat.name }}</li>
+        }
+      </ul>
+    </div>
+  }
+  @else {
+    <p class="text-sm text-gray-500 italic">Pas de bateaux à réviser pour aujourd’hui.</p>
+  }
+</section>
+
+<section class="bg-white shadow rounded-xl p-6 mb-8" >
+  <h2 class="text-2xl font-bold text-blue-700 mb-4">📆 À venir cette semaine</h2>
+
+  @if (weekDives.length) {
+    <div class="mb-4">
+      <h3 class="font-semibold text-gray-700">Plongées :</h3>
+      <ul class="list-disc list-inside text-gray-600 text-sm">
+        @for (dive of weekDives; track dive._id) {
+          <li>{{ dive.name }} – {{ dive.location }} le {{ dive.date | date:'EEEE d MMMM' }}</li>
+        }
+      </ul>
+    </div>
+  }
+  @else {
+    <p class="text-sm text-gray-500 italic">Pas de plongée prévu pour cette semaine.</p>
+  }
+
+  @if (weekEquipment.length) {
+    <div class="mb-4">
+      <h3 class="font-semibold text-gray-700">Révisions matériel :</h3>
+      <ul class="list-disc list-inside text-gray-600 text-sm">
+        @for (eq of weekEquipment; track eq._id) {
+          <li>{{ eq.name }}</li>
+        }
+      </ul>
+    </div>
+  } @else {
+    <p class="text-sm text-gray-500 italic">Pas de matériel à réviser pour cette semaine.</p>
+  }
+
+  @if (weekBoats.length) {
+    <div>
+      <h3 class="font-semibold text-gray-700">Révisions bateaux :</h3>
+      <ul class="list-disc list-inside text-gray-600 text-sm">
+        @for (boat of weekBoats; track boat._id) {
+          <li>{{ boat.name }}</li>
+        }
+      </ul>
+    </div>
+  } @else {
+    <p class="text-sm text-gray-500 italic">Pas de bateaux à réviser pour cette semaine.</p>
+  }
+</section>
+
+<section class="bg-white shadow rounded-xl p-6">
+  <h2 class="text-2xl font-bold text-blue-700 mb-4">📋 À faire</h2>
+  <app-kanban />
+</section>

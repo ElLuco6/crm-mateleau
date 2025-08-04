@@ -9,5 +9,7 @@ export const environment = {
     apiDiver: 'http://localhost:5000/api/divers/',
     apiEquipment: 'http://localhost:5000/api/equipment/',
     apiDivingGroup: 'http://localhost:5000/api/diving-groups/',
+    apiDashboard: 'http://localhost:5000/api/dashboard/',
+    apiTasks: 'http://localhost:5000/api/tasks/',
   };
   

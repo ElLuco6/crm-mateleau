@@ -79,13 +79,13 @@ createGroupComponent!: CreateDiveGroupComponent;
   currentStep = 0;
   startDate: Date = new Date();
   constructor(
-    private _formBuilder: FormBuilder,
-    private wizardService: DiveWizardService,
-    private route: ActivatedRoute,
-    private availibilityService: AvailibilityService,
-    private divingService: DivingService,
-    private snackBar: MatSnackBar,
-    private router: Router
+    protected  _formBuilder: FormBuilder,
+    protected  wizardService: DiveWizardService,
+    protected  route: ActivatedRoute,
+    protected  availibilityService: AvailibilityService,
+    protected  divingService: DivingService,
+    protected  snackBar: MatSnackBar,
+    protected  router: Router
   ) {}
 
   ngOnInit(): void {

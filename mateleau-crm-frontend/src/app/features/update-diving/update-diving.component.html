@@ -1,4 +1,7 @@
-<form [formGroup]="diveForm" (ngSubmit)="submitEdit()" class="space-y-6 p-6 bg-white shadow-md rounded-xl max-w-2xl mx-auto">
+
+<form
+
+       [formGroup]="diveForm" (ngSubmit)="submitEdit()" class="space-y-6 p-6 bg-white shadow-md rounded-xl max-w-2xl mx-auto">
   <h2 class="text-2xl font-bold text-gray-800">Modifier une plongée</h2>
 
   <mat-form-field class="w-full">
@@ -19,10 +22,21 @@
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field class="w-1/2">
-      <mat-label>Heure de début</mat-label>
-      <input matInput type="time" formControlName="startTime" />
-    </mat-form-field>
+     <mat-form-field appearance="fill">
+    <mat-label>Heure de début</mat-label>
+    <input
+      matInput
+      [ngxMatTimepicker]="timePicker"
+      formControlName="startTime"
+      ngxMatTimepickerFormat="HH:mm"
+      placeholder="Choisir l'heure"
+      required
+      readonly
+      [format]="24"
+    />
+    <ngx-mat-timepicker-toggle matSuffix [for]="timePicker"></ngx-mat-timepicker-toggle>
+    <ngx-mat-timepicker #timePicker ></ngx-mat-timepicker>
+  </mat-form-field>
   </div>
 
   <mat-form-field class="w-full">
@@ -47,8 +61,8 @@
   <mat-form-field class="w-full">
     <mat-label>Conducteur</mat-label>
     <mat-select formControlName="driver">
-      <mat-option *ngFor="let user of availableDivers" [value]="user._id">
-        {{ user.firstName }} {{ user.lastName }}
+      <mat-option *ngFor="let user of availableUsers" [value]="user._id">
+        {{ user.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
