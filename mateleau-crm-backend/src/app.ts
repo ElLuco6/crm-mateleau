@@ -16,7 +16,7 @@ import equipmentRoutes from './routes/equipmentRoutes';
 import availabilityRoutes from './routes/availabityRoutes';
 import dashboardRoutes from './routes/dashboardRoute'; // Importer les routes de Today
 import taskRoutes from './routes/taskRoutes';
-import locationRoutes from './routes/localisationRoutes';
+import spotRoutes from './routes/spotRoutes';
 
 import e from 'express';
 
@@ -50,7 +50,7 @@ app.use('/api/equipment', equipmentRoutes);
 app.use('/api/availability', availabilityRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/tasks', taskRoutes);
-app.use('/api/locations', locationRoutes);
+app.use('/api/spots', spotRoutes);
 
 
 // Serve static files (if needed for frontend)

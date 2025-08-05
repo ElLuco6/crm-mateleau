@@ -35,3 +35,7 @@ button:hover {
 #map {
   height: 400px;
 }
+.leaflet-marker-icon {
+  border: none !important;
+  box-shadow: none !important;
+}

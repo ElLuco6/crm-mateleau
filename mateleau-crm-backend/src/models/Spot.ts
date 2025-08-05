@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const LocalisationSchema = new mongoose.Schema({
+const SpotSchema = new mongoose.Schema({
   name: { type: String, required: true },
   coordinates: {
     lat: { type: Number, required: true },
@@ -9,4 +9,4 @@ const LocalisationSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-export const Localisation = mongoose.model('Localisation', LocalisationSchema);
+export const Spot = mongoose.model('Spot', SpotSchema);

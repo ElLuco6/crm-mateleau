@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -8,6 +8,8 @@ import { DivingService } from '../../core/service/diving.service';
 import { EventInput } from '@fullcalendar/core';
 import { Dive } from '../../models/Dive';
 import { NotificationService } from '../../core/service/notification.service';
+import { Subject } from 'rxjs/internal/Subject';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -15,7 +17,7 @@ import { NotificationService } from '../../core/service/notification.service';
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy{
   /*
   Faire le model diving 
   au click sur une plonége existante on prend id de la plongée et on la modifie 
@@ -25,7 +27,7 @@ export class CalendarComponent implements OnInit {
   showEventModal: boolean = false;
   selectedEvent: any = null;
   events: EventInput[] = [];
-
+private destroy$ = new Subject<void>();
   calendarOptions = {
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin, interactionPlugin],
@@ -43,11 +45,15 @@ export class CalendarComponent implements OnInit {
       this.loadDives();
   }
 
+  ngOnDestroy(): void {
+       this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 
   loadDives() {
- this.divingService.getAllDiving().subscribe((dives: Dive[]) => {
-  
-  
+ this.divingService.getAllDiving().pipe(takeUntil(this.destroy$)).subscribe((dives: Dive[]) => {
+
   this.events = dives
   .map(dive => {
     const start = new Date(dive.date);

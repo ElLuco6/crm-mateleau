@@ -1,4 +1,4 @@
-<mat-tab-group>
+<mat-tab-group (selectedTabChange)="onTabChange($event)">
   <mat-tab label="Vue du jour">
     <app-today></app-today>
   </mat-tab>
@@ -6,7 +6,7 @@
     <app-calendar></app-calendar>
   </mat-tab>
   <mat-tab label="Carte des lieux">
-    <app-spot></app-spot>
+    <app-spot #mapComponent></app-spot>
   </mat-tab>
   <mat-tab label="Utilisateurs">
     <app-crud-users></app-crud-users>

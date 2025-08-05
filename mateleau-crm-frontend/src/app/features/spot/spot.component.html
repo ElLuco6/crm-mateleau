@@ -1,36 +1,86 @@
-<div #mapContainer id="map" style="height: 400px;"></div>
+<div class="p-1 max-w-5xl mx-auto space-y-4">
+  <!-- Carte -->
+  <div class="w-full h-[500px] p-4 box-border">
+    <div class="w-full h-full border-2 border-black rounded overflow-hidden">
+      <div id="map" class="w-full h-full"></div>
+    </div>
+  </div>
 
-<div class="flex gap-2">
-  <input type="text" [(ngModel)]="newSpot.name" placeholder="Nom du spot"
-         class="border p-2 rounded w-full">
-  <button (click)="createSpot()" class="bg-blue-600 text-white px-4 py-2 rounded">
-    Enregistrer
-  </button>
-</div>
+  <!-- Message pendant édition -->
+  <div *ngIf="editIndex !== null"
+    class="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-2 rounded mb-4 text-sm">
+    ✏️ Cliquez sur la carte pour mettre à jour l'emplacement du spot.
+  </div>
 
-<ul class="mt-4 list-disc pl-5 text-sm text-gray-600">
-  <li *ngFor="let spot of Spots">
-    {{ spot.name }} ({{ spot.latitude | number: '1.4-4' }}, {{ spot.longitude | number: '1.4-4' }})
-  </li>
-</ul>
+  <!-- Formulaire d’ajout -->
+  <div class="bg-gray-50 p-4 rounded shadow space-y-4 border">
+    <h3 class="text-lg font-semibold text-gray-800">
+      ➕ Ajouter un nouveau spot de plongée
+    </h3>
 
+    <p class="text-sm text-gray-600">
+      Cliquez sur la carte pour positionner le spot, puis entrez un nom pour l’enregistrer.
+    </p>
 
-<ul class="mt-4 list-disc pl-5 text-sm text-gray-600">
-  @for (spot of Spots; track spot._id; let i = $index) {
-    <li>
-      <div class="flex items-center gap-2">
-        <span *ngIf="editIndex !== i">
-          {{ spot.name }} ({{ spot.latitude | number:'1.4-4' }}, {{ spot.longitude | number:'1.4-4' }})
-        </span>
+    <div class="flex gap-2 items-center">
+      <input type="text" [(ngModel)]="newSpot.name" placeholder="Nom du spot"
+        class="border border-gray-300 p-2 rounded w-full text-sm focus:outline-none focus:ring focus:ring-blue-300"
+        [disabled]="editIndex !== null" />
 
-        <input *ngIf="editIndex === i" type="text" [(ngModel)]="newSpot.name"
-               class="border p-1 rounded text-sm w-1/2" />
+      <button (click)="createSpot()"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm rounded shadow-sm transition"
+        [disabled]="editIndex !== null || !newSpot.name.trim()">
+        ➕ Ajouter le spot
+      </button>
+    </div>
 
-        <button *ngIf="editIndex !== i" class="text-blue-600 text-xs" (click)="startEditing(i)">✏️</button>
-        <button *ngIf="editIndex === i" class="text-green-600 text-xs" (click)="updateSpot()">💾</button>
+    <div *ngIf="editIndex !== null" class="text-sm text-yellow-700">
+      Vous êtes en train de modifier un spot existant. Terminez ou annulez la modification dans la liste ci-dessous.
+    </div>
+  </div>
 
-        <button class="text-red-500 text-xs" (click)="deleteSpot(spot._id!, i)">🗑️</button>
+  <!-- Liste des spots -->
+  <ul class="space-y-2 mt-4">
+    @for (spot of Spots; track spot._id; let i = $index) {
+    <li
+      class="bg-white shadow-md rounded-xl p-4 flex items-start justify-between border hover:shadow-lg transition-all duration-200">
+      <!-- Contenu -->
+      <div class="flex-1">
+        <div *ngIf="editIndex !== i" class="space-y-1">
+          <p class="text-base font-semibold text-gray-800">{{ spot.name }}</p>
+          <p class="text-sm text-gray-500 italic">
+            📍 {{ spot.coordinates.lat | number:'1.4-4' }}, {{ spot.coordinates.lng | number:'1.4-4' }}
+          </p>
+        </div>
+
+        <input *ngIf="editIndex === i" [(ngModel)]="editingSpot!.name" placeholder="Nom du spot"
+          class="border border-gray-300 p-2 rounded w-full mt-1 text-sm focus:outline-none focus:ring focus:ring-blue-300" />
       </div>
+
+      <!-- Actions -->
+      <div class="flex gap-1 items-center">
+        <button mat-icon-button color="primary" (click)="startEditing(i)" *ngIf="editIndex !== i"
+          class="!w-8 !h-8 transition-transform hover:scale-110" matTooltip="Modifier">
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <button mat-icon-button color="accent" (click)="updateSpot()" *ngIf="editIndex === i"
+          class="!w-8 !h-8 transition-transform hover:scale-110" matTooltip="Valider">
+          <mat-icon>check</mat-icon>
+        </button>
+
+        <button mat-icon-button color="warn" (click)="cancelEdit()" *ngIf="editIndex === i"
+          class="!w-8 !h-8 transition-transform hover:scale-110" matTooltip="Annuler">
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <button mat-icon-button color="warn" (click)="deleteSpot(spot._id!, i)"
+          class="!w-8 !h-8 transition-transform hover:scale-110" matTooltip="Supprimer">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
     </li>
-  }
-</ul>
+    }
+  </ul>
+</div>
