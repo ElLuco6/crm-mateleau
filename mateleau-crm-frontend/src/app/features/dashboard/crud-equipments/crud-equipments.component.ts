@@ -21,7 +21,7 @@ export class CrudEquipmentsComponent {
 @ViewChild(MatSort) sort!: MatSort;
   equipments: Equipment[] = [];
   dataSource: MatTableDataSource<Equipment> = new MatTableDataSource();
-  displayedColumns = ['reference', 'nature', 'size', 'nextMaintenanceDate', 'isRented', 'actions'];
+  displayedColumns = ['reference', 'nature', 'size', 'nextMaintenanceDate',  'actions'];
 
   constructor(
     private equipmentService: EquipmentServiceService,

@@ -22,7 +22,7 @@ describe('CrudEquipmentsComponent', () => {
       nature: 'combinaison',
       size: 'L',
       nextMaintenanceDate: new Date(),
-      isRented: false,
+    
     },
     {
       _id: '2',
@@ -30,7 +30,7 @@ describe('CrudEquipmentsComponent', () => {
       nature: 'combinaison',
       size: 'M',
       nextMaintenanceDate: new Date(),
-      isRented: true,
+     
     }
   ];
 
@@ -64,8 +64,7 @@ describe('CrudEquipmentsComponent', () => {
       reference: 'EQ003',
       nature: 'combinaison',
       size: 'S',
-      nextMaintenanceDate: new Date(),
-      isRented: false
+      nextMaintenanceDate: new Date(),   
     };
 
     dialogSpy.open.and.returnValue({

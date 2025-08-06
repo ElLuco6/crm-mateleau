@@ -59,7 +59,7 @@ describe('AvailibilityService', () => {
   });
 
   it('should fetch available divers', () => {
-    const mockDivers: Diver[] = [{ _id: 'd1', firstName: 'Bob', lastName: 'Marley', divingLvl: 5, age: 30, phone: '123-456-7890',email: 'aa@a.fr',additionalInfo:"like cool diving", rentedEquipment: [] }] as Diver[];
+    const mockDivers: Diver[] = [{ _id: 'd1', firstName: 'Bob', lastName: 'Marley', divingLvl: 5, age: 30, phone: '123-456-7890',email: 'aa@a.fr',additionalInfo:"like cool diving" }] as Diver[];
     const date = new Date();
     const duration = 1;
 
@@ -104,7 +104,6 @@ const mockDives: Dive[] = [mockDive];
   'bouteille', // doit être une des valeurs du type `nature`
   'REF123',
   new Date(),
-  false,
   'Large'
 );
 const mockEquipment: Equipment[] = [mockEquip];

@@ -35,10 +35,7 @@ export const equipmentFields: FormFieldConfig[] = [
   { key: 'size', label: 'Taille (si applicable)', type: 'text' },
   { key: 'reference', label: 'Référence', type: 'text', required: true },
   { key: 'nextMaintenanceDate', label: 'Prochaine maintenance', type: 'date', required: true },
-  { key: 'isRented', label: 'Loué ?', type: 'select', required: true, options: [
-    { label: 'Oui', value: true },
-    { label: 'Non', value: false }
-  ]}
+  
 ];
 
 export const diverFields: FormFieldConfig[] = [

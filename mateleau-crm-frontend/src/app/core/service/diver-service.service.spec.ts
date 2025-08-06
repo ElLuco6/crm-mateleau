@@ -24,7 +24,7 @@ describe('DiverServiceService', () => {
 
   it('should fetch all divers', () => {
     const mockDivers: Diver[] = [
-      new Diver('d1',  'Bob',  'Marley',  5,  30,  '123-456-7890', 'aa@a.fr',"like cool diving", [])
+      new Diver('d1',  'Bob',  'Marley',  5,  30,  '123-456-7890', 'aa@a.fr',"like cool diving")
     ];
 
     service.getAll().subscribe(res => {
@@ -38,7 +38,7 @@ describe('DiverServiceService', () => {
   });
 
   it('should create a diver', () => {
-    const newDiver = new Diver( 'd1',  'Bob',  'Marley',  5,  30,  '123-456-7890' ,'aa@a.fr',"like cool diving", [] );
+    const newDiver = new Diver( 'd1',  'Bob',  'Marley',  5,  30,  '123-456-7890' ,'aa@a.fr',"like cool diving");
 
     service.create(newDiver).subscribe(res => {
       expect(res).toEqual(newDiver);
@@ -51,7 +51,7 @@ describe('DiverServiceService', () => {
   });
 
   it('should update a diver', () => {
-    const updatedDiver = new Diver('d1',  'Bob',  'Marley',  5,  30,  '123-456-7890' ,'aa@a.fr',"like cool diving", [] );
+    const updatedDiver = new Diver('d1',  'Bob',  'Marley',  5,  30,  '123-456-7890' ,'aa@a.fr',"like cool diving");
 
     service.update(updatedDiver).subscribe(res => {
       expect(res).toEqual(updatedDiver);

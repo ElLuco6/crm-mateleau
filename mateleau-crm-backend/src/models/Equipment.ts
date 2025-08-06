@@ -9,7 +9,6 @@ import mongoose, { Schema, Document } from 'mongoose';
  *         - nature
  *         - reference
  *         - nextMaintenanceDate
- *         - isRented
  *       properties:
  *         nature:
  *           type: string
@@ -25,15 +24,7 @@ import mongoose, { Schema, Document } from 'mongoose';
  *           type: string
  *           format: date
  *           description: The date of the next maintenance
- *         isRented:
- *           type: boolean
- *           description: Whether the equipment is currently rented
- *       example:
- *         nature: "combinaison"
- *         size: "M"
- *         reference: "COMB123"
- *         nextMaintenanceDate: "2023-12-01"
- *         isRented: false
+ *         
  */
 
 
@@ -42,7 +33,6 @@ interface IEquipment extends Document {
     size?: string; // Taille optionnelle (par exemple, pour combinaisons ou palmes)
     reference: string; // Référence unique pour chaque type
     nextMaintenanceDate: Date; // Date du prochain entretien
-    isRented: boolean; // Si le matériel est actuellement loué
   }
   
   const EquipmentSchema: Schema = new Schema({
@@ -65,10 +55,7 @@ interface IEquipment extends Document {
       type: Date,
       required: true,
     },
-    isRented: {
-      type: Boolean,
-      required: true,
-    },
+    
   });
   
   const Equipment = mongoose.model<IEquipment>('Equipment', EquipmentSchema);

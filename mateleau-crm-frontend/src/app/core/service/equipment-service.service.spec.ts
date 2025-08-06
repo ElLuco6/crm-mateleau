@@ -28,7 +28,6 @@ describe('EquipmentServiceService', () => {
       'bouteille',  // doit correspondre à ton union `nature`
       'REF-1234',
       new Date(),
-      false,
       'L'
     );
   }

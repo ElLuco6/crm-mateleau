@@ -52,20 +52,7 @@
         </td>
       </ng-container>
 
-      <!-- Loué -->
-      <ng-container matColumnDef="isRented">
-        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
-          Loué ?
-        </th>
-        <td mat-cell *matCellDef="let eq" class="p-3">
-          <span
-            [ngClass]="eq.isRented ? 'text-red-600 font-semibold' : 'text-green-700 font-semibold'"
-          >
-            {{ eq.isRented ? 'Oui' : 'Non' }}
-          </span>
-        </td>
-      </ng-container>
-
+      
       <!-- Actions -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">

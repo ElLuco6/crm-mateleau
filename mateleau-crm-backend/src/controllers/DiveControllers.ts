@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import * as DiveService from "../services/DiveService";
 import { IDive } from "../models/Dive";
 import { DivingGroup } from "../models/DivingGroup";
-import { IDiver } from "../models/Diver";
+import { Diver, IDiver } from "../models/Diver";
 import { IUser, User } from "../models/User";
 import { Boat } from "../models/Boat";
 import { Dive } from "../models/Dive";
@@ -86,9 +86,9 @@ export const createDive = async (req: Request, res: Response) => {
 
     for (const group of groups) {
       for (const diver of group.divers) {
-          const diverData = await User.findById(diver);
+          const diverData = await Diver.findById(diver);
           if (diverData && divingLevelRequirements[diverData.divingLvl] < maxDepth) {
-              return res.status(400).json({ message: `Diver ${diverData.name} does not have the required diving level for this depth` });
+              return res.status(400).json({ message: `Diver ${diverData.firstName} does not have the required diving level for this depth` });
           }
       }
   }

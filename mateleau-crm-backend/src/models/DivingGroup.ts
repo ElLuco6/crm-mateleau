@@ -90,8 +90,7 @@ const DivingGroupSchema: Schema = new Schema({
         },
     ],
     groupSize: {
-        type: Number,
-        required: true,
+        type: Number
     },
 });
 

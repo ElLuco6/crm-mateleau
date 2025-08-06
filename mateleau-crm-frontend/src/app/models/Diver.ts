@@ -9,7 +9,7 @@ export class Diver{
     phone: string;
     email: string;
     additionalInfo?: string;
-    rentedEquipment:Equipment[]; // Références aux équipements loués
+   
 
     constructor(
         _id: string,
@@ -20,7 +20,7 @@ export class Diver{
         phone: string,
         email: string,
         additionalInfo: string = '',
-        rentedEquipment: Equipment[] = []
+        
     ) {
         this._id = _id;
         this.firstName = firstName;
@@ -30,6 +30,6 @@ export class Diver{
         this.phone = phone;
         this.email = email;
         this.additionalInfo = additionalInfo;
-        this.rentedEquipment = rentedEquipment;
+       
     }
 }

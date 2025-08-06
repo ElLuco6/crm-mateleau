@@ -20,8 +20,7 @@ describe('CrudDiversComponent', () => {
       email: 'lucas@test.com',
       age: 25,
       phone: '0123456789',
-      additionalInfo: 'Aime les plongées profondes',
-      rentedEquipment: []
+      additionalInfo: 'Aime les plongées profondes',    
     },
     {
       _id: '2',
@@ -32,7 +31,6 @@ describe('CrudDiversComponent', () => {
       age: 30,
       phone: '0987654321',
       additionalInfo: 'Aime les plongées en apnée',
-      rentedEquipment: []
     }
   ];
 
@@ -69,7 +67,6 @@ describe('CrudDiversComponent', () => {
       age: 28,
       phone: '1234567890',
       additionalInfo: 'New diver',
-      rentedEquipment: []
     };
 
     dialogSpy.open.and.returnValue({

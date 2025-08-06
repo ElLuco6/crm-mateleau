@@ -1,46 +1,88 @@
-import request from 'supertest';
-import app from '../../app';
-import { loginUser } from '../../services/AuthService';
-
-jest.mock('../../services/AuthService');
+import { loginUser, logoutUser } from '../../controllers/AuthController';
+import * as AuthService from '../../services/AuthService';
+import { Request, Response } from 'express';
 
 describe('AuthController', () => {
-  describe('POST /api/auth/login', () => {
-    it('should return 200 and set cookies on successful login', async () => {
-      (loginUser as jest.Mock).mockResolvedValue({
-        token: 'token',
-        userId: 'userId',
-        role: 'user',
+  let req: Partial<Request>;
+  let res: Partial<Response>;
+  let statusMock: jest.Mock;
+  let jsonMock: jest.Mock;
+  let cookieMock: jest.Mock;
+  let clearCookieMock: jest.Mock;
+
+  beforeEach(() => {
+    req = {
+      body: {},
+    };
+
+    jsonMock = jest.fn();
+    cookieMock = jest.fn();
+    clearCookieMock = jest.fn();
+    statusMock = jest.fn(() => ({ json: jsonMock })) as any;
+
+    res = {
+      status: statusMock,
+      json: jsonMock,
+      cookie: cookieMock,
+      clearCookie: clearCookieMock,
+    };
+  });
+
+  describe('loginUser', () => {
+    it('should login and set cookies', async () => {
+      // Mock du service d’auth
+      const mockData = {
+        token: 'fake-token',
+        userId: 'user123',
+        role: 'admin' as 'admin',
+      };
+      jest.spyOn(AuthService, 'loginUser').mockResolvedValue(mockData);
+
+      req.body = {
+        email: 'test@example.com',
+        password: 'password123',
+      };
+
+      await loginUser(req as Request, res as Response);
+
+      expect(AuthService.loginUser).toHaveBeenCalledWith('test@example.com', 'password123');
+
+      expect(cookieMock).toHaveBeenCalledWith('token', mockData.token, expect.any(Object));
+      expect(cookieMock).toHaveBeenCalledWith('userId', mockData.userId, expect.any(Object));
+      expect(cookieMock).toHaveBeenCalledWith('role', mockData.role, expect.any(Object));
+
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalledWith({
+        message: 'Logged in successfully',
+        ...mockData,
       });
-
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({ email: 'test@example.com', password: 'password' });
-
-      expect(response.status).toBe(200);
-      expect(response.body.message).toBe('Logged in successfully');
-      expect(response.headers['set-cookie']).toBeDefined();
     });
 
-    it('should return 400 on login failure', async () => {
-      (loginUser as jest.Mock).mockRejectedValue(new Error('Invalid email or password'));
+    it('should handle login error', async () => {
+      jest.spyOn(AuthService, 'loginUser').mockRejectedValue(new Error('Invalid credentials'));
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({ email: 'test@example.com', password: 'wrongpassword' });
+      req.body = {
+        email: 'fail@example.com',
+        password: 'wrongpass',
+      };
 
-      expect(response.status).toBe(400);
-      expect(response.body.message).toBe('Invalid email or password');
+      await loginUser(req as Request, res as Response);
+
+      expect(statusMock).toHaveBeenCalledWith(400);
+      expect(jsonMock).toHaveBeenCalledWith({ message: 'Invalid credentials' });
     });
   });
 
-  describe('POST /api/auth/logout', () => {
-    it('should return 200 and clear cookies on logout', async () => {
-      const response = await request(app).post('/api/auth/logout');
+  describe('logoutUser', () => {
+    it('should clear cookies and return success', async () => {
+      await logoutUser(req as Request, res as Response);
 
-      expect(response.status).toBe(200);
-      expect(response.body.message).toBe('Logged out successfully');
-      expect(response.headers['set-cookie']).toBeDefined();
+      expect(clearCookieMock).toHaveBeenCalledWith('token');
+      expect(clearCookieMock).toHaveBeenCalledWith('userId');
+      expect(clearCookieMock).toHaveBeenCalledWith('role');
+
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalledWith({ message: 'Logged out successfully' });
     });
   });
 });

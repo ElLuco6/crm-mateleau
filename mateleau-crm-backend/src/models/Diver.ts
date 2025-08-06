@@ -36,11 +36,7 @@ import mongoose, { Schema, Document } from 'mongoose';
  *         additionalInfo:
  *           type: string
  *           description: Additional information about the diver
- *         rentedEquipment:
- *           type: array
- *           items:
- *             type: string
- *           description: Array of rented equipment IDs
+ *        
  *       example:
  *         firstName: Jane
  *         lastName: Doe
@@ -49,7 +45,7 @@ import mongoose, { Schema, Document } from 'mongoose';
  *         phone: +1234567890
  *         email: jane.doe@example.com
  *         additionalInfo: Experienced diver
- *         rentedEquipment: ["60d0fe4f5311236168a109ca", "60d0fe4f5311236168a109cb"]
+ *         
  */
 
 interface IDiver extends Document {
@@ -60,7 +56,7 @@ interface IDiver extends Document {
     phone: string;
     email: string;
     additionalInfo?: string;
-    rentedEquipment: mongoose.Types.ObjectId[]; // Références aux équipements loués
+   
 }
 
 const DiverSchema: Schema = new Schema({
@@ -71,7 +67,7 @@ const DiverSchema: Schema = new Schema({
     phone: { type: String, required: true, validate: /^\+?[0-9]{7,15}$/ },
     email: { type: String, required: true, unique: true, match: /^\S+@\S+\.\S+$/ },
     additionalInfo: { type: String, default: '' },
-    rentedEquipment: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Equipment' }]
+   
 });
 
 // Exporter le modèle
