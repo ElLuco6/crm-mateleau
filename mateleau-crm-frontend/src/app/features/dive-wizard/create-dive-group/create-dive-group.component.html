@@ -1,66 +1,3 @@
-<!-- <div class="container max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-  <h2 class="text-2xl font-bold mb-6 text-blue-700">Création des palanquées</h2>
-  <div class="container-teams flex flex-col md:flex-row gap-8">
-
-    <div class="container-dive-master">
-      <h2>Choisir le moniteur</h2>
-
-      @for (moniteur of moniteurs; track $index) {
-      <div class="moniteur-card">
-        <h3>{{ moniteur.name }}</h3>
-        <p>Niveau de plongée : {{ moniteur.divingLvl }}</p>
-        <button mat-raised-button color="primary" (click)="AddOnSelectedTeam( undefined, moniteur)">
-          Sélectionner
-        </button>
-      </div>
-      }
-    </div>
-
-    <div class="container-teams">
-      @for (team of teams; track $index) {
-      <div class="team-card" (click)="selectTeam($index)" [ngClass]="{ 'selected-team': selectedTeam === $index }">
-
-        <h3>Équipe {{ $index + 1 }}</h3>
-
-        <div class="moniteur">
-          @if (team.moniteur) {
-          <p>👨‍🏫 Moniteur : {{ team.moniteur.name }}</p>
-          } @else {
-          <p>⚠️ Aucun moniteur assigné</p>
-          }
-        </div>
-
-        <div class="membres">
-          <p>👥 Membres :</p>
-          <ul>
-            @for (member of team.members; track $index) {
-            <li>{{ member.firstName }} – Niveau de plongée : {{ member.divingLvl }}</li>
-            }
-          </ul>
-        </div>
-
-      </div>
-      }
-      <button mat-raised-button color="primary" (click)="addTeam()">
-        Ajouter une équipe
-      </button>
-    </div>
-
-    <div class="container-divers">
-      @for (diver of divers; track $index) {
-      <div class="diver-card">
-        <h3>{{ diver.firstName }} - {{ diver.lastName }}</h3>
-        <p>Niveau de plongée : {{ diver.divingLvl }}</p>
-        <button mat-raised-button color="primary" (click)="AddOnSelectedTeam( diver)">
-          Sélectionner
-        </button>
-      </div>
-      }
-    </div>
-  </div>
-</div>
- -->
-
 <div class="max-w-7xl mx-auto p-6 bg-white rounded-xl shadow-xl">
   <h2 class="text-3xl font-bold text-center text-blue-700 mb-8">Création des palanquées</h2>
   <p class="text-sm text-gray-600">
@@ -205,3 +142,4 @@
     </div>
   </div>
 </div>
+{{this.teams | json}}

@@ -3,11 +3,7 @@
    
   
 <div [formGroup]="formGroup"  class="schedule-form">
-  <mat-form-field appearance="fill">
-    <mat-label>Nom de la plongée</mat-label>
-    <input matInput formControlName="diveName" required>
-  </mat-form-field>
-  
+ 
   <mat-form-field appearance="fill">
     <mat-label>Date de début</mat-label>
     <input matInput [matDatepicker]="picker" formControlName="startDate" required>
@@ -34,7 +30,7 @@
   <mat-form-field appearance="fill">
     <mat-label>Localisation</mat-label>
     <mat-select formControlName="location" required>
-      <mat-option *ngFor="let loc of location" [value]="loc">{{ loc }}</mat-option>
+      <mat-option *ngFor="let loc of location" [value]="loc.name">{{ loc.name }}</mat-option>
     </mat-select>
   </mat-form-field>
   

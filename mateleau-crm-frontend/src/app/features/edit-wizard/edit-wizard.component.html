@@ -4,7 +4,7 @@
       <form [formGroup]="scheduleForm">
         <ng-template matStepLabel>Sélection Date/Horaire & Bateau</ng-template>
         <!-- Insérer le composant dédié pour l'étape 1 -->
-        <app-select-schedule [formGroup]="scheduleForm"  [boats]="availableBoats"></app-select-schedule>
+        <app-select-schedule [formGroup]="scheduleForm"  [boats]="availableBoats" [location]="location" [modeEdit]="true"></app-select-schedule>
         <div class="stepper-actions">
           <button mat-button matStepperNext (click)="onNextStep()" [disabled]="scheduleForm.invalid">Suivant</button>
         </div>
@@ -17,7 +17,7 @@
       <form [formGroup]="step2FormGroup">
         <ng-template matStepLabel>Création de la palanquée</ng-template>
         <!-- Insérer le composant dédié pour l'étape 2 -->
-        <app-create-dive-group [formGroup]="step2FormGroup" [dataForm1]="scheduleForm"></app-create-dive-group>
+        <app-create-dive-group [formGroup]="step2FormGroup" [dataForm1]="scheduleForm" [modeEdit]="true"></app-create-dive-group>
          <div class="flex justify-between items-center w-full mt-4">
           <button mat-button class="px-4 py-2 rounded font-semibold
            bg-blue-500 text-white 
@@ -38,7 +38,7 @@
       <form [formGroup]="step3FormGroup">
         <ng-template matStepLabel>Attribution du Matériel</ng-template>
         <!-- Insérer le composant dédié pour l'étape 3 -->
-        <app-assign-equipment [formGroup]="step3FormGroup" [dataForm]="step2FormGroup"></app-assign-equipment>
+        <app-assign-equipment [formGroup]="step3FormGroup" [dataForm]="step2FormGroup" [modeEdit]="true"></app-assign-equipment>
         <div class="flex justify-between items-center w-full mt-4">
           <button mat-button  class="px-4 py-2 rounded font-semibold
            bg-blue-500 text-white 

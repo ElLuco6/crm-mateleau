@@ -19,12 +19,20 @@ constructor() { }
 ngOnInit(): void {
 }
 @ViewChild('mapComponent') mapComponent!: SpotComponent;
+@ViewChild(CalendarComponent) calendarTab!: CalendarComponent;
 
 onTabChange(event: MatTabChangeEvent) {
   if (event.index === 2) {
-    this.mapComponent?.initMapSafely(); // appel déclenché uniquement quand l’onglet est actif
+    this.mapComponent?.initMapSafely(); // appel déclenché uniquement quand l’onglet est actif 
+  }
+  if (event.index === 1) {
+    setTimeout(() => {
+      this.calendarTab?.refreshCalendar();
+    }, 0);
   }
 }
+
+
 
 
 }

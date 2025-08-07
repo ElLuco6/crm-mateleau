@@ -36,6 +36,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import { User } from '../../models/User';
 import { Diver } from '../../models/Diver';
+import { SpotService } from '../../core/service/spot.service';
+import { Spot } from '../../models/Spot';
 
 @Component({
   selector: 'app-edit-wizard',
@@ -60,7 +62,7 @@ import { Diver } from '../../models/Diver';
   templateUrl: './edit-wizard.component.html',
   styleUrl: './edit-wizard.component.scss',
 })
-export class EditWizardComponent extends DiveWizardComponent implements OnInit ,AfterViewInit  {
+export class EditWizardComponent extends DiveWizardComponent implements OnInit   {
   constructor(
     override _formBuilder: FormBuilder,
     override wizardService: DiveWizardService,
@@ -68,7 +70,8 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
     override availibilityService: AvailibilityService,
     override divingService: DivingService,
     override snackBar: MatSnackBar,
-    override router: Router
+    override router: Router,
+    override spotService: SpotService
   ) {
     super(
       _formBuilder,
@@ -77,7 +80,8 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
       availibilityService,
       divingService,
       snackBar,
-      router
+      router,
+      spotService
     );
   }
   dive!: Dive;
@@ -90,6 +94,7 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
   selectedDriver: User | null = null;
   isDriverSelectionMode: boolean = false;
   selectingDriver = false;
+  modeEdit = true;
 
   override async ngOnInit(): Promise<void> {
     const params = await firstValueFrom(this.route.params);
@@ -99,6 +104,7 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
     this.divingService.getDiveById(diveId).subscribe({
       next: (dive) => {
         this.dive = dive;
+        this.wizardService.setPayload({ oldDive: dive });
         this.startDate = new Date(dive.date);
         console.log('Plongée récupérée pour édition :', dive);
 
@@ -111,7 +117,7 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
             boat: [dive.boat._id],
             maxDepth: [dive.maxDepth, Validators.required],
             location: [dive.location, Validators.required],
-            diveName: [dive.name, Validators.required],
+          
           },
           { updateOn: 'change' }
         );
@@ -146,6 +152,12 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
           driver: dive.driver,
         });
 
+
+         this.spotService.getAll().subscribe((spots: Spot[]) => {
+              this.location = spots;
+            });
+        
+            
         // Lancer la recherche des bateaux
         combineLatest([
           this.scheduleForm
@@ -173,11 +185,7 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
             .valueChanges.pipe(
               startWith(this.scheduleForm.get('location')!.value)
             ),
-          this.scheduleForm
-            .get('diveName')!
-            .valueChanges.pipe(
-              startWith(this.scheduleForm.get('diveName')!.value)
-            ),
+          
         ])
           .pipe(
             debounceTime(300),
@@ -187,14 +195,13 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
               const duration = this.scheduleForm.get('duration')?.value;
               const maxDepth = this.scheduleForm.get('maxDepth')?.value;
               const location = this.scheduleForm.get('location')?.value;
-              const diveName = this.scheduleForm.get('diveName')?.value;
+             
               return (
                 !!date &&
                 !!time &&
                 !!duration &&
                 !!maxDepth &&
-                !!location &&
-                !!diveName
+                !!location 
               );
             })
           )
@@ -256,7 +263,7 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
         equipmentAssignments,
       };
 
-      this.wizardService.setPayload(payload);
+      this.wizardService.setPayload({ ...this.wizardService.getPayload(), equipmentAssignments });
       console.log('🎒 Payload final avec équipements :', payload);
     }
 
@@ -339,9 +346,7 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
     });
   }
 
-  override ngAfterViewInit(): void {
-    //  this.loadExistingDiveState(this.dive);
-  }
+ 
 
 
   /**
@@ -392,7 +397,7 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
       duration: duration,
     };
 
-    this.wizardService.setPayload(payload);
+    this.wizardService.setPayload({ ...this.wizardService.getPayload(), ...payload });
     this.loadingBoats = true;
     this.errorMessage = '';
 
@@ -414,6 +419,8 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
   loadExistingDiveState(dive: Dive) {
  
     // ✅ Conducteur
+    console.log('🟢 Chargement du conducteur de la plongée', dive);
+    
     this.selectedDriver = dive.driver;
     this.step2FormGroup.get('driver')?.setValue(this.selectedDriver);
 
@@ -422,14 +429,36 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
       (m) => m._id !== this.selectedDriver?._id
     );
 
+const teams: Team[] = [];
+
+    // Récupérer les données existantes pour pré-remplir le formulaire
+    const existingTeams = dive.divingGroups;
+    console.log('Existing teams:', existingTeams);
+    
+
+  existingTeams.forEach((group: { guide: User; divers: Diver[] }) => {
+  const moniteur = group.guide;
+  const members = group.divers;
+
+  if (moniteur && members.length > 0) {
+    teams.push({ moniteur, members });
+  }
+});
+
+this.teams = teams;
+console.log('Teams from existing dive:', this.teams);
+
+  //  this.cdr.detectChanges();
+    
+
     // ✅ Palanquées
-    this.teams = dive.divingGroups.map((group) => ({
+   /*  this.teams = dive.divingGroups.map((group) => ({
       moniteur: group.guide,
       members: group.divers,
-    }));
+    })); */
 
     // ❌ Enlever les plongeurs/moniteurs assignés des listes dispo
-    const assignedDiverIds = this.teams.flatMap((t) =>
+    /* const assignedDiverIds = this.teams.flatMap((t) =>
       t.members.map((m) => m._id)
     );
     const assignedMoniteurIds = this.teams
@@ -439,7 +468,7 @@ export class EditWizardComponent extends DiveWizardComponent implements OnInit ,
     this.divers = this.divers.filter((d) => !assignedDiverIds.includes(d._id));
     this.moniteurs = this.moniteurs.filter(
       (m) => !assignedMoniteurIds.includes(m._id)
-    );
+    ); */
 
     // ✅ Patch dans le form
          console.log('🟢 État de la plongée chargé dans le wizard', { dive: this.dive, teams: this.teams });

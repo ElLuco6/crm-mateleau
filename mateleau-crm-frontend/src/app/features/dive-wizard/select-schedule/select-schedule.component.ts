@@ -14,6 +14,7 @@ import {MatTimepickerModule} from '@angular/material/timepicker';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import { DiveWizardService } from '../dive-wizard.service';
+import { Spot } from '../../../models/Spot';
 
 
 @Component({
@@ -36,6 +37,7 @@ import { DiveWizardService } from '../dive-wizard.service';
 export class SelectScheduleComponent {
   @Input() formGroup!: FormGroup;
   @Input() boats: any[] = [];
+  @Input() modeEdit!: boolean;
 
 
  
@@ -44,7 +46,7 @@ export class SelectScheduleComponent {
   boatForm = false;
   newBoatForm: FormGroup;
   startDate: Date = new Date(); // Date par défaut récupérer dans l'url
-  location = ['rocher sorcière', 'arche', 'canyon', 'tombant', 'épave', 'plongée de nuit'];
+  @Input() location: Spot[] = [];
 
   constructor(  private fb: FormBuilder,
                 private boatService: BoatService,

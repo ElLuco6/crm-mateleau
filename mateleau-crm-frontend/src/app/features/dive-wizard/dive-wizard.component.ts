@@ -35,6 +35,9 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { DivingService } from '../../core/service/diving.service';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import { Spot } from '../../models/Spot';
+import { Boat } from '../../models/Boat';
+import { SpotService } from '../../core/service/spot.service';
 
 @Component({
   selector: 'app-dive-wizard',
@@ -61,7 +64,7 @@ import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
   templateUrl: './dive-wizard.component.html',
   styleUrl: './dive-wizard.component.scss',
 })
-export class DiveWizardComponent implements OnInit, AfterViewInit {
+export class DiveWizardComponent implements OnInit {
   scheduleForm!: FormGroup;
   step2FormGroup!: FormGroup;
   step3FormGroup!: FormGroup;
@@ -73,7 +76,8 @@ export class DiveWizardComponent implements OnInit, AfterViewInit {
 createGroupComponent!: CreateDiveGroupComponent;
 
 
-    availableBoats: any[] = [];
+    availableBoats: Boat[] = [];
+    location: Spot[] = [];
   loadingBoats = false;
   errorMessage: string = '';
   currentStep = 0;
@@ -85,7 +89,8 @@ createGroupComponent!: CreateDiveGroupComponent;
     protected  availibilityService: AvailibilityService,
     protected  divingService: DivingService,
     protected  snackBar: MatSnackBar,
-    protected  router: Router
+    protected  router: Router,
+    protected spotService: SpotService
   ) {}
 
   ngOnInit(): void {
@@ -100,9 +105,14 @@ createGroupComponent!: CreateDiveGroupComponent;
       boat: [], // tu l'utiliseras peut-être plus tard,
       maxDepth: [null, Validators.required], // Ajout de la profondeur maximale
       location: ['', Validators.required], // Ajout du champ pour la localisation
-      diveName: ['', Validators.required], // Nom de la plongée
+    
     },
   { updateOn: 'change' });
+
+    this.spotService.getAll().subscribe((spots: Spot[]) => {
+      this.location = spots;
+    });
+
     combineLatest([
       this.scheduleForm
         .get('startDate')!
@@ -123,9 +133,7 @@ createGroupComponent!: CreateDiveGroupComponent;
       this.scheduleForm
         .get('location')!
         .valueChanges.pipe(startWith(this.scheduleForm.get('location')!.value)),
-      this.scheduleForm
-        .get('diveName')!
-        .valueChanges.pipe(startWith(this.scheduleForm.get('diveName')!.value)),
+      
     ])
       .pipe(
         debounceTime(300),
@@ -135,14 +143,13 @@ createGroupComponent!: CreateDiveGroupComponent;
           const duration = this.scheduleForm.get('duration')?.value;
           const maxDepth = this.scheduleForm.get('maxDepth')?.value;
           const location = this.scheduleForm.get('location')?.value;
-          const diveName = this.scheduleForm.get('diveName')?.value;
+         
           return (
             !!date &&
             !!time &&
             !!duration &&
             !!maxDepth &&
-            !!location &&
-            !!diveName
+            !!location 
           );
         })
       )
@@ -168,73 +175,7 @@ createGroupComponent!: CreateDiveGroupComponent;
     });
   }
 
-  ngAfterViewInit(): void {}
-
- /*  submitWizard() {
-    // Récupère toutes les données du wizard
-    const payload = this.wizardService.getPayload();
-    const equipmentAssignments = this.step3FormGroup.value.equipmentAssignments;
-
-    const driver = payload.driver; // ✅ c'est un User complet
-    const boat = payload.formValue1.boat;
-    const date = new Date(payload.date); // ou new Date(payload.date + 'T' + payload.time) si séparés
-    const duration = payload.duration;
-    const maxDepth = payload.formValue1.maxDepth;
-    const location = payload.formValue1.location;
-
-    const divingGroups = payload.teams.map((team: Team) => {
-      const group: any = {
-        guide: team.moniteur ? team.moniteur._id : undefined, // Assure que le guide est un User complet
-        divers: team.members.map((diver: any) => diver._id),
-        rentedEquipment: [],
-        groupSize: team.members.length + 1,
-      };
-
-      if (!equipmentAssignments) {
-        console.error("Formulaire d'équipement introuvable");
-        return;
-      }
-
-      for (const member of team.members) {
-        const assignedEquipments = equipmentAssignments?.[member._id];
-        if (assignedEquipments?.length) {
-          group.rentedEquipment.push({
-            diverId: member._id,
-            equipmentIds: assignedEquipments.map((e: any) => e._id), // juste les ID
-          });
-        }
-      }
-
-      if (team.moniteur) {
-        const guideEquipments = equipmentAssignments?.[team.moniteur._id];
-        if (guideEquipments?.length) {
-          group.rentedEquipment.push({
-            diverId: team.moniteur._id,
-            equipmentIds: guideEquipments.map((e: any) => e._id),
-          });
-        }
-      }
-
-      return group;
-    });
-
-    const finalPayload = {
-      name: `${location} ${new Date(date).toLocaleDateString('fr-FR')}`,
-      location,
-      date,
-      duration,
-      maxDepth,
-      boat: boat._id,
-      driver: driver._id,
-      divingGroups,
-    };
-
-    console.log("📦 Payload prêt à l'envoi :", finalPayload);
-
-    // Utilise le service pour partager les données et/ou envoyer au backend
-    this.wizardService.submitWizard(finalPayload);
-  } */
-
+ 
  
  async submitWizard() {
   let payload = this.wizardService.getPayload();
@@ -421,6 +362,7 @@ if (!currentFormValue) {
      if (this.currentStep === 1 && this.createGroupComponent) {
     this.createGroupComponent.init(); 
   }
+   
 
 
     // Mise à jour du payload avec les données des étapes 1 & 2
@@ -433,6 +375,7 @@ if (!currentFormValue) {
 
     // Si on est à l'étape 3, on ajoute aussi les équipements
     if (this.currentStep === 2 && this.assignEquipmentComponent) {
+      this.assignEquipmentComponent.ngAfterViewInit(); // Assure que les équipements sont initialisés
       const equipmentAssignments =
         this.assignEquipmentComponent.getAssignedEquipmentMap();
       updatedPayload = {
@@ -440,7 +383,7 @@ if (!currentFormValue) {
         equipmentAssignments,
       };
 
-      console.log('🎒 Payload avec équipements :', updatedPayload);
+      console.log('debut assignequip  Payload avec équipements :', updatedPayload);
     }
 
     // Mise à jour finale du payload dans le service

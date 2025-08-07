@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, viewChild } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { FullCalendarModule } from '@fullcalendar/angular';
+import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import { DivingService } from '../../core/service/diving.service';
@@ -18,15 +18,15 @@ import { takeUntil } from 'rxjs';
   styleUrl: './calendar.component.scss'
 })
 export class CalendarComponent implements OnInit, OnDestroy{
-  /*
-  Faire le model diving 
-  au click sur une plonége existante on prend id de la plongée et on la modifie 
-  */
+ 
   showDateModal: boolean = false;
   selectedDate: string = '';
   showEventModal: boolean = false;
   selectedEvent: any = null;
   events: EventInput[] = [];
+
+@ViewChild('calendar') calendarComponent: FullCalendarComponent | undefined;
+
 private destroy$ = new Subject<void>();
   calendarOptions = {
     initialView: 'dayGridMonth',
@@ -139,5 +139,10 @@ private destroy$ = new Subject<void>();
     this.showEventModal = false;
     this.router.navigate(['/edit-dive', this.selectedEvent.id]);
   }
+
+  refreshCalendar(): void {
+  this.calendarComponent?.getApi().updateSize();
+}
+
 
 }

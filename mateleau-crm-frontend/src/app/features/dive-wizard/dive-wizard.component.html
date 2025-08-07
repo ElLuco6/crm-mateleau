@@ -4,7 +4,7 @@
       <form [formGroup]="scheduleForm">
         <ng-template matStepLabel>Sélection Date/Horaire & Bateau</ng-template>
         <!-- Insérer le composant dédié pour l'étape 1 -->
-        <app-select-schedule [formGroup]="scheduleForm"  [boats]="availableBoats"></app-select-schedule>
+        <app-select-schedule [formGroup]="scheduleForm"  [boats]="availableBoats" [location]="location"></app-select-schedule>
         <div class="stepper-actions">
           <button mat-button matStepperNext (click)="onNextStep()" [disabled]="scheduleForm.invalid">Suivant</button>
         </div>
