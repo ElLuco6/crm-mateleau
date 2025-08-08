@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as TaskController from '../../controllers/taskController';
+import * as TaskController from '../../controllers/TaskController';
 import * as TaskService from '../../services/TaskService';
 
 jest.mock('../../services/TaskService');
