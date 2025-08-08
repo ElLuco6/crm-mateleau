@@ -37,6 +37,7 @@ export class CreateDiveGroupComponent implements OnChanges {
   selectedDriver: User | null = null;
   isDriverSelectionMode: boolean = false;
   selectingDriver = false;
+  depth: number = 0; // profondeur du groupe de plongée
   @Input() dataForm1!: FormGroup;
   @Input() formGroup!: FormGroup;
   alreadyInitialized = false;
@@ -61,7 +62,9 @@ export class CreateDiveGroupComponent implements OnChanges {
       this.wizardService.onPayloadReady().subscribe((payload) => {
         console.log('payload create group', payload);
         if (!payload) return;
-
+        this.depth = payload.formValue1?.maxDepth ?? 0;
+        console.log('Depth from payload:', this.depth);
+        
         this.boatLimit = payload.formValue1.boat?.numberMaxPlaces ?? 0;
         //  payload.formValue.
         if (this.dataForm1?.get('boat')?.value) {
@@ -89,7 +92,7 @@ export class CreateDiveGroupComponent implements OnChanges {
             this.wizardService.getPayload().duration
           )
           .subscribe((divers) => {
-            this.divers = divers;
+            this.divers = divers.filter((diver) => this.filterDiversBylvl(diver, this.depth));
             console.log('Divers disponibles:', this.divers);
             this.initialDivers = [...this.divers];
           });
@@ -287,6 +290,23 @@ export class CreateDiveGroupComponent implements OnChanges {
         this.divers = divers;
         this.initialDivers = [...divers];
       });
+  }
+
+  filterDiversBylvl(diver: Diver, depth: number): boolean  {
+     const divingLevelRequirements: Record<number, number> = {
+      0: 10,
+      1: 20,
+      2: 40,
+      3: 60,
+      4: 60,
+      5: 60,
+    };
+
+
+     const lvl = (diver.divingLvl ?? 0) as number;
+
+    return divingLevelRequirements[lvl] >= depth;
+
   }
 
   setDriver(moniteur: User) {

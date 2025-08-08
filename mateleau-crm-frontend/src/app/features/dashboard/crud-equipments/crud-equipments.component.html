@@ -11,58 +11,69 @@
     </button>
   </div>
 
-  <div class="overflow-x-auto">
-    <table
-      mat-table
-      [dataSource]="dataSource"
-      class="w-full border border-gray-200 rounded-xl overflow-hidden shadow-sm"
-      matSort
-    >
-      <!-- Référence -->
-      <ng-container matColumnDef="reference">
-        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
-          Référence
-        </th>
-        <td mat-cell *matCellDef="let eq" class="p-3">{{ eq.reference }}</td>
-      </ng-container>
+  <div class="responsive-table overflow-x-auto">
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="w-full border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+    matSort
+  >
+    <!-- Référence -->
+    <ng-container matColumnDef="reference">
+      <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+        Référence
+      </th>
+      <td mat-cell *matCellDef="let eq" class="p-3">
+        <span class="mobile-label">Référence :</span>
+        <span>{{ eq.reference }}</span>
+      </td>
+    </ng-container>
 
-      <!-- Type -->
-      <ng-container matColumnDef="nature">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
-          Type
-        </th>
-        <td mat-cell *matCellDef="let eq" class="p-3 capitalize">{{ eq.nature }}</td>
-      </ng-container>
+    <!-- Type -->
+    <ng-container matColumnDef="nature">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+        Type
+      </th>
+      <td mat-cell *matCellDef="let eq" class="p-3 capitalize">
+        <span class="mobile-label">Type :</span>
+        <span>{{ eq.nature }}</span>
+      </td>
+    </ng-container>
 
-      <!-- Taille -->
-      <ng-container matColumnDef="size">
-        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
-          Taille
-        </th>
-        <td mat-cell *matCellDef="let eq" class="p-3">{{ eq.size || '—' }}</td>
-      </ng-container>
+    <!-- Taille -->
+    <ng-container matColumnDef="size">
+      <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+        Taille
+      </th>
+      <td mat-cell *matCellDef="let eq" class="p-3">
+        <span class="mobile-label">Taille :</span>
+        <span>{{ eq.size || '—' }}</span>
+      </td>
+    </ng-container>
 
-      <!-- Entretien -->
-      <ng-container matColumnDef="nextMaintenanceDate">
-        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
-          Maintenance
-        </th>
-        <td mat-cell *matCellDef="let eq" class="p-3">
-          {{ eq.nextMaintenanceDate | date: 'dd/MM/yyyy' }}
-        </td>
-      </ng-container>
+    <!-- Maintenance -->
+    <ng-container matColumnDef="nextMaintenanceDate">
+      <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+        Maintenance
+      </th>
+      <td mat-cell *matCellDef="let eq" class="p-3">
+        <span class="mobile-label">Maintenance :</span>
+        <span>{{ eq.nextMaintenanceDate | date: 'dd/MM/yyyy' }}</span>
+      </td>
+    </ng-container>
 
-      
-      <!-- Actions -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
-          Actions
-        </th>
-        <td
-          mat-cell
-          *matCellDef="let eq"
-          class="p-3 flex gap-2 items-center min-h-[52px]"
-        >
+    <!-- Actions -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="bg-gray-100 p-3 text-sm font-medium text-gray-700">
+        Actions
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let eq"
+        class="p-3 flex gap-2 items-center min-h-[52px]"
+      >
+        <span class="mobile-label">Actions :</span>
+        <div class="flex gap-2">
           <button
             mat-icon-button
             color="primary"
@@ -79,11 +90,13 @@
           >
             <mat-icon>delete</mat-icon>
           </button>
-        </td>
-      </ng-container>
+        </div>
+      </td>
+    </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  </div>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+
 </div>

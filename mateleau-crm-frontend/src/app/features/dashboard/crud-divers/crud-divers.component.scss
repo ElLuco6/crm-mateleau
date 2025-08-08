@@ -1,0 +1,58 @@
+
+/* Par défaut, on cache les labels "mobile" */
+.responsive-table .mobile-label {
+  display: none;
+}
+
+/* Mobile: on stack les cellules d'une même ligne comme une carte */
+@media (max-width: 600px) {
+  /* cache l’entête */
+  .responsive-table .mat-mdc-header-row {
+    display: none !important;
+  }
+
+  /* la ligne devient une carte */
+  .responsive-table .mat-mdc-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    background: #fff;
+    padding: 8px 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    height: 200px;
+  }
+
+  /* chaque cellule = une ligne dans la carte */
+  .responsive-table .mat-mdc-cell {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    width: 100%;
+    padding: 6px 0 !important;
+    border: none !important;
+  }
+
+  /* affiche le label mobile */
+  .responsive-table .mobile-label {
+    display: inline-block;
+    width: 88px; /* ≈ 80px + marge */
+    font-weight: 600;
+    color: #374151;
+    flex-shrink: 0;
+  }
+
+  /* email long qui wrap correctement */
+  .responsive-table .mat-mdc-cell:nth-child(2) span:last-child {
+    word-break: break-word;
+  }
+
+  /* actions: garder les boutons groupés à droite, pas de label si tu veux */
+  .responsive-table .mat-mdc-cell:has(button) {
+    justify-content: flex-end;
+  }
+  /* si :has() pas supporté, cible la colonne via nth-child ou ajoute une classe à la cellule actions */
+
+}

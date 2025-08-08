@@ -56,3 +56,57 @@
     border-radius: 4px;
   }
   
+
+  /* Layout global */
+.kanban-board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* Seulement les colonnes "top-level" (pas les listes internes) */
+.kanban-board > .kanban-column {
+  /* largeur réactive : entre 280px et 420px selon la place */
+  flex: 1 1 clamp(280px, 32vw, 420px);
+  max-width: clamp(280px, 32vw, 420px);
+  min-width: 260px;
+
+  border: 1px solid #e5e7eb; /* gris clair */
+  border-radius: 12px;
+  background: #fff;
+  padding: 12px;
+}
+
+/* La LISTE interne reste en colonne (ne pas confondre avec la colonne UI) */
+.kanban-board > .kanban-column .kanban-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 160px; /* facilite le drop quand la liste est vide */
+}
+
+/* Items */
+.kanban-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px;
+  min-height: 48px; /* évite les boîtes trop petites */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+/* ===== Mobile : en dessous de 450px, on passe en colonne ===== */
+@media (max-width: 450px) {
+  .kanban-board {
+    flex-direction: column;
+  }
+  .kanban-board > .kanban-column {
+    flex: 1 1 auto;
+    max-width: none;
+    width: 100%;
+  }
+}
