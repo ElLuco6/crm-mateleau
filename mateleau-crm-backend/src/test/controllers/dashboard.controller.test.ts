@@ -35,7 +35,7 @@ describe('DashboardController', () => {
     });
 
     it('should handle service error', async () => {
-      (DashboardService.getTodayDashboardData as jest.Mock).mockRejectedValue(new Error('fail'));
+      (DashboardService.getTodayDashboardData as jest.Mock).mockRejectedValue({ message: 'fail' });
 
       await DashboardController.getTodayDashboard(req as Request, res as Response);
 

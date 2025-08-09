@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 import { DivingGroup } from '../../models/DivingGroup';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Schema } from 'mongoose';
+
+let mongo: MongoMemoryServer;
 
 // Schéma temporaire pour mocker Equipment
 const EquipmentSchema = new Schema({
@@ -8,11 +11,21 @@ const EquipmentSchema = new Schema({
 });
 const Equipment = mongoose.model('Equipment', EquipmentSchema);
 
+// Augmente un peu le timeout global du fichier si besoin (téléchargement binaire la 1ère fois)
+jest.setTimeout(60_000);
+
 beforeAll(async () => {
-  await mongoose.connect('mongodb://localhost:27017/test-mateleau', {
-   
-    dbName: 'test-db'
-  });
+  mongo = await MongoMemoryServer.create();
+  const uri = mongo.getUri();
+  await mongoose.connect(uri);
+});
+
+afterAll(async () => {
+  if (mongoose.connection.readyState !== 0 && mongoose.connection.db) {
+    await mongoose.connection.db.dropDatabase();
+  }
+  await mongoose.disconnect();
+  await mongo.stop();
 });
 
 afterAll(async () => {
