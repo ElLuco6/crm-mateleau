@@ -127,7 +127,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: mateleau-crm-backend
+        working-directory: { run: { working-directory: mateleau-crm-backend } }
     steps:
       - uses: actions/checkout@v4
 
