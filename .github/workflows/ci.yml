@@ -119,8 +119,9 @@ jobs:
       - name: Upload coverage artifact (backend)
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-backend
-          path: BACKEND_DIR/coverage/lcov.info
+          name: coverage
+          path: /coverage/lcov.info
+          if-no-files-found: error
 
   sonar-backend:
     needs: test-backend
@@ -166,7 +167,7 @@ jobs:
             -Dsonar.login=$SONAR_TOKEN
 
   release-changelog:
-    needs: [sonar-frontend]
+    needs: [sonar-frontend, sonar-backend]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
