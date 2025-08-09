@@ -155,7 +155,7 @@ jobs:
           test -f "$REPORT" || (echo "Missing $REPORT" && exit 1)
           wc -c "$REPORT" || true
           echo "Using coverage: $REPORT"
-          sonar-scanner \
+          sonar-scanner -X \
             -Dsonar.projectKey=crm-mateleau-backend \
             -Dsonar.organization=elluco6 \
             -Dsonar.host.url=https://sonarcloud.io \
