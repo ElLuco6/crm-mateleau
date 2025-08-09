@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.3](https://github.com/ElLuco6/crm-mateleau/compare/v1.1.2...v1.1.3) (2025-08-09)
+
+
+### Bug Fixes
+
+* fix ci backend  10 ([0c7ea5a](https://github.com/ElLuco6/crm-mateleau/commit/0c7ea5aec1f8987dfe2b5a1da0b08589e27c432b))
+* fix ci backend  11 ([2b9c95a](https://github.com/ElLuco6/crm-mateleau/commit/2b9c95a594f27a622b995806b3000468c8624173))
+* fix ci backend  12 ([76d411d](https://github.com/ElLuco6/crm-mateleau/commit/76d411db7d71f89fe1235faa78af7ef3f05788a3))
+* fix ci backend  132 ([6b866cb](https://github.com/ElLuco6/crm-mateleau/commit/6b866cb4d59bee5cbb9631828658cc89457af283))
+* fix ci backend  14 ([29aa592](https://github.com/ElLuco6/crm-mateleau/commit/29aa5926e79272590a6784d7eed02697006382d7))
+* fix ci backend  15 ([b1b6bfe](https://github.com/ElLuco6/crm-mateleau/commit/b1b6bfe032d00ff89bc9a98a6aea0b5cb7d31f09))
+* fix ci backend  16 ([7b59ffc](https://github.com/ElLuco6/crm-mateleau/commit/7b59ffc07eedb1716ac66e580b3d077866231002))
+* fix ci backend  17 ([bacc3d6](https://github.com/ElLuco6/crm-mateleau/commit/bacc3d61eb712c0e71f61396936bff9581578f5d))
+* fix ci backend  18 ([9cff698](https://github.com/ElLuco6/crm-mateleau/commit/9cff69877b7d26a6d9fb8f132c8f19cb7fe17998))
+* fix ci backend  19 ([2cfe789](https://github.com/ElLuco6/crm-mateleau/commit/2cfe7899f8c72b5e434c5a50cfed264e3245efce))
+* fix ci backend  20 ([9367b7a](https://github.com/ElLuco6/crm-mateleau/commit/9367b7a0b47dcba896fd602acc202f782b69bb1f))
+* fix ci backend  6 ([7ebde66](https://github.com/ElLuco6/crm-mateleau/commit/7ebde66ab121a8d181b24ca74d72bea00a4e6432))
+* fix ci backend  7 ([5898fa1](https://github.com/ElLuco6/crm-mateleau/commit/5898fa1394fd237f2f66317919c29c3b8239b704))
+* fix ci backend  8 ([5f58cf4](https://github.com/ElLuco6/crm-mateleau/commit/5f58cf4f125abd00ff99bd62dd993178bcfff520))
+* fix ci backend  9 ([50418e9](https://github.com/ElLuco6/crm-mateleau/commit/50418e99d3708f5df3a42f495e54a26cdfa69a4a))
+* fix ci backend  9 ([83b0c17](https://github.com/ElLuco6/crm-mateleau/commit/83b0c17a126cf6e1ab9f3ba066d02525a10bec74))
+* fix ci backend 4 ([8e3031c](https://github.com/ElLuco6/crm-mateleau/commit/8e3031c42182eec80eb4f6ba7a1be555736e47dd))
+* fix ci backend 5 ([9331ede](https://github.com/ElLuco6/crm-mateleau/commit/9331ede965284d1b121069b55ed0963e8787a247))
+* lancer al ci en mode debug ([76a392b](https://github.com/ElLuco6/crm-mateleau/commit/76a392beced3f352651036d409e06064d3126c6c))
+
 ### [1.1.2](https://github.com/ElLuco6/crm-mateleau/compare/v1.1.1...v1.1.2) (2025-08-09)
 
 
