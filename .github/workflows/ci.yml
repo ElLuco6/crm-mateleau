@@ -73,6 +73,7 @@ jobs:
         run: |
           sonar-scanner \
             -Dsonar.projectKey=ElLuco6_crm-mateleau \
+            -Dsonar.projectBaseDir=mateleau-crm-frontend \
             -Dsonar.sources=mateleau-crm-frontend/src \
             -Dsonar.inclusions=**/*.ts,**/*.js \
             -Dsonar.javascript.security.hotspot.enabled=false \
