@@ -77,17 +77,18 @@ jobs:
           echo "Using coverage: $REPORT"
 
           sonar-scanner \
-            -Dsonar.projectKey=ElLuco6_crm-mateleau-frontend \
+            -Dsonar.projectKey=ElLuco6_crm-mateleau \
             -Dsonar.organization=elluco6 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.sources=src \
             -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.spec.ts,**/*.stories.ts \
             -Dsonar.javascript.lcov.reportPaths="$REPORT" \
             -Dsonar.typescript.lcov.reportPaths="$REPORT" \
-            -Dsonar.branch.name=${{ github.ref_name }} \
+            -Dsonar.branch.name=master \
             -Dsonar.scm.revision=${{ github.sha }} \
             -Dsonar.automaticAnalysis=false \
             -Dsonar.login=$SONAR_TOKEN
+
   release-changelog:
     needs: [sonar-frontend]
     if: github.event_name == 'push'
