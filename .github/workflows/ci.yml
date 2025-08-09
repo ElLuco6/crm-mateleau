@@ -34,7 +34,7 @@ jobs:
 
       - name: Run Angular tests (with coverage)
         run: |
-          npx ng test --watch=false --browsers=ChromeHeadless --code-coverage --no-progress
+              npx -y -p @angular/cli@latest ng test --watch=false --browsers=ChromeHeadless --code-coverage --no-progress
 
       - name: Upload coverage artifact (frontend)
         uses: actions/upload-artifact@v4
