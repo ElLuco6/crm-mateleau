@@ -149,12 +149,17 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          REPORT=$(find coverage -name lcov.info -print -quit)
+          BASE="${{ github.workspace }}/mateleau-crm-backend"
+          REPORT="$BASE/coverage/lcov.info"
+          echo "BASE=$BASE"
+          test -f "$REPORT" || (echo "Missing $REPORT" && exit 1)
+          wc -c "$REPORT" || true
           echo "Using coverage: $REPORT"
           sonar-scanner \
             -Dsonar.projectKey=crm-mateleau-backend \
             -Dsonar.organization=elluco6 \
             -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.projectBaseDir="$BASE" \
             -Dsonar.sources=src \
             -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/lcov-report/** \
             -Dsonar.tests=src \
