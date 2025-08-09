@@ -135,7 +135,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage-backend
-          path: coverage
+          path:  mateleau-crm-backend/coverage 
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
