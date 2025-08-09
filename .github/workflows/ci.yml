@@ -161,19 +161,20 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.projectBaseDir="$BASE" \
             -Dsonar.sources=src \
-            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/lcov-report/** \
+            -Dsonar.inclusions=src/**/*.ts \
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/lcov-report/**,**/*.spec.ts,**/*.test.ts,**/*.d.ts \
             -Dsonar.tests=src \
             -Dsonar.test.inclusions=**/*.spec.ts,**/*.test.ts \
+            -Dsonar.typescript.tsconfigPath=tsconfig.json \
             -Dsonar.typescript.lcov.reportPaths="$REPORT" \
             -Dsonar.javascript.lcov.reportPaths="$REPORT" \
-            -Dsonar.security.exclusions=src/**/*.ts \ 
+            -Dsonar.javascript.security.hotspot.enabled=false \
+            -Dsonar.security.exclusions="src/**/*.ts" \
             -Dsonar.branch.name=master \
             -Dsonar.scm.revision=${{ github.sha }} \
             -Dsonar.projectVersion=${{ github.run_number }} \
             -Dsonar.automaticAnalysis=false \
-            -Dsonar.login=$SONAR_TOKEN
-            -Dsonar.javascript.security.hotspot.enabled=false
-
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
   release-changelog:
     needs: [sonar-frontend, sonar-backend]
