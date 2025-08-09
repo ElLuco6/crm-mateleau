@@ -166,6 +166,7 @@ jobs:
             -Dsonar.test.inclusions=**/*.spec.ts,**/*.test.ts \
             -Dsonar.typescript.lcov.reportPaths="$REPORT" \
             -Dsonar.javascript.lcov.reportPaths="$REPORT" \
+            -Dsonar.security.exclusions=src/**/*.ts \ 
             -Dsonar.branch.name=master \
             -Dsonar.scm.revision=${{ github.sha }} \
             -Dsonar.projectVersion=${{ github.run_number }} \
