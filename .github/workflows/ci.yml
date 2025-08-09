@@ -25,22 +25,18 @@ jobs:
         run: npm install
         working-directory: mateleau-crm-frontend
 
-       # Chrome pour Karma headless
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1
+      - name: Run Angular tests with coverage
+        run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless --code-coverage
+        working-directory: mateleau-crm-frontend
 
-      - name: Install deps (frontend)
-        run: npm ci
+      - name: Debug coverage files
+        run: ls -R mateleau-crm-frontend/coverage/
 
-      - name: Run Angular tests (with coverage)
-        run: |
-              npx -y -p @angular/cli@latest ng test --watch=false --browsers=ChromeHeadless --code-coverage --no-progress
-
-      - name: Upload coverage artifact (frontend)
+      - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-frontend
-          path: mateleau-crm-frontend/coverage/**/lcov.info
+          name: coverage-report
+          path: mateleau-crm-frontend/coverage/
 
   sonar:
     needs: test-frontend
