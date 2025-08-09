@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.15](https://github.com/ElLuco6/crm-mateleau/compare/v1.0.14...v1.0.15) (2025-08-09)
+
+
+### Bug Fixes
+
+* ci-cd ajout test front ([74fbdb7](https://github.com/ElLuco6/crm-mateleau/commit/74fbdb7580d19327d2858c273268630a2bf7d7ae))
+* ci-cd ajout test front 2 ([968106c](https://github.com/ElLuco6/crm-mateleau/commit/968106c281f5390a204a376521026c2751eb7030))
+* ci-cd ajout test front 3 ([c3a2a52](https://github.com/ElLuco6/crm-mateleau/commit/c3a2a52c74c158aac30ef2c5f85a40187f990257))
+* fix de tous les test du front pour passé la pipeline ([721f2f9](https://github.com/ElLuco6/crm-mateleau/commit/721f2f9236245281bde7340421c2686b2aeda7e1))
+
 ### [1.0.14](https://github.com/ElLuco6/crm-mateleau/compare/v1.0.13...v1.0.14) (2025-08-09)
 
 
