@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/ElLuco6/crm-mateleau/compare/v1.1.1...v1.1.2) (2025-08-09)
+
+
+### Bug Fixes
+
+* fix ci backend ([8c3be8a](https://github.com/ElLuco6/crm-mateleau/commit/8c3be8ae12cf1df3d8d14b37906d03202fb0116e))
+* fix ci backend 2 ([c2a00db](https://github.com/ElLuco6/crm-mateleau/commit/c2a00dbf9bfb04c99fcad0a670df2024b7c627b9))
+* fix ci backend 3 ([9d05803](https://github.com/ElLuco6/crm-mateleau/commit/9d0580388f1f551b32a50b8c7e140d9b7418319a))
+
 ### [1.1.1](https://github.com/ElLuco6/crm-mateleau/compare/v1.1.0...v1.1.1) (2025-08-09)
 
 ## [1.1.0](https://github.com/ElLuco6/crm-mateleau/compare/v1.0.19...v1.1.0) (2025-08-09)
