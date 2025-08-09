@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/ElLuco6/crm-mateleau/compare/v1.0.19...v1.1.0) (2025-08-09)
+
+
+### Features
+
+* ajout du backend sur sonaqube ([9a17ae0](https://github.com/ElLuco6/crm-mateleau/commit/9a17ae0b727a53d7008b51cd28b72121096a8711))
+
 ### [1.0.19](https://github.com/ElLuco6/crm-mateleau/compare/v1.0.18...v1.0.19) (2025-08-09)
 
 
