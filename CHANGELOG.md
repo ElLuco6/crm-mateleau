@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.18](https://github.com/ElLuco6/crm-mateleau/compare/v1.0.17...v1.0.18) (2025-08-09)
+
+
+### Bug Fixes
+
+* ajout basedir a la pipeline pour recuper le Lcov.info ([0a8b61e](https://github.com/ElLuco6/crm-mateleau/commit/0a8b61e92c3576720f522cfddc56339708dd884a))
+
 ### [1.0.17](https://github.com/ElLuco6/crm-mateleau/compare/v1.0.16...v1.0.17) (2025-08-09)
 
 
