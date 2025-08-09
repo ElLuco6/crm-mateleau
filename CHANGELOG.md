@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.19](https://github.com/ElLuco6/crm-mateleau/compare/v1.0.18...v1.0.19) (2025-08-09)
+
+
+### Bug Fixes
+
+* fix ci yaml ([f461358](https://github.com/ElLuco6/crm-mateleau/commit/f461358ae8b9fd216db11499200913a99acbb78f))
+* fix ci yaml 2 ([631049a](https://github.com/ElLuco6/crm-mateleau/commit/631049a5b7f53dd4173bb1b29a7690adb8c4946a))
+* fix ci yaml 3 ([a0f192d](https://github.com/ElLuco6/crm-mateleau/commit/a0f192d0bbd974852990a40cecd75f53b0e831d4))
+
 ### [1.0.18](https://github.com/ElLuco6/crm-mateleau/compare/v1.0.17...v1.0.18) (2025-08-09)
 
 
