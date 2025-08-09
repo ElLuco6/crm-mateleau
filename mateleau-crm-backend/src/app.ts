@@ -4,6 +4,8 @@ import cors from 'cors';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import { setupSwagger } from './swagger';
+import helmet from 'helmet';
+import { apiLimiter, loginLimiter, loginSlowdown } from './security/rateLimit';
 
 // Import routes
 import userRoutes from './routes/userRoutes';
@@ -17,10 +19,22 @@ import availabilityRoutes from './routes/availabityRoutes';
 import dashboardRoutes from './routes/dashboardRoute'; // Importer les routes de Today
 import taskRoutes from './routes/taskRoutes';
 import spotRoutes from './routes/spotRoutes';
+import { requestId, httpLogger, errorLogger } from './logging/logger';
 
 
 // Create an instance of Express
 const app: Application = express();
+
+// --- Security Middleware ---
+// Helmet : sécurise les en-têtes HTTP
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'same-site' }, // images non cross-origin
+}));
+if (process.env.NODE_ENV === 'production') {
+  app.use(helmet.hsts({ maxAge: 15552000 })); // ~180 jours
+}
+
+
 
 // Middleware
 app.use(express.json()); // Parse incoming JSON requests
@@ -30,6 +44,11 @@ app.use(cors({
   allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
   credentials: true // Important pour les cookies ou JWT
 }));
+app.use(requestId);
+app.use(httpLogger);
+app.use(express.json({ limit: '1mb' })); // limite taille payload
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
  // Enable Cross-Origin Resource Sharing
 app.use(morgan('dev')); // Log HTTP requests
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
@@ -40,9 +59,9 @@ setupSwagger(app);
 
 // Routes
 app.use('/api/users', userRoutes);
-app.use('/api/boats', boatRoutes); // Utiliser les routes de Boat
+app.use('/api/boats', boatRoutes);
 app.use('/api/dives', diveRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', loginSlowdown, loginLimiter, authRoutes);
 app.use('/api/diving-groups', divingGroupRoutes);
 app.use('/api/divers', diverRoutes);
 app.use('/api/equipment', equipmentRoutes);
@@ -59,6 +78,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/api/health', (req: Request, res: Response) => {
   res.status(200).json({ message: 'API is running!' });
 });
+
+app.use(errorLogger);
 
 // Global error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
