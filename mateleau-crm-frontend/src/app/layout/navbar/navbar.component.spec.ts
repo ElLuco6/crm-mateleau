@@ -1,30 +1,32 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavbarComponent } from './navbar.component';
 import { AuthService } from '../../core/service/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let authServiceSpy: jasmine.SpyObj<AuthService>;
-  let routerSpy: jasmine.SpyObj<Router>;
+  let router: Router;
 
   beforeEach(async () => {
     authServiceSpy = jasmine.createSpyObj('AuthService', ['logout']);
-    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
-      imports: [NavbarComponent], // Standalone
+      imports: [
+        NavbarComponent,        // standalone
+        RouterTestingModule,    // ✅ fournit Router, RouterLink, ActivatedRoute, etc.
+      ],
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
-        { provide: Router, useValue: routerSpy },
-        { provide: ActivatedRoute, useValue: {} }
-      ]
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavbarComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
@@ -33,10 +35,13 @@ describe('NavbarComponent', () => {
   });
 
   it('should call logout and navigate to /login', () => {
+    const navSpy = spyOn(router, 'navigate');
     authServiceSpy.logout.and.returnValue(of({}));
+
     component.login();
+
     expect(authServiceSpy.logout).toHaveBeenCalled();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
+    expect(navSpy).toHaveBeenCalledWith(['/login']);
   });
 
   describe('isLoggedIn()', () => {
