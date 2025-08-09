@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20.19.0
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: mateleau-crm-frontend/package-lock.json
       - uses: browser-actions/setup-chrome@v1
 
@@ -56,12 +56,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage-frontend
-          path: mateleau-crm-frontend/coverage    # <<< dans le baseDir
+          path: mateleau-crm-frontend/coverage # <<< dans le baseDir
 
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
 
       - name: Install SonarScanner
         run: |
@@ -93,14 +93,14 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory:  mateleau-crm-backend
+        working-directory: mateleau-crm-backend
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20.19.0
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: mateleau-crm-backend/package-lock.json
 
       - name: Install deps (backend)
@@ -123,54 +123,47 @@ jobs:
           path: BACKEND_DIR/coverage/lcov.info
 
   sonar-backend:
-  needs: test-backend
-  runs-on: ubuntu-latest
-  defaults:
-    run:
-      working-directory: mateleau-crm-backend
-  steps:
-    - uses: actions/checkout@v4
-
-    
-    - name: Download coverage (backend)
-      uses: actions/download-artifact@v4
-      with:
-        name: coverage-backend
-        path: coverage
-
-    - uses: actions/setup-java@v4
-      with:
-        distribution: temurin
-        java-version: '17'
-
-    - name: Install SonarScanner
-      run: |
-        wget -O sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-        unzip sonar-scanner.zip
-        echo "$PWD/sonar-scanner-5.0.1.3006-linux/bin" >> $GITHUB_PATH
-
-    - name: SonarCloud scan (backend)
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        REPORT=$(find coverage -name lcov.info -print -quit)
-        echo "Using coverage: $REPORT"
-        sonar-scanner \
-          -Dsonar.projectKey=ElLuco6_crm-mateleau-backend \
-          -Dsonar.organization=elluco6 \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.sources=src \
-          -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.spec.ts,**/*.test.ts \
-          -Dsonar.tests=src \
-          -Dsonar.test.inclusions=**/*.spec.ts,**/*.test.ts \
-          -Dsonar.typescript.lcov.reportPaths="$REPORT" \
-          -Dsonar.branch.name=${{ github.ref_name }} \
-          -Dsonar.scm.revision=${{ github.sha }} \
-          -Dsonar.projectVersion=${{ github.run_number }} \
-          -Dsonar.automaticAnalysis=false \
-          -Dsonar.login=$SONAR_TOKEN
-
-
+    needs: test-backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mateleau-crm-backend
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download coverage (backend)
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-backend
+          path: coverage
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install SonarScanner
+        run: |
+          wget -O sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+          unzip sonar-scanner.zip
+          echo "$PWD/sonar-scanner-5.0.1.3006-linux/bin" >> $GITHUB_PATH
+      - name: SonarCloud scan (backend)
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          REPORT=$(find coverage -name lcov.info -print -quit)
+          echo "Using coverage: $REPORT"
+          sonar-scanner \
+            -Dsonar.projectKey=ElLuco6_crm-mateleau-backend \
+            -Dsonar.organization=elluco6 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.sources=src \
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.spec.ts,**/*.test.ts \
+            -Dsonar.tests=src \
+            -Dsonar.test.inclusions=**/*.spec.ts,**/*.test.ts \
+            -Dsonar.typescript.lcov.reportPaths="$REPORT" \
+            -Dsonar.branch.name=${{ github.ref_name }} \
+            -Dsonar.scm.revision=${{ github.sha }} \
+            -Dsonar.projectVersion=${{ github.run_number }} \
+            -Dsonar.automaticAnalysis=false \
+            -Dsonar.login=$SONAR_TOKEN
 
   release-changelog:
     needs: [sonar-frontend]
@@ -180,7 +173,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Important pour les tags Git
+          fetch-depth: 0 # Important pour les tags Git
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Git user
