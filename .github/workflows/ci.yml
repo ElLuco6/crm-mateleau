@@ -111,16 +111,16 @@ jobs:
 
       - name: Check LCOV
         run: |
-          L=$(find coverage -name lcov.info -print -quit)
-          echo "LCOV=$L"
-          wc -c "$L"
-          head -n 20 "$L" || true
+           echo "PWD=$(pwd)"
+            ls -R coverage || true
+            test -f coverage/lcov.info
+            wc -c coverage/lcov.info
 
       - name: Upload coverage artifact (backend)
         uses: actions/upload-artifact@v4
         with:
-          name: coverage
-          path: /coverage/lcov.info
+          name: coverage-backend
+          path: coverage/lcov.info
           if-no-files-found: error
 
   sonar-backend:
