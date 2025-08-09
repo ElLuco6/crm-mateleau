@@ -166,6 +166,7 @@ jobs:
             -Dsonar.automaticAnalysis=false \
             -Dsonar.login=$SONAR_TOKEN
 
+
   release-changelog:
     needs: [sonar-frontend, sonar-backend]
     if: github.event_name == 'push'
