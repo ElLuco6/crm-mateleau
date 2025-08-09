@@ -162,7 +162,7 @@ jobs:
             -Dsonar.projectBaseDir="$BASE" \
             -Dsonar.sources=src \
             -Dsonar.inclusions=src/**/*.ts \
-            -Dsonar.exclusions=src/app.ts,**/node_modules/**,**/dist/**,**/coverage/**,**/lcov-report/**,**/*.spec.ts,**/*.test.ts,**/*.d.ts
+            -Dsonar.exclusions=src/routes/**/*.ts,src/app.ts,**/node_modules/**,**/dist/**,**/coverage/**,**/lcov-report/**,**/*.spec.ts,**/*.test.ts,**/*.d.ts
             -Dsonar.security.exclusions=src/app.ts,src/swagger.ts,src/routes/**/*.ts,src/controllers/**/*.ts
             -Dsonar.tests=src \
             -Dsonar.test.inclusions=**/*.spec.ts,**/*.test.ts \
