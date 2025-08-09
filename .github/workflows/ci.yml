@@ -156,11 +156,12 @@ jobs:
             -Dsonar.organization=elluco6 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.sources=src \
-            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.spec.ts,**/*.test.ts \
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/lcov-report/** \
             -Dsonar.tests=src \
             -Dsonar.test.inclusions=**/*.spec.ts,**/*.test.ts \
             -Dsonar.typescript.lcov.reportPaths="$REPORT" \
-            -Dsonar.branch.name=${{ github.ref_name }} \
+            -Dsonar.javascript.lcov.reportPaths="$REPORT" \
+            -Dsonar.branch.name=master \
             -Dsonar.scm.revision=${{ github.sha }} \
             -Dsonar.projectVersion=${{ github.run_number }} \
             -Dsonar.automaticAnalysis=false \
