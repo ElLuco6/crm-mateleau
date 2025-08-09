@@ -43,56 +43,53 @@ jobs:
           name: coverage-frontend
           path: mateleau-crm-frontend/coverage/**/lcov.info
 
-  sonar:
+  sonar-frontend:
     needs: test-frontend
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mateleau-crm-frontend
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Download coverage report
+      - name: Download coverage
         uses: actions/download-artifact@v4
         with:
-          name: coverage-report
-          path: coverage/
+          name: coverage-frontend
+          path: mateleau-crm-frontend/coverage    # <<< dans le baseDir
 
-      - name: Set up JDK 17 (required for SonarQube)
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
 
       - name: Install SonarScanner
         run: |
           wget -O sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
           unzip sonar-scanner.zip
-          echo "$(pwd)/sonar-scanner-5.0.1.3006-linux/bin" >> $GITHUB_PATH
+          echo "$PWD/sonar-scanner-5.0.1.3006-linux/bin" >> $GITHUB_PATH
 
-      - name: Debug Sonar env
+      - name: SonarCloud scan (frontend)
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          echo "🔐 SONAR_TOKEN is defined: ${{ secrets.SONAR_TOKEN != '' }}"
-          echo "📦 projectKey: ElLuco6_crm-mateleau"
-          echo "🏢 organization: elluco6"
+          REPORT=$(find coverage -name lcov.info -print -quit)
+          echo "Using coverage: $REPORT"
 
-      - name: Run SonarQube Scan
-        run: |
           sonar-scanner \
-            -Dsonar.projectKey=ElLuco6_crm-mateleau \
-            -Dsonar.organization=elluco6  \
+            -Dsonar.projectKey=ElLuco6_crm-mateleau-frontend \
+            -Dsonar.organization=elluco6 \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.projectBaseDir=mateleau-crm-frontend \
             -Dsonar.sources=src \
-            -Dsonar.inclusions=**/*.ts,**/*.js \
-            -Dsonar.javascript.security.hotspot.enabled=false \
-            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.spec.ts,**/*.test.ts,**/*.stories.ts,**/coverage/** \
-            -Dsonar.branch.name=master \
-            -Dsonar.javascript.lcov.reportPaths="../$REPORT" \
-            -Dsonar.typescript.lcov.reportPaths="../$REPORT" \
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.spec.ts,**/*.stories.ts \
+            -Dsonar.javascript.lcov.reportPaths="$REPORT" \
+            -Dsonar.typescript.lcov.reportPaths="$REPORT" \
+            -Dsonar.branch.name=${{ github.ref_name }} \
+            -Dsonar.scm.revision=${{ github.sha }} \
             -Dsonar.automaticAnalysis=false \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.javascript.rules=-security
+            -Dsonar.login=$SONAR_TOKEN
   release-changelog:
-    needs: [sonar]
+    needs: [sonar-frontend]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
