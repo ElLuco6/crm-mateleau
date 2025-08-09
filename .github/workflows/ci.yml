@@ -152,7 +152,7 @@ jobs:
           REPORT=$(find coverage -name lcov.info -print -quit)
           echo "Using coverage: $REPORT"
           sonar-scanner \
-            -Dsonar.projectKey=ElLuco6_crm-mateleau-backend \
+            -Dsonar.projectKey=crm-mateleau-backend \
             -Dsonar.organization=elluco6 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.sources=src \
