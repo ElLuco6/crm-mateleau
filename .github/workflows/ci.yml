@@ -9,34 +9,39 @@ on:
 jobs:
   test-frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mateleau-crm-frontend
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          submodules: true
-          fetch-depth: 0
+          node-version: 20.19.0
+          cache: 'npm'
+          cache-dependency-path: mateleau-crm-frontend/package-lock.json
+      - uses: browser-actions/setup-chrome@v1
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
+      - name: Install deps
+        run: npm ci
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: mateleau-crm-frontend
+      - name: Run tests with coverage
+        env: { CHROME_BIN: google-chrome }
+        run: npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage
 
-      - name: Run Angular tests with coverage
-        run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless --code-coverage
-        working-directory: mateleau-crm-frontend
+      - name: Check LCOV
+        run: |
+          set -e
+          L=$(find coverage -name lcov.info -print -quit)
+          echo "LCOV=$L"
+          wc -c "$L"
+          # Montre quelques sources référencées :
+          grep -m3 '^SF:' "$L" || true
 
-      - name: Debug coverage files
-        run: ls -R mateleau-crm-frontend/coverage/
-
-      - name: Upload coverage report
+      - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
-          path: mateleau-crm-frontend/coverage/
+          name: coverage-frontend
+          path: mateleau-crm-frontend/coverage/**/lcov.info
 
   sonar:
     needs: test-frontend
