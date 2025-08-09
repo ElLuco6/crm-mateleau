@@ -162,14 +162,14 @@ jobs:
             -Dsonar.projectBaseDir="$BASE" \
             -Dsonar.sources=src \
             -Dsonar.inclusions=src/**/*.ts \
-            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/lcov-report/**,**/*.spec.ts,**/*.test.ts,**/*.d.ts \
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/lcov-report/**,**/*.spec.ts,**/*.test.ts,**/*.d.ts,**/*generated*/** \
+            -Dsonar.security.exclusions=src/swagger.ts,src/**/routes/**/*.ts,src/**/controllers/**/*.ts \
             -Dsonar.tests=src \
             -Dsonar.test.inclusions=**/*.spec.ts,**/*.test.ts \
             -Dsonar.typescript.tsconfigPath=tsconfig.json \
             -Dsonar.typescript.lcov.reportPaths="$REPORT" \
             -Dsonar.javascript.lcov.reportPaths="$REPORT" \
             -Dsonar.javascript.security.hotspot.enabled=false \
-            -Dsonar.security.exclusions="src/**/*.ts" \
             -Dsonar.branch.name=master \
             -Dsonar.scm.revision=${{ github.sha }} \
             -Dsonar.projectVersion=${{ github.run_number }} \

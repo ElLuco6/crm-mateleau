@@ -18,7 +18,6 @@ import dashboardRoutes from './routes/dashboardRoute'; // Importer les routes de
 import taskRoutes from './routes/taskRoutes';
 import spotRoutes from './routes/spotRoutes';
 
-import e from 'express';
 
 // Create an instance of Express
 const app: Application = express();
