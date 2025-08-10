@@ -1,0 +1,15 @@
+Processus de mise à jour des dépendances
+Afin de garantir la sécurité, la stabilité et la compatibilité du projet, un processus de mise à jour des dépendances a été défini et appliqué tout au long du développement.
+
+Les mises à jour sont différenciées selon leur nature :
+
+Mises à jour mineures et correctives (patch) : intégrées en continu. Chaque semaine, une vérification est effectuée via npm outdated afin d’identifier les versions disponibles. Les dépendances éligibles sont mises à jour dans une branche dédiée (chore/update-deps-YYYYMMDD), puis soumises à la suite CI/CD comprenant compilation, tests unitaires et analyse SonarQube. Le déploiement est effectué uniquement si tous les contrôles sont validés.
+
+Mises à jour majeures : planifiées et testées séparément afin de limiter les risques de régression. Elles sont intégrées dans une branche spécifique, testées en local puis, si nécessaire, en environnement de préproduction. Les fonctionnalités critiques (authentification, API, interactions avec la base de données) font l’objet d’une recette ciblée avant validation.
+
+Chaque mise à jour est consignée dans le journal des versions (CHANGELOG), avec mention des bibliothèques concernées et de la justification du changement. Par exemple, plusieurs dépendances @types/*, typescript, ts-jest et supertest ont été mises à jour récemment vers leurs dernières versions mineures pour bénéficier de corrections et améliorations sans modification des API principales. À l’inverse, certaines mises à jour majeures (express, bcrypt) ont été volontairement reportées afin de ne pas introduire de rupture fonctionnelle avant la soutenance.
+
+Lors d’une mise à jour, un avertissement (ExpressSlowDownWarning) est apparu suite à une évolution de l’API de la bibliothèque express-slow-down. Ce message, non bloquant, a été documenté et sera traité lors du prochain cycle de mises à jour majeures.
+
+Ce processus garantit un équilibre entre la sécurité et la stabilité de l’application, en s’appuyant sur la CI/CD pour valider chaque changement, et sur le changelog pour assurer une traçabilité complète des mises à jour effectuées.
+

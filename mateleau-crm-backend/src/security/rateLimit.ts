@@ -18,4 +18,5 @@ export const loginSlowdown = slowDown({
   windowMs: 15 * 60 * 1000,
   delayAfter: 5,          // après 5 tentatives
   delayMs: 500,           // +500ms / requête
+  validate: { delayMs: false }
 });

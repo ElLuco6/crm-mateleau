@@ -56,7 +56,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage-frontend
-          path: mateleau-crm-frontend/coverage # <<< dans le baseDir
+          path: mateleau-crm-frontend/coverage 
 
       - uses: actions/setup-java@v4
         with:
@@ -184,7 +184,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Important pour les tags Git
+          fetch-depth: 0 
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Git user
