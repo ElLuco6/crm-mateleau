@@ -59,11 +59,7 @@ Pré-requis : objet `User` complet (ex : `_id, email, name, password, role, divi
 
 ---
 
-Suite non-régression – Front/AuthService
 
-* FRONT-AUTH-001 (login + stockage LS)
-* FRONT-AUTH-002 (logout + purge LS)
-* FRONT-AUTH-003 (register POST apiUsers)
 
 
 Cahier de Recettes – Front (Angular) – AvailibilityService
@@ -126,10 +122,6 @@ Réponse : tableau Equipment[] (ex. [ new Equipment('e1','bouteille','REF123',Da
 Statut : OK / KO
 Test lié : should fetch available equipment
 
-Suite non-régression – Front/AvailibilityService
-
-AV-FRONT-001 à 005 (toutes les méthodes HTTP + withCredentials)
-
 
 Cahier de Recettes – Front (Angular) – BoatService
 Modules concernés : BoatService (Angular)
@@ -180,9 +172,6 @@ Réponse : succès (ex. { success: true })
 Statut : OK / KO
 Test lié : should delete a boat by id
 
-Suite non-régression – Front/BoatService
-
-BOAT-FRONT-001 à 004 (GET/POST/PUT/DELETE + withCredentials)
 
 
 Cahier de Recettes – Front (Angular) – DashboardService
@@ -256,9 +245,6 @@ Réponse : succès (ex. { success: true })
 Statut : OK / KO
 Test lié : should delete a task
 
-Suite non-régression – Front/DashboardService
-
-DASH-FRONT-001 à 006 (toutes les méthodes HTTP du service)
 
 
 Cahier de Recettes – Front (Angular) – DiverServiceService
@@ -312,9 +298,6 @@ Attendu :
 
 ---
 
-Suite non-régression – Front/DiverServiceService
-
-* DIVER-FRONT-001 à 004 (GET/POST/PUT/DELETE)
 
 
 Cahier de Recettes – Front (Angular) – DivingService
@@ -379,9 +362,7 @@ Attendu :
 
 ---
 
-Suite non-régression – Front/DivingService
 
-* DIVE-FRONT-001 à 005 (GET/GET by id/POST/PUT/DELETE + withCredentials)
 
 
 Cahier de Recettes – Front (Angular) – EquipmentServiceService
@@ -429,11 +410,6 @@ Requête : DELETE ${environment.apiEquipment}/e4 avec withCredentials: true
 Réponse : succès (ex. { success: true } ou truthy)
 Test lié : should delete equipment
 
-Suite non-régression – Front/EquipmentServiceService
-
-EQUIP-FRONT-001 à 004 (GET/POST/PUT/DELETE + withCredentials)
-
-
 
 Cahier de Recettes – Front (Angular) – NotificationService
 Modules concernés : `NotificationService` (Angular), `MatSnackBar`, `SnackbarComponent`
@@ -473,9 +449,7 @@ Attendu :
 
 ---
 
-Suite non-régression – Front/NotificationService
 
-* NOTIF-FRONT-001 à 002 (vérification du type et des options de snackbar)
 
 
 
@@ -541,9 +515,7 @@ Attendu :
 
 ---
 
-Suite non-régression – Front/SpotService
 
-* SPOT-FRONT-001 à 005 (GET/GET by id/POST/PUT/DELETE + withCredentials)
 
 
 Cahier de Recettes – Front (Angular) – UsersServiceService
@@ -597,9 +569,7 @@ Attendu :
 
 ---
 
-Suite non-régression – Front/UsersServiceService
 
-* USER-FRONT-001 à 004 (GET/POST/PUT/DELETE + withCredentials)
 
 
 Cahier de Recettes – Front (Angular) – LoginComponent
@@ -642,11 +612,6 @@ Pré-requis :
   Test lié : `should handle login error`
 
 ---
-
-Suite non-régression – Front/LoginComponent
-
-* LOGIN-CMP-001 (flux succès)
-* LOGIN-CMP-002 (flux erreur)
 
 
 Cahier de Recettes – Front (Angular) – RegisterComponent
@@ -811,9 +776,7 @@ NotificationService.show('...Échec...', 'error') appelé
 (La liste peut rester inchangée selon l’implémentation)
 Test lié : should handle delete error
 
-Suite non-régression – Front/CalendarComponent
 
-CAL-CMP-001 à 007 (chargement, interactions UI, navigations, suppression + feedback)
 
 Cahier de Recettes – Front (Angular) – CrudBoatsComponent
 Modules concernés : `CrudBoatsComponent`, `BoatService`, `MatDialog`
@@ -895,11 +858,6 @@ Attendu :
 
 ---
 
-Suite non-régression – Front/CrudBoatsComponent
-
-* CRUDBOAT-CMP-001 à 006 (chargement, création, édition, suppression + confirmations)
-
-
 Cahier de Recettes – Front (Angular) – CrudDiversComponent
 Modules concernés : `CrudDiversComponent`, `DiverServiceService`, `MatDialog`
 Fonctionnalités couvertes : chargement liste, création via dialog, édition via dialog, suppression avec confirmation
@@ -971,11 +929,6 @@ Attendu :
   Test lié : `should not delete a diver if confirmation is cancelled`
 
 ---
-
-Suite non-régression – Front/CrudDiversComponent
-
-* CRUDDIVER-CMP-001 à 005 (chargement, création, édition, suppression + confirmation)
-
 
 
 Cahier de Recettes – Front (Angular) – CrudEquipmentsComponent
@@ -1091,9 +1044,7 @@ Pré-requis :
 
 ---
 
-Suite non-régression – Front/CrudUsersComponent
 
-* CRUDUSER-CMP-001 à 004 (chargement, création, édition, suppression + confirmation)
 
 
 Cahier de Recettes – Front (Angular) – TodayComponent
@@ -1139,11 +1090,6 @@ Pré-requis :
 
 ---
 
-Suite non-régression – Front/TodayComponent
-
-* TODAY-CMP-001 (flux succès)
-* TODAY-CMP-002 (flux erreur)
-
 
 Cahier de Recettes – Front (Angular) – DashboardComponent
 Modules concernés : `DashboardComponent`, `MatTabsModule`, sous-composant carte (`SpotComponent`/mock)
@@ -1174,10 +1120,6 @@ Attendu : `mapComponent.initMapSafely` appelé **une fois**
 Test lié : `should call initMapSafely if tab index is 2`
 
 ---
-
-Suite non-régression – Front/DashboardComponent
-
-* DASH-CMP-001 à 003 (création, logique d’onglets, init paresseuse de la carte)
 
 
 Cahier de Recettes – Front (Angular) – KanbanComponent
@@ -1247,9 +1189,7 @@ Test lié : `should not update task title if unchanged`.
 
 ---
 
-Suite non-régression – Front/KanbanComponent
 
-* KANBAN-CMP-001 à 009 (création, load & split, DnD statut, ajout, suppression, édition inline).
 
 
 Cahier de Recettes – Front (Angular) – SpotComponent
@@ -1309,9 +1249,7 @@ Pré-requis :
 
 ---
 
-Suite non-régression – Front/SpotComponent
 
-* SPOT-CMP-001 à 004 (init, chargement + markers, création, abandon d’édition)
 
 
 Cahier de Recettes – Front (Angular) – NavbarComponent
@@ -1354,12 +1292,6 @@ Attendu : `true`
 Test lié : `should return true if token exists`
 
 ---
-
-Suite non-régression – Front/NavbarComponent
-
-* NAV-CMP-001 à 004 (init, logout + redirection, état d’auth via localStorage)
-
-
 
 Cahier de Recettes – Front (Angular) – GenericFormDialogComponent
 Module testé : GenericFormDialogComponent (standalone)
@@ -1520,9 +1452,6 @@ Attendu :
 
 ---
 
-Suite non-régression – Front/SnackbarComponent
-
-* SNACKBAR-CMP-001 à 006 (création, message, mapping type→icône/couleur, fallback défaut)
 
 Cahier de Recettes – Front (Angular) – AppComponent
 Modules concernés : `AppComponent`, `NavbarComponent`, `RouterOutlet`
@@ -1550,6 +1479,244 @@ Test lié : `should contain <app-navbar> and <router-outlet>`
 
 ---
 
-Suite non-régression – Front/AppComponent
+## Suite de non-régression – Frontend
 
-* APP-CMP-001 à 003 (instanciation, propriété métier, structure du shell d’app)
+### Environnement & données (commun)
+- **Environnement** : Angular v19, Node 20, MongoDB 7, Chrome stable.
+- **Jeux de données seed** :
+  - 1 utilisateur **admin**
+  - 1 utilisateur **staff**
+  - 1 bateau (capacité = 8)
+  - Spots de base
+  - Équipements : quelques références (dont 2 de même nature pour tests de conflit).
+  - Plongeurs / Palanquées : quelques docs de base.
+  - Tokens **valide** et **expiré**
+- **Critère de passage** : 100% des cas NR doivent être OK (bloquant sinon).
+
+---
+
+### AuthService
+
+* FRONT-AUTH-001 (login + stockage LS)
+* FRONT-AUTH-002 (logout + purge LS)
+* FRONT-AUTH-003 (register POST apiUsers)
+
+
+### AvailibilityService
+- AV-FRONT-001 à 005 : toutes les méthodes HTTP + `withCredentials`
+- *(Optionnel)* AV-FRONT-006 : réponses vides → pas de crash
+
+---
+
+### BoatService
+- BOAT-FRONT-001 à 004 : GET / POST / PUT / DELETE + `withCredentials`
+
+---
+
+### DashboardService
+- DASH-FRONT-001 à 006 : toutes les méthodes HTTP du service
+
+---
+
+### DiverServiceService
+- DIVER-FRONT-001 à 004 : GET / POST / PUT / DELETE
+
+---
+
+### DivingService
+- DIVE-FRONT-001 à 005 : GET / GET by id / POST / PUT / DELETE + `withCredentials`
+
+---
+
+### EquipmentServiceService
+- EQUIP-FRONT-001 à 004 : GET / POST / PUT / DELETE + `withCredentials`
+
+---
+
+
+### AvailibilityService
+- AV-FRONT-001 à 005 : toutes les méthodes HTTP + `withCredentials`
+- *(Optionnel)* AV-FRONT-006 : réponses vides → pas de crash
+
+---
+
+### BoatService
+- BOAT-FRONT-001 à 004 : GET / POST / PUT / DELETE + `withCredentials`
+
+---
+
+### DashboardService
+- DASH-FRONT-001 à 006 : toutes les méthodes HTTP du service
+
+---
+
+### DiverServiceService
+- DIVER-FRONT-001 à 004 : GET / POST / PUT / DELETE
+
+---
+
+### DivingService
+- DIVE-FRONT-001 à 005 : GET / GET by id / POST / PUT / DELETE + `withCredentials`
+
+---
+
+### EquipmentServiceService
+- EQUIP-FRONT-001 à 004 : GET / POST / PUT / DELETE + `withCredentials`
+
+---
+
+### DashboardComponent
+- DASH-CMP-001 à 003 : création, logique d’onglets, init paresseuse de la carte
+
+---
+
+### KanbanComponent
+- KANBAN-CMP-001 à 009 : création, load & split, drag & drop statut, ajout, suppression, édition inline
+
+---
+
+### SpotComponent
+- SPOT-CMP-001 à 004 : init, chargement + markers, création, abandon d’édition
+
+---
+
+### NavbarComponent
+- NAV-CMP-001 à 004 : init, logout + redirection, état d’auth via `localStorage`
+
+---
+
+### SnackbarComponent
+
+* SNACKBAR-CMP-001 à 006 (création, message, mapping type→icône/couleur, fallback défaut)
+
+---
+
+### AppComponent
+- APP-CMP-001 à 003 : instanciation, propriété métier, structure du shell d’app
+
+---
+
+### Sécurité (front transversal)
+- **SEC-GUARD-001** : route protégée sans token → redirection `/login`
+- **SEC-ROLE-001** : accès admin avec rôle `staff` → refus (redir + toast)
+- **SEC-INTERCEPTOR-001** : ajout header `Authorization` + gestion 401 → `logout()` + redirection `/login`
+
+
+
+
+### Matrice de traçabilité
+
+
+| Feature / US                                   | Scénario(s)                            | Test auto (fichier/spec)                 | Type         | Priorité |
+|------------------------------------------------|----------------------------------------|------------------------------------------|--------------|----------|
+| Auth – Login                                   | FRONT-AUTH-001                         | auth.service.spec.ts                     | Fonctionnel  | P1       |
+| Auth – Logout                                  | FRONT-AUTH-002                         | auth.service.spec.ts                     | Fonctionnel  | P1       |
+| Auth – Register                                | FRONT-AUTH-003                         | auth.service.spec.ts                     | Fonctionnel  | P2       |
+| Availibility – Bateaux                         | AV-FRONT-001                           | availibility.service.spec.ts             | Fonctionnel  | P1       |
+| Availibility – Utilisateurs                    | AV-FRONT-002                           | availibility.service.spec.ts             | Fonctionnel  | P1       |
+| Availibility – Plongeurs                       | AV-FRONT-003                           | availibility.service.spec.ts             | Fonctionnel  | P1       |
+| Availibility – Plongées du mois                | AV-FRONT-004                           | availibility.service.spec.ts             | Fonctionnel  | P2       |
+| Availibility – Matériel                        | AV-FRONT-005                           | availibility.service.spec.ts             | Fonctionnel  | P2       |
+| Bateaux CRUD – Lire tous                       | BOAT-FRONT-001                         | boat.service.spec.ts                     | Fonctionnel  | P1       |
+| Bateaux CRUD – Créer                           | BOAT-FRONT-002                         | boat.service.spec.ts                     | Fonctionnel  | P1       |
+| Bateaux CRUD – Mettre à jour                   | BOAT-FRONT-003                         | boat.service.spec.ts                     | Fonctionnel  | P1       |
+| Bateaux CRUD – Supprimer                       | BOAT-FRONT-004                         | boat.service.spec.ts                     | Fonctionnel  | P1       |
+| Dashboard – Jour                               | DASH-FRONT-001                         | dashboard.service.spec.ts                | Fonctionnel  | P2       |
+| Dashboard – Semaine                            | DASH-FRONT-002                         | dashboard.service.spec.ts                | Fonctionnel  | P2       |
+| Dashboard – Tâches – Lister                    | DASH-FRONT-003                         | dashboard.service.spec.ts                | Fonctionnel  | P2       |
+| Dashboard – Tâches – Créer                     | DASH-FRONT-004                         | dashboard.service.spec.ts                | Fonctionnel  | P2       |
+| Dashboard – Tâches – Mettre à jour             | DASH-FRONT-005                         | dashboard.service.spec.ts                | Fonctionnel  | P2       |
+| Dashboard – Tâches – Supprimer                 | DASH-FRONT-006                         | dashboard.service.spec.ts                | Fonctionnel  | P2       |
+| Plongeurs CRUD – Lire tous                     | DIVER-FRONT-001                        | diver.service.spec.ts                    | Fonctionnel  | P1       |
+| Plongeurs CRUD – Créer                         | DIVER-FRONT-002                        | diver.service.spec.ts                    | Fonctionnel  | P1       |
+| Plongeurs CRUD – Mettre à jour                 | DIVER-FRONT-003                        | diver.service.spec.ts                    | Fonctionnel  | P1       |
+| Plongeurs CRUD – Supprimer                     | DIVER-FRONT-004                        | diver.service.spec.ts                    | Fonctionnel  | P1       |
+| Plongées – Lire toutes                         | DIVE-FRONT-001                         | diving.service.spec.ts                   | Fonctionnel  | P1       |
+| Plongées – Lire par id                         | DIVE-FRONT-002                         | diving.service.spec.ts                   | Fonctionnel  | P1       |
+| Plongées – Créer palanquée                     | DIVE-FRONT-003                         | diving.service.spec.ts                   | Fonctionnel  | P1       |
+| Plongées – Mettre à jour                       | DIVE-FRONT-004                         | diving.service.spec.ts                   | Fonctionnel  | P1       |
+| Plongées – Supprimer                           | DIVE-FRONT-005                         | diving.service.spec.ts                   | Fonctionnel  | P1       |
+| Matériel CRUD – Lire tous                      | EQUIP-FRONT-001                        | equipment.service.spec.ts                | Fonctionnel  | P1       |
+| Matériel CRUD – Créer                          | EQUIP-FRONT-002                        | equipment.service.spec.ts                | Fonctionnel  | P1       |
+| Matériel CRUD – Mettre à jour                  | EQUIP-FRONT-003                        | equipment.service.spec.ts                | Fonctionnel  | P1       |
+| Matériel CRUD – Supprimer                      | EQUIP-FRONT-004                        | equipment.service.spec.ts                | Fonctionnel  | P1       |
+| Notifications – Message succès                 | NOTIF-FRONT-001                        | notification.service.spec.ts             | Fonctionnel  | P2       |
+| Notifications – Type par défaut info           | NOTIF-FRONT-002                        | notification.service.spec.ts             | Fonctionnel  | P2       |
+| Spots CRUD – Lire tous                         | SPOT-FRONT-001                         | spot.service.spec.ts                      | Fonctionnel  | P1       |
+| Spots CRUD – Lire par id                       | SPOT-FRONT-002                         | spot.service.spec.ts                      | Fonctionnel  | P1       |
+| Spots CRUD – Créer                             | SPOT-FRONT-003                         | spot.service.spec.ts                      | Fonctionnel  | P1       |
+| Spots CRUD – Mettre à jour                     | SPOT-FRONT-004                         | spot.service.spec.ts                      | Fonctionnel  | P1       |
+| Spots CRUD – Supprimer                         | SPOT-FRONT-005                         | spot.service.spec.ts                      | Fonctionnel  | P1       |
+| Utilisateurs CRUD – Lire tous                  | USER-FRONT-001                         | users.service.spec.ts                     | Fonctionnel  | P1       |
+| Utilisateurs CRUD – Créer                      | USER-FRONT-002                         | users.service.spec.ts                     | Fonctionnel  | P1       |
+| Utilisateurs CRUD – Mettre à jour              | USER-FRONT-003                         | users.service.spec.ts                     | Fonctionnel  | P1       |
+| Utilisateurs CRUD – Supprimer                  | USER-FRONT-004                         | users.service.spec.ts                     | Fonctionnel  | P1       |
+| Login – Flux succès                            | LOGIN-CMP-001                          | login.component.spec.ts                   | Fonctionnel  | P1       |
+| Login – Flux erreur                            | LOGIN-CMP-002                          | login.component.spec.ts                   | Fonctionnel  | P1       |
+| Register – Initialisation formulaire           | REG-CMP-001                            | register.component.spec.ts                | Fonctionnel  | P2       |
+| Register – Succès                              | REG-CMP-002                            | register.component.spec.ts                | Fonctionnel  | P2       |
+| Register – Erreur                              | REG-CMP-003                            | register.component.spec.ts                | Fonctionnel  | P2       |
+| Calendar – Chargement initial                  | CAL-CMP-001                            | calendar.component.spec.ts                | Fonctionnel  | P2       |
+| Calendar – Clic date                           | CAL-CMP-002                            | calendar.component.spec.ts                | Fonctionnel  | P2       |
+| Calendar – Clic événement                      | CAL-CMP-003                            | calendar.component.spec.ts                | Fonctionnel  | P2       |
+| Calendar – Créer plongée                       | CAL-CMP-004                            | calendar.component.spec.ts                | Fonctionnel  | P2       |
+| Calendar – Détail événement                    | CAL-CMP-005                            | calendar.component.spec.ts                | Fonctionnel  | P2       |
+| Calendar – Suppression succès                  | CAL-CMP-006                            | calendar.component.spec.ts                | Fonctionnel  | P2       |
+| Calendar – Suppression échec                   | CAL-CMP-007                            | calendar.component.spec.ts                | Fonctionnel  | P2       |
+| CrudBoats – Chargement initial                 | CRUDBOAT-CMP-001                       | crud-boats.component.spec.ts              | Fonctionnel  | P2       |
+| CrudBoats – Charger tableau                    | CRUDBOAT-CMP-002                       | crud-boats.component.spec.ts              | Fonctionnel  | P2       |
+| CrudBoats – Créer                              | CRUDBOAT-CMP-003                       | crud-boats.component.spec.ts              | Fonctionnel  | P2       |
+| CrudBoats – Éditer                             | CRUDBOAT-CMP-004                       | crud-boats.component.spec.ts              | Fonctionnel  | P2       |
+| CrudBoats – Supprimer confirmé                 | CRUDBOAT-CMP-005                       | crud-boats.component.spec.ts              | Fonctionnel  | P2       |
+| CrudBoats – Supprimer annulé                   | CRUDBOAT-CMP-006                       | crud-boats.component.spec.ts              | Fonctionnel  | P2       |
+| CrudDivers – Chargement initial                | CRUDDIVER-CMP-001                      | crud-divers.component.spec.ts             | Fonctionnel  | P2       |
+| CrudDivers – Créer                             | CRUDDIVER-CMP-002                      | crud-divers.component.spec.ts             | Fonctionnel  | P2       |
+| CrudDivers – Éditer                            | CRUDDIVER-CMP-003                      | crud-divers.component.spec.ts             | Fonctionnel  | P2       |
+| CrudDivers – Supprimer confirmé                | CRUDDIVER-CMP-004                      | crud-divers.component.spec.ts             | Fonctionnel  | P2       |
+| CrudDivers – Supprimer annulé                  | CRUDDIVER-CMP-005                      | crud-divers.component.spec.ts             | Fonctionnel  | P2       |
+| CrudEquipments – Chargement initial            | CRUDEQ-CMP-001                         | crud-equipments.component.spec.ts         | Fonctionnel  | P2       |
+| CrudEquipments – Créer                         | CRUDEQ-CMP-002                         | crud-equipments.component.spec.ts         | Fonctionnel  | P2       |
+| CrudEquipments – Éditer                        | CRUDEQ-CMP-003                         | crud-equipments.component.spec.ts         | Fonctionnel  | P2       |
+| CrudEquipments – Supprimer confirmé            | CRUDEQ-CMP-004                         | crud-equipments.component.spec.ts         | Fonctionnel  | P2       |
+| CrudUsers – Chargement initial                 | CRUDUSER-CMP-001                       | crud-users.component.spec.ts              | Fonctionnel  | P2       |
+| CrudUsers – Créer                              | CRUDUSER-CMP-002                       | crud-users.component.spec.ts              | Fonctionnel  | P2       |
+| CrudUsers – Éditer                             | CRUDUSER-CMP-003                       | crud-users.component.spec.ts              | Fonctionnel  | P2       |
+| CrudUsers – Supprimer confirmé                 | CRUDUSER-CMP-004                       | crud-users.component.spec.ts              | Fonctionnel  | P2       |
+| Today – Chargement succès                      | TODAY-CMP-001                          | today.component.spec.ts                   | Fonctionnel  | P2       |
+| Today – Chargement erreur                      | TODAY-CMP-002                          | today.component.spec.ts                   | Fonctionnel  | P2       |
+| DashboardComponent – Création                  | DASH-CMP-001                           | dashboard.component.spec.ts               | Fonctionnel  | P2       |
+| DashboardComponent – Changement onglet ≠ 2     | DASH-CMP-002                           | dashboard.component.spec.ts               | Fonctionnel  | P2       |
+| DashboardComponent – Changement onglet = 2     | DASH-CMP-003                           | dashboard.component.spec.ts               | Fonctionnel  | P2       |
+| Kanban – Création                              | KANBAN-CMP-001                         | kanban.component.spec.ts                  | Fonctionnel  | P2       |
+| Kanban – Chargement + répartition              | KANBAN-CMP-002                         | kanban.component.spec.ts                  | Fonctionnel  | P2       |
+| Kanban – Drag & drop changement statut         | KANBAN-CMP-003                         | kanban.component.spec.ts                  | Fonctionnel  | P2       |
+| Kanban – Ajout tâche                           | KANBAN-CMP-004                         | kanban.component.spec.ts                  | Fonctionnel  | P2       |
+| Kanban – Suppression confirmée                 | KANBAN-CMP-005                         | kanban.component.spec.ts                  | Fonctionnel  | P2       |
+| Kanban – Suppression annulée                   | KANBAN-CMP-006                         | kanban.component.spec.ts                  | Fonctionnel  | P2       |
+| Kanban – Passer en mode édition                | KANBAN-CMP-007                         | kanban.component.spec.ts                  | Fonctionnel  | P2       |
+| Kanban – Fin édition + update                  | KANBAN-CMP-008                         | kanban.component.spec.ts                  | Fonctionnel  | P2       |
+| Kanban – Fin édition sans update               | KANBAN-CMP-009                         | kanban.component.spec.ts                  | Fonctionnel  | P2       |
+| SpotComponent – Création                       | SPOT-CMP-001                           | spot.component.spec.ts                    | Fonctionnel  | P2       |
+| SpotComponent – Chargement + markers           | SPOT-CMP-002                           | spot.component.spec.ts                    | Fonctionnel  | P2       |
+| SpotComponent – Créer spot                     | SPOT-CMP-003                           | spot.component.spec.ts                    | Fonctionnel  | P2       |
+| SpotComponent – Annuler édition                | SPOT-CMP-004                           | spot.component.spec.ts                    | Fonctionnel  | P2       |
+| Navbar – Création                              | NAV-CMP-001                            | navbar.component.spec.ts                  | Fonctionnel  | P2       |
+| Navbar – Déconnexion                           | NAV-CMP-002                            | navbar.component.spec.ts                  | Fonctionnel  | P2       |
+| Navbar – isLoggedIn false                      | NAV-CMP-003                            | navbar.component.spec.ts                  | Fonctionnel  | P2       |
+| Navbar – isLoggedIn true                       | NAV-CMP-004                            | navbar.component.spec.ts                  | Fonctionnel  | P2       |
+| GenericFormDialog – Création                   | GEN-FORM-001                           | generic-form-dialog.component.spec.ts     | Fonctionnel  | P2       |
+| GenericFormDialog – Init contrôles             | GEN-FORM-002                           | generic-form-dialog.component.spec.ts     | Fonctionnel  | P2       |
+| GenericFormDialog – Btn désactivé si invalide  | GEN-FORM-003                           | generic-form-dialog.component.spec.ts     | Fonctionnel  | P2       |
+| GenericFormDialog – Btn activé si valide       | GEN-FORM-004                           | generic-form-dialog.component.spec.ts     | Fonctionnel  | P2       |
+| GenericFormDialog – Soumission fermeture       | GEN-FORM-005                           | generic-form-dialog.component.spec.ts     | Fonctionnel  | P2       |
+| GenericFormDialog – Annulation                 | GEN-FORM-006                           | generic-form-dialog.component.spec.ts     | Fonctionnel  | P2       |
+| GenericFormDialog – Masquer mot de passe       | GEN-FORM-007                           | generic-form-dialog.component.spec.ts     | Fonctionnel  | P2       |
+| Snackbar – Création                            | SNACKBAR-CMP-001                       | snackbar.component.spec.ts                | Fonctionnel  | P2       |
+| Snackbar – Affichage message                   | SNACKBAR-CMP-002                       | snackbar.component.spec.ts                | Fonctionnel  | P2       |
+| Snackbar – Style & icône success               | SNACKBAR-CMP-003                       | snackbar.component.spec.ts                | Fonctionnel  | P2       |
+| Snackbar – Style & icône error                 | SNACKBAR-CMP-004                       | snackbar.component.spec.ts                | Fonctionnel  | P2       |
+| Snackbar – Style & icône info                  | SNACKBAR-CMP-005                       | snackbar.component.spec.ts                | Fonctionnel  | P2       |
+| Snackbar – Fallback défaut                     | SNACKBAR-CMP-006                       | snackbar.component.spec.ts                | Fonctionnel  | P2       |
+| AppComponent – Création                        | APP-CMP-001                            | app.component.spec.ts                     | Fonctionnel  | P2       |
+| AppComponent – Propriété titre                 | APP-CMP-002                            | app.component.spec.ts                     | Fonctionnel  | P2       |
+| AppComponent – Structure layout                | APP-CMP-003                            | app.component.spec.ts                     | Fonctionnel  | P2       |
