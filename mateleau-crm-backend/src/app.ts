@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import { setupSwagger } from './swagger';
 import helmet from 'helmet';
 import { apiLimiter, loginLimiter, loginSlowdown } from './security/rateLimit';
-
+import 'dotenv/config';
 // Import routes
 import userRoutes from './routes/userRoutes';
 import diveRoutes from './routes/diveRoutes';

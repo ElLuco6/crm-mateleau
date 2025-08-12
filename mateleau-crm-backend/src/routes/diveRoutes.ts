@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
-import { createDive, getAllDives, getDiveById, updateDive, deleteDive } from '../controllers/DiveControllers';
+import { createDive, getAllDives, getDiveById, updateDive, deleteDive, getDiveDetail } from '../controllers/DiveControllers';
 import { authenticateToken } from '../middleware/authMiddleware';
+import asyncHandler from 'express-async-handler';
+import { NotificationService } from '../services/NotificationService';
 
 const router = express.Router();
 
@@ -54,6 +56,28 @@ router.get('/:id', (req: Request, res: Response) => {
     getDiveById(req, res);
   });
 });
+
+// GET /api/dives/:id/detail
+router.get('/:id/detail', (
+  req: Request,
+  res: Response
+) => {
+  authenticateToken(req, res, () => {
+    getDiveDetail(req, res);
+  });
+});
+
+router.post(
+  '/:id/remind-divers',
+  asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const templateId = req.query.templateId ? Number(req.query.templateId) : 0;
+    const result = await NotificationService.notifyDiveDivers(id, { templateId });
+    res.json(result);
+  })
+);
+
+
 
 /**
  * @swagger

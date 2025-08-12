@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { Dive } from '../../models/Dive';
+import { DiveDetail } from '../../shared/types/dive-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,11 @@ export class DivingService {
 
   getDiveById(id: string): Observable<Dive> {
     return this.http.get<Dive>(`${environment.apiDives}/${id}`, {
+      withCredentials: true
+    });
+  }
+  getDiveDetailById(id: string): Observable<DiveDetail> {
+    return this.http.get<DiveDetail>(`${environment.apiDives}/${id}/detail`, {
       withCredentials: true
     });
   }

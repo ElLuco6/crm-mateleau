@@ -198,3 +198,15 @@ export const deleteDive = async (req: Request, res: Response) => {
     res.status(500).json({ message: errorMessage });
   }
 };
+
+export const getDiveDetail = async (req: Request, res: Response ) => {
+  try {
+    const data = await DiveService.getDiveDetailById(req.params.id);
+    res.json(data);
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "An unknown error occurred";
+    res.status(500).json({ message: errorMessage });
+  }
+};
+
