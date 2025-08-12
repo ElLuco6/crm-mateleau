@@ -18,7 +18,8 @@
         class="w-44 bg-white border hover:border-blue-500 hover:bg-blue-50 rounded-lg p-2 shadow-sm cursor-pointer transition text-center"
         [ngClass]="{
           'border-green-500 ring-2 ring-green-300': selectedDriver?._id === moniteur._id
-        }" (click)="setDriver(moniteur)">
+        }" (click)="setDriver(moniteur)" (keydown.enter)="setDriver(moniteur)"
+  (keydown.space)="$event.preventDefault(); setDriver(moniteur)">
 
         <div class="font-semibold text-gray-800 truncate">{{ moniteur.name }}</div>
         <div class="text-xs text-gray-600">Niveau : {{ moniteur.divingLvl }}</div>
@@ -66,7 +67,9 @@
         @for (team of teams; track $index) {
         <div
           class="relative p-4 rounded-lg shadow hover:bg-gray-100 transition bg-white border p-5 rounded-2xl shadow-md hover:shadow-lg transition cursor-pointer group"
-          [ngClass]="{ 'border-blue-600 ring-2 ring-blue-300': selectedTeam === $index }" (click)="selectTeam($index)">
+          [ngClass]="{ 'border-blue-600 ring-2 ring-blue-300': selectedTeam === $index }" (click)="selectTeam($index)" (keydown.enter)="selectTeam($index)"
+  (keydown.space)="$event.preventDefault(); selectTeam($index)"
+>
 
           <!-- ❌ Bouton de suppression -->
           <button (click)="removeTeam($index); $event.stopPropagation()"

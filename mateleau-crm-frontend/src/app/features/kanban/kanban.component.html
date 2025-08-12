@@ -1,7 +1,8 @@
 <div class="kanban-board">
   <div *ngFor="let col of columns; let i = index" class="kanban-column">
     <!-- Édition du nom des colonnes -->
-    <h3 *ngIf="!col.editing" (click)="col.editing = true">{{ col.name }}</h3>
+    <h3 *ngIf="!col.editing" (click)="col.editing = true"  (keydown.enter)="col.editing = true"
+  (keydown.space)="$event.preventDefault(); col.editing = true">{{ col.name }}</h3>
     <input *ngIf="col.editing" [value]="col.name" 
            (blur)="col.editing = false" 
            (keydown.enter)="col.editing = false" autofocus />
@@ -21,7 +22,8 @@
         class="kanban-item"
       >
         <!-- Édition des tâches -->
-        <span *ngIf="!task.editing" (click)="startEditingTask(task)">
+        <span *ngIf="!task.editing" (click)="startEditingTask(task)" (keydown.enter)="startEditingTask(task)"
+  (keydown.space)="$event.preventDefault(); startEditingTask(task)">
           {{ task.title }}
         </span>
         <input
