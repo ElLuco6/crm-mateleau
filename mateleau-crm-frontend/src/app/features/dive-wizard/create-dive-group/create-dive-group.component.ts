@@ -41,7 +41,7 @@ export class CreateDiveGroupComponent implements OnChanges {
   @Input() dataForm1!: FormGroup;
   @Input() formGroup!: FormGroup;
   alreadyInitialized = false;
-  @Input() modeEdit!: boolean;
+  
   boatLimit: number = 0;
   constructor(
     private formBuilder: FormBuilder,
@@ -52,13 +52,7 @@ export class CreateDiveGroupComponent implements OnChanges {
 
   public init(): void {
     //Get the available users (moniteurs) based on the date and duration from the wizard service
-    if (this.modeEdit) {
-      console.log('Mode Edit is true, fetching available users');
-      this.initModeEdit();
-      this.wizardService.setPayload({ ...this.wizardService.getPayload(), divers:this.divers, moniteurs:this.moniteurs });
-      return;
-    } else {
-      console.log('Mode Edit is false, initializing form');
+    
       this.wizardService.onPayloadReady().subscribe((payload) => {
         console.log('payload create group', payload);
         if (!payload) return;
@@ -107,7 +101,7 @@ export class CreateDiveGroupComponent implements OnChanges {
 
       this.formGroup.get('teams')?.setValue(this.teams);
       this.formGroup.addControl('driver', this.formBuilder.control(null));
-    }
+    
   }
 
   ngOnChanges() {
@@ -119,74 +113,7 @@ export class CreateDiveGroupComponent implements OnChanges {
     }
   }
 
-  initModeEdit() {
-     if (this.alreadyInitialized) return; 
-    this.wizardService.onPayloadReady().subscribe((payload) => {
-      console.log('payload create group',this.alreadyInitialized, payload);
-      if (!payload) return;
-      if (this.alreadyInitialized) return; 
-      this.alreadyInitialized = true;
-      // Récupération du bateau et de sa capacité
-      const boat = this.dataForm1?.get('boat')?.value;
-      if (boat) {
-        this.boatLimit = boat.numberMaxPlaces || 0;
-        console.log('✅ Boat limit:', this.boatLimit);
-      }
-
-      // Appels parallèles pour récupérer les moniteurs et plongeurs
-      forkJoin({
-        moniteurs: this.availabilityService.getAvailableUsers(
-          this.wizardService.getPayload().date,
-          this.wizardService.getPayload().duration
-        ),
-        divers: this.availabilityService.getAvailableDivers(
-          this.wizardService.getPayload().date,
-          this.wizardService.getPayload().duration
-        ),
-      }).subscribe(({ moniteurs, divers }) => {
-        // Mise à jour des moniteurs et plongeurs disponibles
-        this.moniteurs = moniteurs;
-        this.initialMoniteurs = [...moniteurs];
-        this.divers = divers;
-        this.initialDivers = [...divers];
-
-        // Gestion du conducteur
-        const driver = this.formGroup.get('driver')?.value;
-        if (driver) {
-          this.selectedDriver = driver;
-          this.moniteurs = this.moniteurs.filter((m) => m._id !== driver._id);
-        }
-
-        // Construction des teams à partir des groupes existants
-        const existingTeams = this.formGroup.get('groups')?.value;
-        console.log('Existing teams: from edit', existingTeams);
-
-        const teams: Team[] = [];
-
-        existingTeams.forEach(
-          (group: { moniteur: string; members: string[] }) => {
-            const moniteur = this.moniteurs.find(
-              (u) => u._id === group.moniteur
-            );
-            const members = this.divers.filter((d) =>
-              group.members.includes(d._id)
-            );
-
-            if (moniteur && members.length > 0) {
-              teams.push({ moniteur, members });
-            }
-          }
-        );
-
-        this.teams = teams;
-
-        console.log('✅ Final teams from edit:', this.teams);
-        this.wizardService.setPayload({ ...this.wizardService.getPayload(), divers: this.divers, moniteurs: this.moniteurs });
-        this.cdr.detectChanges();
-      });
-      
-    });
-  }
+  
 
   removeTeam(index: number) {
     const team = this.teams[index];
@@ -410,11 +337,7 @@ export class CreateDiveGroupComponent implements OnChanges {
   }
 
   getCurrentTeamSize(): number {
-    /*  if (this.modeEdit){
-      return this.formGroup.get('teams')?.value.reduce((acc: number, team: Team) => {
-        return acc + team.members.length + (team.moniteur ? 1 : 0);
-      }, 0);
-    } */
+   
     let count = this.selectedDriver ? 1 : 0;
     for (const team of this.teams) {
       count += team.members.length;

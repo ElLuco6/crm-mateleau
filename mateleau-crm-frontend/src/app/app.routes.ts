@@ -25,10 +25,6 @@ export const routes: Routes = [
         loadComponent: () => import('./features/dive-wizard/dive-wizard.component')
           .then(m => m.DiveWizardComponent)
       },
-      { path: 'edit-dive/:id',
-        loadComponent: () => import('./features/edit-wizard/edit-wizard.component')
-          .then(m => m.EditWizardComponent)
-      },
       { path: 'dive/:id',
         loadComponent: () => import('./features/dive-detail/dive-detail.component')
           .then(m => m.DiveDetailComponent)

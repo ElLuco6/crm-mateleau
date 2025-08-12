@@ -1,19 +1,16 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AvailibilityService } from '../../../core/service/availibility.service';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component,  Input   } from '@angular/core';
+import { FormBuilder, FormGroup,  ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { BoatService } from '../../../core/service/boat.service';
 import { Boat } from '../../../models/Boat';
-import { debounce, debounceTime, filter, finalize, firstValueFrom } from 'rxjs';
+import {  firstValueFrom } from 'rxjs';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import {MatTimepickerModule} from '@angular/material/timepicker';
-import { ActivatedRoute, Router } from '@angular/router';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
-import { DiveWizardService } from '../dive-wizard.service';
 import { Spot } from '../../../models/Spot';
 
 

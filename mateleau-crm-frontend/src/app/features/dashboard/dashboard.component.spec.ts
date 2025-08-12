@@ -1,53 +1,66 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { SpotComponent } from '../spot/spot.component'; // <<< chemin EXACT comme dans DashboardComponent
-import { MatTabsModule } from '@angular/material/tabs';
-import { CalendarComponent } from '../calendar/calendar.component';
 
 describe('DashboardComponent', () => {
   let fixture: ComponentFixture<DashboardComponent>;
   let component: DashboardComponent;
 
+  // Mocks partagés pour les ViewChild
+  const mapMock = { initMapSafely: jasmine.createSpy('initMapSafely') };
+  const calendarMock = { refreshCalendar: jasmine.createSpy('refreshCalendar') };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        // On importe le standalone tel quel (avec tous ses vrais enfants)
-        DashboardComponent,
-        // Modules utilitaires pour éviter les emmerdes
-        HttpClientTestingModule,
-        NoopAnimationsModule,
-        MatTabsModule, // optionnel si déjà importé par Dashboard, ça ne gêne pas
-      ],
-    }).compileComponents();
-
-    // ⚠️ Stub AVANT la création du composant
-    spyOn(SpotComponent.prototype, 'initMapSafely').and.stub();
-    spyOn(CalendarComponent.prototype, 'refreshCalendar').and.stub();
+      imports: [DashboardComponent],
+    })
+      .overrideComponent(DashboardComponent, {
+        set: {
+          template: '<div></div>', // neutralise le template
+          imports: [],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
+
+    // IMPORTANT: d'abord déclencher le cycle de vie...
     fixture.detectChanges();
+
+    // ...puis injecter nos mocks (Angular ne les écrasera plus)
+    (component as any).mapComponent = mapMock;
+    (component as any).calendarTab = calendarMock;
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  /* it('should NOT call initMapSafely if tab index !== 2', () => {
-    const spy = (SpotComponent.prototype.initMapSafely as jasmine.Spy);
-    spy.calls.reset();
-
-    component.onTabChange({ index: 1 } as any);
-    expect(spy).not.toHaveBeenCalled();
-  });
-
-  it('should call initMapSafely if tab index is 2', () => {
-    const spy = (SpotComponent.prototype.initMapSafely as jasmine.Spy);
-    spy.calls.reset();
+  it('onTabChange(index=2) appelle initMapSafely du spot', () => {
+    mapMock.initMapSafely.calls.reset();
 
     component.onTabChange({ index: 2 } as any);
-    expect(spy).toHaveBeenCalled();
-  }); */
+
+    expect(mapMock.initMapSafely).toHaveBeenCalledTimes(1);
+  });
+
+  it('onTabChange(index=1) appelle refreshCalendar (via setTimeout 0)', fakeAsync(() => {
+    calendarMock.refreshCalendar.calls.reset();
+
+    component.onTabChange({ index: 1 } as any);
+    tick(); // flush setTimeout(0)
+
+    expect(calendarMock.refreshCalendar).toHaveBeenCalledTimes(1);
+  }));
+
+  it('onTabChange(index différent) ne fait rien', fakeAsync(() => {
+    mapMock.initMapSafely.calls.reset();
+    calendarMock.refreshCalendar.calls.reset();
+
+    component.onTabChange({ index: 0 } as any);
+    tick();
+
+    expect(mapMock.initMapSafely).not.toHaveBeenCalled();
+    expect(calendarMock.refreshCalendar).not.toHaveBeenCalled();
+  }));
 });

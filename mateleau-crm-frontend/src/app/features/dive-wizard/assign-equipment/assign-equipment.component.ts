@@ -47,10 +47,7 @@ export class AssignEquipmentComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.modeEdit) {
-      this.initModeEdit();
-      return;
-    } else {
+    
       if (this.formGroup?.get('equipmentAssignments')) {
         this.wizardService.onPayloadReady().subscribe((payload) => {
           console.log('Payload received in assign-equipment:create ', payload);
@@ -70,93 +67,13 @@ export class AssignEquipmentComponent implements AfterViewInit {
               assignEquipment.addControl(diver._id, this.fb.control([]));
             }
           }
-
-          console.log('Teams:', this.teams);
           this.fetchEquipment();
         });
-      } else {
-        // fallback au cas où ça n'est pas prêt immédiatement
-        setTimeout(() => this.ngAfterViewInit(), 0);
-      }
+      
     }
   }
 
-  initModeEdit() {
-    this.getAndStoreAvailableEquipment()
-    //this.cdr.detectChanges();
-    //if (this.formGroup?.get('equipmentAssignments')) {
 
-/*     forkJoin({
-  payload: this.wizardService.onPayloadReady().pipe(tap(() => console.log('✅ payload ok'))),
-  equipmentList: this.getAndStoreAvailableEquipment().pipe(tap(() => console.log('✅ equipment ok'))),
-  moniteurs: this.availabilityService.getAvailableUsers(
-    this.wizardService.getPayload().date,
-    this.wizardService.getPayload().duration
-  ).pipe(tap(() => console.log('✅ moniteurs ok'))),
-  divers: this.availabilityService.getAvailableDivers(
-    this.wizardService.getPayload().date,
-    this.wizardService.getPayload().duration
-  ).pipe(tap(() => console.log('✅ divers ok')))
-}).subscribe() */
-
-      forkJoin({
-       payload: of(this.wizardService.getPayload()),
-        equipmentList: this.getAndStoreAvailableEquipment(),
-      }).subscribe(({ payload }) => {
-        
-        
-      this.teams = payload.teams.map((team: any) => {
-  const moniteur = payload.moniteurs.find((u: any) => u._id === team.moniteur);
-  const members = team.members.map((id: any) =>
-    payload.divers.find((d: any) => d._id === id)
-  ).filter(Boolean); // pour virer les null si un ID n'a pas matché
-
-  return {
-    moniteur: moniteur!,
-    members: members as Diver[]
-  };
-
-});
-
-      
-    this.wizardService.setPayload({teams:this.teams})
-    console.log(this.wizardService.getPayload(),"zaza");
-    
-        const assignEquipment = this.formGroup.get(
-          'equipmentAssignments'
-        ) as FormGroup;
-
-        for (const team of this.teams) {
-          if (team.moniteur) {
-            assignEquipment.addControl(team.moniteur._id, this.fb.control([]));
-          }
-          for (const diver of team.members) {
-            assignEquipment.addControl(diver._id, this.fb.control([]));
-          }
-        }
-
-        //const divingGroups = this.formGroup.get('groups')?.value || [];
-
-        for (const group of payload.oldDive.divingGroups || []) {
-          for (const rented of group.rentedEquipment || []) {
-            const diverId = rented.diverId;
-            for (const equipmentId of rented.equipmentIds || []) {
-              const equipment = this.equipmentList.find(
-                (eq) => eq._id === equipmentId
-              );
-              if (equipment) {
-                this.assignEquipmentTo(diverId, equipment);
-              } else {
-                console.warn(`⚠️ Equipment not found for ID: ${equipmentId}`);
-              }
-            }
-          }
-        }
-      }); 
-   /*  } else {
-      setTimeout(() => this.ngAfterViewInit(), 0);
-    }*/
-  }
 
   fetchEquipment() {
     this.availabilityService
@@ -176,7 +93,7 @@ export class AssignEquipmentComponent implements AfterViewInit {
         );
       });
 
-    console.log('Teams:', this.teams);
+   
   }
 
   get equipmentAssignmentsForm(): FormGroup {

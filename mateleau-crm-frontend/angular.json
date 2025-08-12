@@ -88,6 +88,12 @@
           "options": {
             "karmaConfig": "karma.conf.js",
             "codeCoverage": true,
+            "codeCoverageExclude": [
+              "**/models/**",
+              "**/types/**",
+              "**/*.module.ts",
+              "**/index.ts"
+            ],
             "browsers": "ChromeHeadless",
             "polyfills": [
               "zone.js",

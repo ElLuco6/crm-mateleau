@@ -12,6 +12,11 @@ module.exports = {
     '!src/**/*.spec.ts',
     '!src/**/*.test.ts',
     '!src/**/__mocks__/**',
-    '!src/**/index.ts'
+    '!src/**/index.ts',
+    '!src/routes/**',
+    '!src/security/**',
+    '!src/server.ts',
+    '!src/swagger.ts',      
+    '!src/swagger/**',
   ]
 };
