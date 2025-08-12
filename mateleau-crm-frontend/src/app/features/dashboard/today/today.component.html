@@ -1,93 +1,148 @@
-<section class="bg-white shadow rounded-xl p-6 mb-8" >
+<!-- 📅 Aujourd’hui -->
+<section class="bg-white shadow rounded-xl p-6 mb-8">
   <h2 class="text-2xl font-bold text-blue-700 mb-4">📅 Aujourd’hui</h2>
 
   @if (todayDives.length) {
-    <div class="mb-4">
-      <h3 class="font-semibold text-gray-700">Plongées prévues :</h3>
-      <ul class="list-disc list-inside text-gray-600 text-sm">
-        @for (dive of todayDives; track dive._id) {
-          <li>{{ dive.name }} – {{ dive.location }} à {{ dive.date | date:'shortTime' }}</li>
-        }
-      </ul>
-    </div>
-  }
-  @else {
-    <p class="text-sm text-gray-500 italic">Pas de plongée prévu pour aujourd’hui.</p>
+  <div class="mb-4">
+    <h3 class="font-semibold text-gray-700 mb-2">Plongées prévues :</h3>
+
+    <ul class="grid gap-2">
+      @for (dive of todayDives; track dive._id) {
+      <li class="flex items-center justify-between gap-3 rounded-xl border p-3 shadow-sm">
+        <p class="min-w-0 truncate text-sm text-gray-700">
+          <span class="font-semibold">{{ dive.name }}</span>
+          – {{ dive.location }} • {{ dive.date | date:'HH:mm' }}
+        </p>
+
+        <button type="button" (click)="sendRemindEmail(dive._id)" class="shrink-0 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold
+                     bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800
+                     focus:outline-none focus:ring-2 focus:ring-blue-500/40 whitespace-nowrap transition"
+          aria-label="Envoyer un rappel">
+
+          Envoyer un rappel
+        </button>
+      </li>
+      }
+    </ul>
+  </div>
+  } @else {
+  <p class="text-sm text-gray-500 italic">Pas de plongée prévue pour aujourd’hui.</p>
   }
 
   @if (todayEquipment.length) {
-    <div class="mb-4">
-      <h3 class="font-semibold text-gray-700">Matériel à réviser :</h3>
-      <ul class="list-disc list-inside text-gray-600 text-sm">
-        @for (eq of todayEquipment; track eq._id) {
-          <li>{{ eq.name }}</li>
-        }
-      </ul>
+  <div class="mb-4">
+    <h3 class="font-semibold text-gray-700 mb-2">Matériel à réviser :</h3>
+    <div class="flex flex-wrap gap-2">
+      @for (eq of todayEquipment; track eq._id) {
+      <span class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs bg-gray-50">
+        <mat-icon class="!text-base text-gray-600">build</mat-icon>
+        {{ eq.name }}
+      </span>
+      }
     </div>
-  }
-  @else {
-    <p class="text-sm text-gray-500 italic">Pas de matériel à réviser pour aujourd’hui.</p>
+  </div>
+  } @else {
+  <p class="text-sm text-gray-500 italic">Pas de matériel à réviser pour aujourd’hui.</p>
   }
 
   @if (todayBoats.length) {
-    <div>
-      <h3 class="font-semibold text-gray-700">Bateaux à réviser :</h3>
-      <ul class="list-disc list-inside text-gray-600 text-sm">
-        @for (boat of todayBoats; track boat._id) {
-          <li>{{ boat.name }}</li>
-        }
-      </ul>
+  <div>
+    <h3 class="font-semibold text-gray-700 mb-2">Bateaux à réviser :</h3>
+    <div class="flex flex-wrap gap-2">
+      @for (boat of todayBoats; track boat._id) {
+      <span class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs bg-gray-50">
+        <mat-icon class="!text-base text-gray-600">directions_boat</mat-icon>
+        {{ boat.name }}
+      </span>
+      }
     </div>
-  }
-  @else {
-    <p class="text-sm text-gray-500 italic">Pas de bateaux à réviser pour aujourd’hui.</p>
+  </div>
+  } @else {
+  <p class="text-sm text-gray-500 italic">Pas de bateaux à réviser pour aujourd’hui.</p>
   }
 </section>
 
-<section class="bg-white shadow rounded-xl p-6 mb-8" >
+<!-- 📆 À venir cette semaine -->
+<section class="bg-white shadow rounded-xl p-6 mb-8">
   <h2 class="text-2xl font-bold text-blue-700 mb-4">📆 À venir cette semaine</h2>
 
   @if (weekDives.length) {
-    <div class="mb-4">
-      <h3 class="font-semibold text-gray-700">Plongées :</h3>
-      <ul class="list-disc list-inside text-gray-600 text-sm">
-        @for (dive of weekDives; track dive._id) {
-          <li>{{ dive.name }} – {{ dive.location }} le {{ dive.date | date:'EEEE d MMMM' }}</li>
-        }
-      </ul>
-    </div>
-  }
-  @else {
-    <p class="text-sm text-gray-500 italic">Pas de plongée prévu pour cette semaine.</p>
+  <div class="mb-6">
+    <h3 class="mb-3 font-semibold text-gray-700">Plongées</h3>
+
+    <ul class="grid gap-2">
+      @for (dive of weekDives; track dive._id) {
+      <li
+        class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 rounded-xl border p-3 sm:p-4 shadow-sm">
+        <!-- Texte -->
+        <p class="min-w-0 text-sm sm:text-base text-gray-700">
+          <!-- Nom (truncate seulement sur grands écrans) -->
+          <span class="font-semibold block sm:inline sm:truncate sm:max-w-[36ch]">{{ dive.name }}</span>
+
+          <!-- Meta courte (mobile) -->
+          <span class="block sm:hidden text-gray-600">
+            {{ dive.location }} • {{ dive.date | date:'d MMM à HH:mm' }}
+          </span>
+
+          <!-- Meta longue (≥ sm) -->
+          <span class="hidden sm:inline text-gray-600">
+            – {{ dive.location }} • {{ dive.date | date:'EEEE d MMMM à HH:mm' }}
+          </span>
+        </p>
+
+        <!-- Bouton -->
+        <button type="button" (click)="sendRemindEmail(dive._id)" class="order-3 sm:order-none w-full sm:w-auto justify-center inline-flex items-center gap-1.5
+           rounded-full px-3 sm:px-4 py-2 sm:py-1.5 text-xs sm:text-sm font-semibold
+           bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800
+           focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition whitespace-nowrap"
+          aria-label="Envoyer un rappel">
+          <mat-icon class="!text-base -ml-0.5">send</mat-icon>
+          <span class="sm:hidden">Envoyer</span>
+          <span class="hidden sm:inline">Envoyer un rappel</span>
+        </button>
+      </li>
+
+      }
+    </ul>
+  </div>
+  } @else {
+  <p class="text-sm text-gray-500 italic">Pas de plongée prévue pour cette semaine.</p>
   }
 
   @if (weekEquipment.length) {
-    <div class="mb-4">
-      <h3 class="font-semibold text-gray-700">Révisions matériel :</h3>
-      <ul class="list-disc list-inside text-gray-600 text-sm">
-        @for (eq of weekEquipment; track eq._id) {
-          <li>{{ eq.name }}</li>
-        }
-      </ul>
+  <div class="mb-4">
+    <h3 class="font-semibold text-gray-700 mb-2">Révisions matériel :</h3>
+    <div class="flex flex-wrap gap-2">
+      @for (eq of weekEquipment; track eq._id) {
+      <span class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs bg-gray-50">
+        <mat-icon class="!text-base text-gray-600">build</mat-icon>
+        {{ eq.name }}
+      </span>
+      }
     </div>
+  </div>
   } @else {
-    <p class="text-sm text-gray-500 italic">Pas de matériel à réviser pour cette semaine.</p>
+  <p class="text-sm text-gray-500 italic">Pas de matériel à réviser pour cette semaine.</p>
   }
 
   @if (weekBoats.length) {
-    <div>
-      <h3 class="font-semibold text-gray-700">Révisions bateaux :</h3>
-      <ul class="list-disc list-inside text-gray-600 text-sm">
-        @for (boat of weekBoats; track boat._id) {
-          <li>{{ boat.name }}</li>
-        }
-      </ul>
+  <div>
+    <h3 class="font-semibold text-gray-700 mb-2">Révisions bateaux :</h3>
+    <div class="flex flex-wrap gap-2">
+      @for (boat of weekBoats; track boat._id) {
+      <span class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs bg-gray-50">
+        <mat-icon class="!text-base text-gray-600">directions_boat</mat-icon>
+        {{ boat.name }}
+      </span>
+      }
     </div>
+  </div>
   } @else {
-    <p class="text-sm text-gray-500 italic">Pas de bateaux à réviser pour cette semaine.</p>
+  <p class="text-sm text-gray-500 italic">Pas de bateaux à réviser pour cette semaine.</p>
   }
 </section>
 
+<!-- 📋 À faire -->
 <section class="bg-white shadow rounded-xl p-6">
   <h2 class="text-2xl font-bold text-blue-700 mb-4">📋 À faire</h2>
   <app-kanban />

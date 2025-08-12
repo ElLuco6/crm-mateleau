@@ -137,7 +137,7 @@ private destroy$ = new Subject<void>();
   }
   goToEventDetail(): void {
     this.showEventModal = false;
-    this.router.navigate(['/edit-dive', this.selectedEvent.id]);
+    this.router.navigate(['/dive', this.selectedEvent.id]);
   }
 
   refreshCalendar(): void {

@@ -1,19 +1,13 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { inject, Injectable } from '@angular/core';
+import { CanActivate, CanMatchFn, Router, UrlSegment } from '@angular/router';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthGuard implements CanActivate {
-  constructor(private router: Router) {}
 
-  canActivate(): boolean {
-    const token = localStorage.getItem('token');
-    if (token) {
-      return true;
-    } else {
-      this.router.navigate(['/login']);
-      return false;
-    }
-  }
-}
+export const AuthGuard: CanMatchFn = (_route, segments: UrlSegment[]) => {
+  const router = inject(Router);
+  const token = localStorage.getItem('token');
+
+  if (token) return true;
+
+  const target = '/' + segments.map(s => s.path).join('/');
+  return router.createUrlTree(['/login'], { queryParams: { r: target } });
+};

@@ -1,0 +1,185 @@
+
+
+<div class="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-8" *ngIf="dive as d">
+  <!-- Conteneur global avec marges/padding -->
+<button
+  mat-raised-button
+  color="primary"
+  [routerLink]="['/']"
+  class="mb-6 flex items-center gap-2 px-4 py-2 rounded font-semibold bg-blue-600 text-white hover:bg-blue-700 transition"
+>
+  <mat-icon>arrow_back</mat-icon>
+  Retour au dashboard
+</button>
+  <!-- Header boosté -->
+  <div class="rounded-3xl border shadow-sm bg-gradient-to-r from-sky-50 to-indigo-50">
+    <div class="p-6 md:p-8">
+      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-semibold tracking-tight">{{ d.name }}</h1>
+          <p class="mt-1 text-sm text-gray-600">
+            {{ d.location }} •
+            {{ d.date | date:'medium' }} → {{ d.endDate | date:'medium' }}
+            • {{ d.duration }} min • Max {{ d.maxDepth }} m
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <span class="inline-flex items-center gap-2 rounded-full bg-white/70 backdrop-blur px-3 py-1 text-sm border">
+            <span class="h-2 w-2 rounded-full bg-indigo-500"></span>
+            Groupes: {{ totalGroups }}
+          </span>
+          <span class="inline-flex items-center gap-2 rounded-full bg-white/70 backdrop-blur px-3 py-1 text-sm border">
+            <span class="h-2 w-2 rounded-full bg-sky-500"></span>
+            Plongeurs: {{ totalDivers }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <button type="button" (click)="sendRemindEmailToDivers()" class="order-3 sm:order-none w-full sm:w-auto justify-center inline-flex items-center gap-1.5
+           rounded-full px-3 sm:px-4 py-2 sm:py-1.5 text-xs sm:text-sm font-semibold
+           bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800
+           focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition whitespace-nowrap"
+          aria-label="Envoyer un rappel">
+          <mat-icon class="!text-base -ml-0.5">send</mat-icon>
+          <span class="sm:hidden">Envoyer</span>
+          <span class="hidden sm:inline">Envoyer un rappel</span>
+        </button>
+
+  <!-- Boat + Driver -->
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Boat -->
+    <div class="rounded-2xl border p-5 shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-lg font-semibold">Bateau</h2>
+        @if (d.boat?.revisionDate) {
+          <span class="text-xs text-gray-500">Révision : {{ d.boat?.revisionDate | date:'mediumDate' }}</span>
+        }
+      </div>
+      @if (d.boat) {
+        <div class="space-y-1 text-sm">
+          <div><span class="font-medium">Nom :</span> {{ d.boat.name }}</div>
+          <div>
+            <span class="font-medium">Places :</span>
+            {{ d.boat.numberAviablePlaces ?? '—' }} / {{ d.boat.numberMaxPlaces ?? '—' }}
+          </div>
+        </div>
+      } @else {
+        <div class="text-sm text-gray-500">— Aucun bateau lié</div>
+      }
+    </div>
+
+    <!-- Driver -->
+    <div class="rounded-2xl border p-5 shadow-sm">
+      <h2 class="text-lg font-semibold mb-3">Conducteur </h2>
+      @if (d.driver) {
+        <div class="space-y-1 text-sm">
+          <div><span class="font-medium">Nom :</span> {{ d.driver.name }}</div>
+          <div><span class="font-medium">Rôle :</span> {{ d.driver.role }}</div>
+          @if (d.driver.email) {
+            <div><span class="font-medium">Email :</span> {{ d.driver.email }}</div>
+          }
+        </div>
+      } @else {
+        <div class="text-sm text-gray-500">— Aucun moniteur lié</div>
+      }
+    </div>
+  </div>
+
+  <!-- Groups -->
+  <div class="space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="text-lg font-semibold">Groupes</h2>
+    </div>
+
+    @if (d.divingGroups.length) {
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        @for (g of d.divingGroups; track g._id) {
+          <div class="rounded-2xl border p-5 shadow-sm hover:shadow-md transition-shadow">
+            <!-- Guide + taille -->
+            <div class="flex items-start justify-between gap-3 mb-4">
+              <div>
+                <div class="text-xs uppercase tracking-wide text-gray-500">Guide</div>
+                @if (g.guide) {
+                  <div class="font-medium">{{ g.guide.name }}</div>
+                  <div class="text-xs text-gray-500">{{ g.guide.role }}</div>
+                } @else {
+                  <div class="text-sm text-gray-500">— Non défini</div>
+                }
+              </div>
+              <span class="inline-flex items-center rounded-full border px-2.5 py-1 text-xs bg-gray-50">
+                {{ g.groupSize ?? (g.divers.length + (g.guide ? 1 : 0)) }} pers.
+              </span>
+            </div>
+
+            <div class="space-y-4">
+              <!-- Divers -->
+              <div>
+                <div class="text-sm font-medium mb-2">Plongeurs</div>
+                @if (g.divers.length) {
+                  <ul class="space-y-1">
+                    @for (dv of g.divers; track dv._id) {
+                      <li class="text-sm">
+                        <span class="font-medium">{{ dv.firstName }} {{ dv.lastName }}</span>
+                        <span class="text-gray-500">
+                          • Niv. {{ dv.divingLvl || '- Pas de niveau' }}
+                          
+                        </span>
+                      </li>
+                    }
+                  </ul>
+                } @else {
+                  <div class="text-sm text-gray-500">— Aucun plongeur</div>
+                }
+              </div>
+
+              <!-- Rented Equipment -->
+              <div class="pt-3 border-t">
+                <div class="text-sm font-medium mb-2">Équipement loué</div>
+                @if (g.rentedEquipment.length) {
+                  <ul class="space-y-3">
+                    @for (rent of g.rentedEquipment; track rent.diver?._id || $index) {
+                      <li class="text-sm">
+                        <div class="mb-1">
+                          @if (rent.diver) {
+                            <span class="font-medium">
+                              {{ rent.diver.firstName || 'Diver' }} {{ rent.diver.lastName || ('#' + rent.diver._id) }}
+                            </span>
+                          } @else {
+                            <span class="text-gray-500">Diver inconnu</span>
+                          }
+                        </div>
+
+                        @if (rent.items.length) {
+                          <div class="flex flex-wrap gap-2">
+                            @for (it of rent.items; track it._id) {
+                              <span class="inline-flex items-center rounded-full border px-2.5 py-1 text-xs bg-white">
+                                {{ it.name }}
+                                @if (it.size) { <span class="ml-1 text-gray-500">({{ it.size }})</span> }
+                                @if (it.nature) { <span class="ml-1 text-gray-500">• {{ it.nature }}</span> }
+                                @if (it.ref) { <span class="ml-1 text-gray-500">• ref {{ it.ref }}</span> }
+                                @if (it.state) { <span class="ml-1 text-gray-500">• {{ it.state }}</span> }
+                              </span>
+                            }
+                          </div>
+                        } @else {
+                          <div class="text-xs text-gray-500">— Aucun matériel listé</div>
+                        }
+                      </li>
+                    }
+                  </ul>
+                } @else {
+                  <div class="text-sm text-gray-500">— Aucun matériel loué</div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="rounded-xl border p-5 text-sm text-gray-500">Aucun groupe pour cette plongée.</div>
+    }
+  </div>
+</div>

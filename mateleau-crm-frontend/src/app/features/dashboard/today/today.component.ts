@@ -3,10 +3,12 @@ import { KanbanComponent } from '../../kanban/kanban.component';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from '../../../core/service/dashboard.service';
 import { firstValueFrom } from 'rxjs';
+import { NotificationService } from '../../../core/service/notification.service';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-today',
-  imports: [KanbanComponent,CommonModule],
+  imports: [KanbanComponent,CommonModule,MatIconModule],
   templateUrl: './today.component.html',
   styleUrl: './today.component.scss'
 })
@@ -27,7 +29,7 @@ export class TodayComponent implements OnInit {
 
   constructor(
     private dashboardService: DashboardService,
-  
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -57,6 +59,17 @@ export class TodayComponent implements OnInit {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  sendRemindEmail(diveId: string) {
+    this.notificationService.sendRemindEmailToDivers(diveId).subscribe({
+      next: () => {
+        this.notificationService.show('Rappel envoyé aux plongeurs.', 'success');
+      },
+      error: (err) => {
+        this.notificationService.show('Erreur lors de l\'envoi du rappel.', 'error');
+      }
+    });
   }
 
 }
