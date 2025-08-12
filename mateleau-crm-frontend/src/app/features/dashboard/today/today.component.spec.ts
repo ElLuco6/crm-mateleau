@@ -4,11 +4,13 @@ import { DashboardService } from '../../../core/service/dashboard.service';
 import { of, throwError } from 'rxjs';
 import { KanbanComponent } from '../../kanban/kanban.component';
 import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('TodayComponent', () => {
   let component: TodayComponent;
   let fixture: ComponentFixture<TodayComponent>;
   let dashboardServiceSpy: jasmine.SpyObj<DashboardService>;
+  let httpMock: HttpTestingController;
 
   const mockToday = {
     dives: [{ _id: '1', name: 'Plongée 1', location: 'Nice', date: new Date() }],
@@ -30,7 +32,7 @@ describe('TodayComponent', () => {
     ]);
 
     TestBed.configureTestingModule({
-      imports: [TodayComponent, CommonModule, KanbanComponent],
+      imports: [TodayComponent, CommonModule, KanbanComponent, HttpClientTestingModule],
       providers: [{ provide: DashboardService, useValue: dashboardServiceSpy }]
     }).compileComponents();
   }));
@@ -44,6 +46,7 @@ dashboardServiceSpy.getTasks.and.returnValue(of([])); // <== ADD THIS TOO
     component = fixture.componentInstance;
     await component.fetchDashboardData();
     fixture.detectChanges();
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should load dashboard data successfully', fakeAsync(() => {

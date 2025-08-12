@@ -103,8 +103,7 @@ export class AssignEquipmentComponent implements AfterViewInit {
        payload: of(this.wizardService.getPayload()),
         equipmentList: this.getAndStoreAvailableEquipment(),
       }).subscribe(({ payload }) => {
-        console.log('🧠 Payload:', payload);
-        console.log('🛠 Equipment list:', this.equipmentList);
+        
         
       this.teams = payload.teams.map((team: any) => {
   const moniteur = payload.moniteurs.find((u: any) => u._id === team.moniteur);
@@ -119,7 +118,7 @@ export class AssignEquipmentComponent implements AfterViewInit {
 
 });
 
-        console.log('📦 Final teams:', this.teams);
+      
     this.wizardService.setPayload({teams:this.teams})
     console.log(this.wizardService.getPayload(),"zaza");
     
@@ -211,7 +210,7 @@ export class AssignEquipmentComponent implements AfterViewInit {
       )
       .pipe(
         tap((equipment) => {
-          console.log('🧪 Equipement reçu:', equipment);
+          
           this.equipmentList = equipment;
           this.groupedEquipment = equipment.reduce(
             (acc: { [nature: string]: Equipment[] }, eq: Equipment) => {

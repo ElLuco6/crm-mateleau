@@ -1,39 +1,60 @@
+// auth.guard.spec.ts
 import { TestBed } from '@angular/core/testing';
+import { Router, UrlSegment } from '@angular/router';
 import { AuthGuard } from './auth.guard';
-import { Router } from '@angular/router';
 
-describe('AuthGuard', () => {
-  let guard: AuthGuard;
+describe('AuthGuard (CanMatchFn)', () => {
   let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    routerSpy = jasmine.createSpyObj('Router', ['createUrlTree']);
 
     TestBed.configureTestingModule({
-      providers: [
-        AuthGuard,
-        { provide: Router, useValue: routerSpy }
-      ]
+      providers: [{ provide: Router, useValue: routerSpy }],
     });
-
-    guard = TestBed.inject(AuthGuard);
   });
 
   afterEach(() => {
-    localStorage.clear(); // pour éviter les interférences entre tests
+    localStorage.clear();
   });
 
-  it('should allow access if token exists', () => {
+  function runGuard(segments: UrlSegment[] = []) {
+    // Exécute le guard dans un contexte d'injection valide
+    return TestBed.runInInjectionContext(() => AuthGuard({} as any, segments));
+  }
+
+  it('should allow access when token exists', () => {
     localStorage.setItem('token', 'fake-token');
-    const result = guard.canActivate();
+
+    const result = runGuard([new UrlSegment('dashboard', {})]);
+
     expect(result).toBeTrue();
-    expect(routerSpy.navigate).not.toHaveBeenCalled();
+    expect(routerSpy.createUrlTree).not.toHaveBeenCalled();
   });
 
-  it('should redirect to /login if token is missing', () => {
-    localStorage.removeItem('token');
-    const result = guard.canActivate();
-    expect(result).toBeFalse();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
+  it('should return UrlTree(/login?r=/dashboard) when token is missing', () => {
+    const fakeTree = {} as any;
+    routerSpy.createUrlTree.and.returnValue(fakeTree);
+
+    const result = runGuard([new UrlSegment('dashboard', {})]);
+
+    expect(routerSpy.createUrlTree).toHaveBeenCalledWith(
+      ['/login'],
+      { queryParams: { r: '/dashboard' } }
+    );
+    expect(result).toBe(fakeTree);
+  });
+
+  it('should handle empty segments (redirect with r=/)', () => {
+    const fakeTree = {} as any;
+    routerSpy.createUrlTree.and.returnValue(fakeTree);
+
+    const result = runGuard([]);
+
+    expect(routerSpy.createUrlTree).toHaveBeenCalledWith(
+      ['/login'],
+      { queryParams: { r: '/' } }
+    );
+    expect(result).toBe(fakeTree);
   });
 });

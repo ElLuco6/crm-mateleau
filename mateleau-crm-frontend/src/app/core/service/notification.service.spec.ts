@@ -2,11 +2,15 @@ import { TestBed } from '@angular/core/testing';
 import { NotificationService } from './notification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarComponent } from '../../shared/snackbar/snackbar.component';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+
+
+
 
 describe('NotificationService', () => {
   let service: NotificationService;
   let snackBarSpy: jasmine.SpyObj<MatSnackBar>;
-
+  let httpMock: HttpTestingController;
   beforeEach(() => {
     const spy = jasmine.createSpyObj('MatSnackBar', ['openFromComponent']);
 
@@ -14,9 +18,10 @@ describe('NotificationService', () => {
       providers: [
         NotificationService,
         { provide: MatSnackBar, useValue: spy }
-      ]
+      ],
+      imports: [HttpClientTestingModule]
     });
-
+    httpMock = TestBed.inject(HttpTestingController);
     service = TestBed.inject(NotificationService);
     snackBarSpy = TestBed.inject(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
   });

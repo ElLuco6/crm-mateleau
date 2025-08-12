@@ -81,10 +81,10 @@ it('should navigate to /create-dive with date', () => {
     queryParams: { date: '2025-08-20' }
   });
 });
-it('should navigate to /edit-dive/:id', () => {
+it('should navigate to detail', () => {
   component.selectedEvent = { id: '123' };
   component.goToEventDetail();
-  expect(routerSpy.navigate).toHaveBeenCalledWith(['/edit-dive', '123']);
+  expect(routerSpy.navigate).toHaveBeenCalledWith(['/dive', '123']);
 });
 it('should delete dive and update events list', () => {
   spyOn(window, 'confirm').and.returnValue(true);
