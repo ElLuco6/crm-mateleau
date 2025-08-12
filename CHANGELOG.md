@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/ElLuco6/crm-mateleau/compare/v1.1.5...v1.2.0) (2025-08-12)
+
+
+### Features
+
+* **dive:** vue détail + rappel par email (Mailjet); UI responsive liste/semaine ([200e731](https://github.com/ElLuco6/crm-mateleau/commit/200e7316d8ab87dfb169eec35ab8573607574e3b))
+
 ### [1.1.5](https://github.com/ElLuco6/crm-mateleau/compare/v1.1.4...v1.1.5) (2025-08-11)
 
 ### [1.1.4](https://github.com/ElLuco6/crm-mateleau/compare/v1.1.3...v1.1.4) (2025-08-09)
