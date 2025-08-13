@@ -26,6 +26,9 @@
         </mat-select>
 
       </ng-container>
+       <mat-error *ngIf="form.get(field.key)?.invalid && (form.get(field.key)?.touched || form.get(field.key)?.dirty)">
+        {{ field.label }} est requis.
+      </mat-error>
     </mat-form-field>
   </ng-container>
 

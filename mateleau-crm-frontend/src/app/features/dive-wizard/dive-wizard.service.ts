@@ -36,11 +36,7 @@ sendFinalReservation(payload:any): Observable<any> {
   });
 }
 
-  submitWizard(payload: any): any {
-    
-    console.log("🟢 Envoi de la réservation avec les données du wizard", payload);
-    
-    
+  submitWizard(payload: any): any {    
     this.sendFinalReservation(payload).subscribe({
     next: (res) => {
       console.log("✅ Enregistré avec succès", res);
@@ -52,8 +48,4 @@ sendFinalReservation(payload:any): Observable<any> {
     }
   });
   }
-
-
-
-  
 }

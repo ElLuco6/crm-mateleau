@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import { createBoat, getAllBoats, getBoatById, updateBoat, deleteBoat } from '../controllers/BoatController';
 import { authenticateToken } from '../middleware/authMiddleware';
+import { validate } from '../middleware/validateMiddleware';
+import { boatValidation, boatIdValidation } from '../validators/Boat.validator';
 
 const router = express.Router();
 
@@ -20,11 +22,13 @@ const router = express.Router();
  *               items:
  *                 $ref: '#/components/schemas/Boat'
  */
-router.get('/', (req: Request, res: Response) => {
-    authenticateToken(req, res, () => {
-        getAllBoats(req, res);
-    });
-});
+router.get('/', 
+    (req: Request, res: Response) => {
+        authenticateToken(req, res, () => {
+            getAllBoats(req, res);
+        });
+    }
+);
 
 /**
  * @swagger
@@ -49,11 +53,15 @@ router.get('/', (req: Request, res: Response) => {
  *       404:
  *         description: The boat was not found
  */
-router.get('/:id', (req: Request, res: Response) => {
-    authenticateToken(req, res, () => {
-        getBoatById(req, res);
-    });
-});
+router.get('/:id', 
+    (req: Request, res: Response) => {
+        authenticateToken(req, res, () => {
+            validate(boatIdValidation)(req, res, () => {
+                getBoatById(req, res);
+            });
+        });
+    }
+);
 
 /**
  * @swagger
@@ -77,11 +85,15 @@ router.get('/:id', (req: Request, res: Response) => {
  *       500:
  *         description: Some server error
  */
-router.post('/', (req: Request, res: Response) => {
-    authenticateToken(req, res, () => {
-        createBoat(req, res);
-    });
-});
+router.post('/', 
+    (req: Request, res: Response) => {
+        authenticateToken(req, res, () => {
+            validate(boatValidation)(req, res, () => {
+                createBoat(req, res);
+            });
+        });
+    }
+);
 
 /**
  * @swagger
@@ -114,11 +126,15 @@ router.post('/', (req: Request, res: Response) => {
  *       500:
  *         description: Some server error
  */
-router.put('/:id', (req: Request, res: Response) => {
-    authenticateToken(req, res, () => {
-        updateBoat(req, res);
-    });
-});
+router.put('/:id', 
+    (req: Request, res: Response) => {
+        authenticateToken(req, res, () => {
+            validate([...boatIdValidation, ...boatValidation])(req, res, () => {
+                updateBoat(req, res);
+            });
+        });
+    }
+);
 
 /**
  * @swagger
@@ -139,10 +155,14 @@ router.put('/:id', (req: Request, res: Response) => {
  *       404:
  *         description: The boat was not found
  */
-router.delete('/:id', (req: Request, res: Response) => {
-    authenticateToken(req, res, () => {
-        deleteBoat(req, res);
-    });
-});
+router.delete('/:id', 
+    (req: Request, res: Response) => {
+        authenticateToken(req, res, () => {
+            validate(boatIdValidation)(req, res, () => {
+                deleteBoat(req, res);
+            });
+        });
+    }
+);
 
 export default router;

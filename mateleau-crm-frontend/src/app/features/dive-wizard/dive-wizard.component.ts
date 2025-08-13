@@ -361,9 +361,6 @@ if (!currentFormValue) {
      if (this.currentStep === 1 && this.createGroupComponent) {
     this.createGroupComponent.init(); 
   }
-   
-
-
     // Mise à jour du payload avec les données des étapes 1 & 2
     let updatedPayload = {
       ...currentPayload,

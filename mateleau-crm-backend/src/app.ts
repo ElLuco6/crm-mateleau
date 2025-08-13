@@ -20,7 +20,7 @@ import dashboardRoutes from './routes/dashboardRoute'; // Importer les routes de
 import taskRoutes from './routes/taskRoutes';
 import spotRoutes from './routes/spotRoutes';
 import { requestId, httpLogger, errorLogger } from './logging/logger';
-
+import mongoSanitize from 'express-mongo-sanitize';
 
 // Create an instance of Express
 const app: Application = express();
@@ -30,24 +30,31 @@ const app: Application = express();
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'same-site' }, // images non cross-origin
 }));
+
 if (process.env.NODE_ENV === 'production') {
   app.use(helmet.hsts({ maxAge: 15552000 })); // ~180 jours
 }
 
+app.disable('x-powered-by');
 
 
 // Middleware
 app.use(express.json()); // Parse incoming JSON requests
 app.use(cors({
-  origin: "http://localhost:4200", // Autorise uniquement votre frontend
+  origin: ["http://localhost:4200","https://crm-mateleau-isvbf.ondigitalocean.app/"], // Autorise uniquement votre frontend
   methods: "GET, POST, PUT, DELETE, OPTIONS",
   allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-  credentials: true // Important pour les cookies ou JWT
+  credentials: true 
 }));
+
 app.use(requestId);
 app.use(httpLogger);
+
 app.use(express.json({ limit: '1mb' })); // limite taille payload
+
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
+app.use(mongoSanitize());
 
  // Enable Cross-Origin Resource Sharing
 app.use(morgan('dev')); // Log HTTP requests
@@ -79,7 +86,9 @@ app.get('/api/health', (req: Request, res: Response) => {
   res.status(200).json({ message: 'API is running!' });
 });
 
-app.use(errorLogger);
+app.use(requestId);       // Associe un ID unique à chaque requête
+app.use(httpLogger);      // Log chaque requête HTTP
+app.use(errorLogger);     // Log les erreurs
 
 // Global error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

@@ -1,99 +1,116 @@
 <div class="schedule-container">
   @if (formGroup) {
-   
-  
-<div [formGroup]="formGroup"  class="schedule-form">
- 
-  <mat-form-field appearance="fill">
-    <mat-label>Date de début</mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="startDate" required>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Heure de début</mat-label>
-    <input
-      matInput
-      [ngxMatTimepicker]="timePicker"
-      formControlName="startTime"
-      ngxMatTimepickerFormat="HH:mm"
-      placeholder="Choisir l'heure"
-      required
-      readonly
-      [format]="24"
-    />
-    <ngx-mat-timepicker-toggle matSuffix [for]="timePicker"></ngx-mat-timepicker-toggle>
-    <ngx-mat-timepicker #timePicker ></ngx-mat-timepicker>
-  </mat-form-field>
+  <div [formGroup]="formGroup" class="schedule-form">
 
-  <mat-form-field appearance="fill">
-    <mat-label>Localisation</mat-label>
-    <mat-select formControlName="location" required>
-      <mat-option *ngFor="let loc of location" [value]="loc.name">{{ loc.name }}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  
-  
+    <mat-form-field appearance="fill">
+      <mat-label>Date de début</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="startDate" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+       <mat-error *ngIf="formGroup.get('startDate')?.invalid && (formGroup.get('startDate')?.touched || formGroup.get('startDate')?.dirty)">
+        Date de début requise.
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Durée (minutes)</mat-label>
-    <input matInput type="number" formControlName="duration" required min="1">
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Heure de début</mat-label>
+      <input matInput [ngxMatTimepicker]="timePicker" formControlName="startTime" ngxMatTimepickerFormat="HH:mm"
+        placeholder="Choisir l'heure" required readonly [format]="24" />
+      <ngx-mat-timepicker-toggle matSuffix [for]="timePicker"></ngx-mat-timepicker-toggle>
+      <ngx-mat-timepicker #timePicker></ngx-mat-timepicker>
+      <mat-error *ngIf="formGroup.get('startTime')?.invalid && (formGroup.get('startTime')?.touched || formGroup.get('startTime')?.dirty)">
+        Heure de début requise.
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Profondeur maximale (m)</mat-label>
-    <input matInput type="number" formControlName="maxDepth" required>
+    <mat-form-field appearance="fill">
+      <mat-label>Localisation</mat-label>
+      <mat-select formControlName="location" required>
+        <mat-option *ngFor="let loc of location" [value]="loc.name">{{ loc.name }}</mat-option>
+      </mat-select>
+        <mat-error *ngIf="formGroup.get('location')?.invalid && (formGroup.get('location')?.touched || formGroup.get('location')?.dirty)">
+        Localisation requise.
+      </mat-error>
+    </mat-form-field>
 
-  </mat-form-field>
 
-  <!-- Affiche la liste des bateaux disponibles -->
-  @if (boats.length > 0) {
-    <div  class="available-boats">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Durée (minutes)</mat-label>
+      <input matInput type="number" formControlName="duration" required min="1">
+       <mat-error *ngIf="formGroup.get('duration')?.invalid && (formGroup.get('duration')?.touched || formGroup.get('duration')?.dirty)">
+        Durée invalide (minimum 1 minute).
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Profondeur maximale (m)</mat-label>
+      <input matInput type="number" formControlName="maxDepth" required>
+      <mat-error *ngIf="formGroup.get('maxDepth')?.invalid && (formGroup.get('maxDepth')?.touched || formGroup.get('maxDepth')?.dirty)">
+        Profondeur maximale requise.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Affiche la liste des bateaux disponibles -->
+    @if (boats.length > 0) {
+    <div class="available-boats">
       <mat-form-field appearance="fill">
         <mat-label>Select your boat</mat-label>
         <mat-select formControlName="boat">
           <mat-option *ngFor="let boat of boats" [value]="boat">
-            {{ boat.name }} -  Place availiable : {{boat.numberMaxPlaces}}
+            {{ boat.name }} - Place availiable : {{boat.numberMaxPlaces}}
           </mat-option>
         </mat-select>
+         <mat-error *ngIf="formGroup.get('boat')?.invalid && (formGroup.get('boat')?.touched || formGroup.get('boat')?.dirty)">
+            Veuillez sélectionner un bateau.
+          </mat-error>
       </mat-form-field>
     </div>
     <button mat-raised-button color="accent" (click)="showBoatForm()" *ngIf="!boatForm">
       Ajouter un bateau
     </button>
-  }
-  
-</div>
+    }
+
+  </div>
 
 
   <!--Add Boats-->
 
 
-@if (boatForm === true) {
+  @if (boatForm === true) {
   <div [formGroup]="newBoatForm" class="new-boat-form">
     <h3>Ajouter un nouveau bateau</h3>
-  <mat-form-field appearance="fill">
-    <mat-label>Nom du bateau</mat-label>
-    <input matInput formControlName="name" required>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Nom du bateau</mat-label>
+      <input matInput formControlName="name" required>
+      <mat-error *ngIf="newBoatForm.get('name')?.invalid && (newBoatForm.get('name')?.touched || newBoatForm.get('name')?.dirty)">
+          Nom du bateau requis.
+        </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Nombre maximum de places</mat-label>
-    <input matInput type="number" formControlName="numberMaxPlaces" required>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre maximum de places</mat-label>
+      <input matInput type="number" formControlName="numberMaxPlaces" required>
+      <mat-error *ngIf="newBoatForm.get('numberMaxPlaces')?.invalid && (newBoatForm.get('numberMaxPlaces')?.touched || newBoatForm.get('numberMaxPlaces')?.dirty)">
+          Nombre de places invalide.
+        </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Date de révision</mat-label>
-    <input matInput type="date" formControlName="revisionDate" required>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Date de révision</mat-label>
+      <input matInput type="date" formControlName="revisionDate" required>
+       <mat-error *ngIf="newBoatForm.get('revisionDate')?.invalid && (newBoatForm.get('revisionDate')?.touched || newBoatForm.get('revisionDate')?.dirty)">
+          Date de révision requise.
+        </mat-error>
+    </mat-form-field>
 
-  <button mat-raised-button color="primary" (click)="addNewBoat()" [disabled]="newBoatForm.invalid">
-    Ajouter le bateau
-  </button>
+    <button mat-raised-button color="primary" (click)="addNewBoat()" [disabled]="newBoatForm.invalid">
+      Ajouter le bateau
+    </button>
   </div>
 
-}
+  }
   }
 
 </div>

@@ -1,0 +1,29 @@
+version: 2
+updates:
+  # Frontend (Angular)
+  - package-ecosystem: "npm"
+    directory: "/mateleau-crm-frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Paris"
+    labels: ["deps", "frontend"]
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]  # on évite les majors
+
+  # Backend (Node/NestJS)
+  - package-ecosystem: "npm"
+    directory: "/mateleau-crm-backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Paris"
+    labels: ["deps", "backend"]
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
