@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.3](https://github.com/ElLuco6/crm-mateleau/compare/v1.3.2...v1.3.3) (2025-08-15)
+
+
+### Bug Fixes
+
+* **ci:** fix de la pipeline indentation + bonne fonction ([8fb55b6](https://github.com/ElLuco6/crm-mateleau/commit/8fb55b6e37123ccfe3c9324c336132f6adc3fd90))
+
 ### [1.3.2](https://github.com/ElLuco6/crm-mateleau/compare/v1.3.1...v1.3.2) (2025-08-15)
 
 ### [1.3.1](https://github.com/ElLuco6/crm-mateleau/compare/v1.3.0...v1.3.1) (2025-08-15)
