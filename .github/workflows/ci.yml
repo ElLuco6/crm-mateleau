@@ -96,23 +96,6 @@ jobs:
             -Dsonar.automaticAnalysis=false \
             -Dsonar.login=$SONAR_TOKEN
 
-      - name: SonarCloud scan (frontend - PR)
-        if: ${{ github.event_name == 'pull_request' }}
-        env: 
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          REPORT=$(find coverage -name lcov.info -print -quit)
-          sonar-scanner \
-            -Dsonar.organization=elluco6 \
-            -Dsonar.projectKey=ElLuco6_crm-mateleau \
-            -Dsonar.sources=src \
-            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.spec.ts,**/*.stories.ts \
-            -Dsonar.javascript.lcov.reportPaths="$REPORT" \
-            -Dsonar.typescript.lcov.reportPaths="$REPORT" \
-            -Dsonar.pullrequest.key='${{ github.event.number }}' \
-            -Dsonar.pullrequest.branch='${{ github.head_ref }}' \
-            -Dsonar.pullrequest.base='${{ github.base_ref }}' \
-            -Dsonar.automaticAnalysis=false
 
   test-backend:
     runs-on: ubuntu-latest
@@ -206,39 +189,7 @@ jobs:
             -Dsonar.token='${{ secrets.SONAR_TOKEN }}'
       
 
-      - name: SonarCloud scan (backend - PR)
-        if: ${{ github.event_name == 'pull_request' }}
-        env:
-         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          BASE="${{ github.workspace }}/mateleau-crm-backend"
-          REPORT="$BASE/coverage/lcov.info"
-          echo "BASE=$BASE"
-          test -f "$REPORT" || (echo "Missing $REPORT" && exit 1)
-          wc -c "$REPORT" || true
-          echo "Using coverage: $REPORT"
-          sonar-scanner \
-            -Dsonar.projectKey=crm-mateleau-backend \
-            -Dsonar.organization=elluco6 \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.projectBaseDir="$BASE" \
-            -Dsonar.sources=src \
-            -Dsonar.inclusions='src/**/*.ts' \
-            -Dsonar.exclusions='src/routes/**/*.ts,src/app.ts,**/node_modules/**,**/dist/**,**/coverage/**,**/lcov-report/**,**/*.spec.ts,**/*.test.ts,**/*.d.ts' \
-            -Dsonar.security.exclusions='src/app.ts,src/swagger.ts,src/routes/**/*.ts,src/controllers/**/*.ts' \
-            -Dsonar.tests=src \
-            -Dsonar.test.inclusions='**/*.spec.ts,**/*.test.ts' \
-            -Dsonar.typescript.tsconfigPath=tsconfig.json \
-            -Dsonar.typescript.lcov.reportPaths="$REPORT" \
-            -Dsonar.javascript.lcov.reportPaths="$REPORT" \
-            -Dsonar.javascript.security.hotspot.enabled=false \
-            -Dsonar.pullrequest.key='${{ github.event.number }}' \
-            -Dsonar.pullrequest.branch='${{ github.head_ref }}' \
-            -Dsonar.pullrequest.base='${{ github.base_ref }}' \
-            -Dsonar.scm.revision='${{ github.sha }}' \
-            -Dsonar.projectVersion='${{ github.run_number }}' \
-            -Dsonar.automaticAnalysis=false \
-            -Dsonar.token="$SONAR_TOKEN"        
+        
 
   release-changelog:
     needs: [sonar-frontend, sonar-backend]
