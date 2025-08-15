@@ -9,10 +9,21 @@ updates:
       time: "09:00"
       timezone: "Europe/Paris"
     labels: ["deps", "frontend"]
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 3
+    rebase-strategy: "disabled"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]  # on évite les majors
+    groups:
+      angular:
+        patterns: ["@angular/*", "rxjs", "zone.js"]
+        update-types: ["minor","patch"]
+      fullcalendar:
+        patterns: ["@fullcalendar/*"]
+        update-types: ["minor","patch"]
+      test-tooling:
+        patterns: ["jasmine*", "@types/jasmine", "karma*", "jest*", "@types/node", "eslint*", "postcss", "webpack*","typescript"]
+        update-types: ["minor","patch"]
 
   # Backend (Node/NestJS)
   - package-ecosystem: "npm"
@@ -23,7 +34,14 @@ updates:
       time: "09:00"
       timezone: "Europe/Paris"
     labels: ["deps", "backend"]
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 3
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+    groups:
+      runtime:
+        patterns: ["express", "dotenv", "mongoose"]
+        update-types: ["minor","patch"]
+    types-tests:
+        patterns: ["@types/*", "jest*", "ts-jest", "supertest", "typescript", "eslint*"]
+        update-types: ["minor","patch"]
