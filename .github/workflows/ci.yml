@@ -192,7 +192,7 @@ jobs:
             -Dsonar.sources=src \
             -Dsonar.inclusions='src/**/*.ts' \
             -Dsonar.exclusions='src/routes/**/*.ts,src/app.ts,**/node_modules/**,**/dist/**,**/coverage/**,**/lcov-report/**,**/*.spec.ts,**/*.test.ts,**/*.d.ts' \
-            -Dsonar.security.exclusions='src/app.ts,src/swagger.ts,src/routes/**/*.ts \
+            -Dsonar.security.exclusions='src/app.ts,src/swagger.ts,src/routes/**/*.ts'\
             -Dsonar.tests=src \
             -Dsonar.test.inclusions='**/*.spec.ts,**/*.test.ts' \
             -Dsonar.typescript.tsconfigPath=tsconfig.json \
@@ -208,7 +208,8 @@ jobs:
 
       - name: SonarCloud scan (backend - PR)
         if: ${{ github.event_name == 'pull_request' }}
-        env: ${{ secrets.SONAR_TOKEN }}
+        env:
+         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           BASE="${{ github.workspace }}/mateleau-crm-backend"
           REPORT="$BASE/coverage/lcov.info"
@@ -241,7 +242,7 @@ jobs:
 
   release-changelog:
     needs: [sonar-frontend, sonar-backend]
-    if: github.event_name == 'push'
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
