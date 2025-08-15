@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.4](https://github.com/ElLuco6/crm-mateleau/compare/v1.3.3...v1.3.4) (2025-08-15)
+
+
+### Bug Fixes
+
+* **ci:** enlèvement de la parti pour les pr elle ne sont pas prise en compte sur le plan gratuit de sonar-cloud d'ou les erreur avec les pr ([227a54b](https://github.com/ElLuco6/crm-mateleau/commit/227a54b61f19e6bbf082c1fd20f060066b0b764c))
+
 ### [1.3.3](https://github.com/ElLuco6/crm-mateleau/compare/v1.3.2...v1.3.3) (2025-08-15)
 
 
