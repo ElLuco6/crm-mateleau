@@ -42,6 +42,6 @@ updates:
       runtime:
         patterns: ["express", "dotenv", "mongoose"]
         update-types: ["minor","patch"]
-    types-tests:
+      types-tests:
         patterns: ["@types/*", "jest*", "ts-jest", "supertest", "typescript", "eslint*"]
         update-types: ["minor","patch"]
