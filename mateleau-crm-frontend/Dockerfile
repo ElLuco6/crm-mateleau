@@ -1,21 +1,21 @@
-FROM node:18 AS build
+# Step 1: Build Angular
+FROM node:20-alpine AS build
+WORKDIR /app
 
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
+COPY mateleau-crm-frontend/package*.json ./
+RUN npm ci
+COPY mateleau-crm-frontend/ .
 RUN npm run build -- --configuration production
 
-# Utilise une image de base minimale pour l'image finale
-FROM alpine:latest
+# Step 2: Serve with Nginx
+FROM nginx:alpine
 
-# Copier les fichiers générés vers le dossier de l'image finale
-COPY --from=build /usr/src/app/dist/mateleau-crm-frontend /usr/src/app/dist/mateleau-crm-frontend
+# confs
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Définir le répertoire de travail
-WORKDIR /usr/src/app/dist/mateleau-crm-frontend
+# copier la build Angular (Angular 17+ -> /browser)
+COPY --from=build /app/dist/mateleau-crm-frontend/browser /usr/share/nginx/html
 
-# Commande pour garder le conteneur actif
-CMD ["tail", "-f", "/dev/null"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

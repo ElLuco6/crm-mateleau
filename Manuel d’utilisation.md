@@ -6,16 +6,15 @@ Public cible : administrateurs de clubs, moniteurs, staff accueil
 1. Connexion et rôles
 1.1 Création de compte
 
-L’administrateur du club reçoit un compte initial (email + mot de passe provisoire).
+L’administrateur du club crée un compte initial .
 
-À la première connexion, changement de mot de passe requis.
 
 1.2 Rôles et permissions
 Admin : accès complet (planning, utilisateurs, bateaux, spots, paiements si activés, configuration).
 
 Moniteur : accès aux plongées où il est affecté, consultation du planning, gestion des groupes, check-list matériel.
 
-Accueil / Staff : création/modification de réservations, gestion des plongeurs, encaissements (si paiements activés).
+Accueil / Staff : création/modification de réservations, gestion des plongeurs, encaissements .
 
 Astuce : limitez le rôle Admin à 1–2 personnes par structure.
 
@@ -29,7 +28,7 @@ Vue synthétique du jour : plongées prévues, moniteurs affectés, nombre de pl
 Cartes récapitulatives : « Plongées du jour », « Équipement à vérifier », « Places restantes ».
 
 2.2 Planning
-Vue Calendrier (FullCalendar) : navigation jour/semaine/mois.
+Vue Calendrier (FullCalendar) : navigation jour/mois.
 
 Vue Kanban du jour : colonnes par état (A faire  ▶ en cours ▶  terminé).
 
@@ -70,8 +69,6 @@ filtre automatiquement les plongeurs qui on le niveau pour la plongée.
 3.3 Supression
 Depuis le calendrier  clicker sur la plongée puis sur supprimer la plongée.
 
-
-
 libérer automatiquement matériel et ressources.
 
 4. Gestion des utilisateurs
@@ -98,3 +95,7 @@ Carte (Leaflet) : clic pour ajouter un marker (coordonnées + nom).
 
 CRUD des spots (cohordonées gps, nom).
 
+6 Système de mailling avec mailjet
+Envoyer des rappel par mail de la plonége prévus 
+sois via le détail de la plongée
+sois via le dashboard

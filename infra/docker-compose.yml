@@ -1,11 +1,10 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mongo:
-    image: mongo:latest
+    image: mongo:7
     container_name: mateleau-crm-mongo
-    ports:
-      - "27017:27017"
+    ports: ["27017:27017"]
     volumes:
       - mongo-data:/data/db
 
@@ -14,36 +13,23 @@ services:
       context: ../mateleau-crm-backend
       dockerfile: Dockerfile
     container_name: mateleau-crm-backend
-    ports:
-      - "5000:5000"
+    env_file:
+    - ../mateleau-crm-backend/.env
     environment:
-      - MONGO_URI=mongodb://mongo:27017/mateleau-crm
+      - NODE_ENV=production
       - PORT=5000
-    depends_on:
-      - mongo
+      - MONGO_URI=mongodb://mongo:27017/mateleau-crm
 
-  frontend:
+    ports: ["5000:5000"]
+    depends_on: [mongo]
+
+  web:
     build:
-      context: ../mateleau-crm-frontend
-      dockerfile: Dockerfile
-    container_name: mateleau-crm-frontend
-    ports:
-      - "4200:4200"
-    volumes:
-    - ../mateleau-crm-frontend:/usr/src/app
-    depends_on:
-      - backend
-    restart: always
-  nginx:
-    build:
-      context: ../  # Le contexte devient le dossier parent
+      context: ../        # parent qui contient mateleau-crm-frontend/ et nginx/
       dockerfile: nginx/Dockerfile
     container_name: mateleau-crm-nginx
-    ports:
-      - "80:80"
-    depends_on:
-      - frontend
-      - backend
+    ports: ["80:80"]
+    depends_on: [backend]
 
 volumes:
   mongo-data:

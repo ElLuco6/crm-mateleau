@@ -11,11 +11,10 @@ RUN npm install -g @angular/cli && npm install  # Install Angular CLI globally
 COPY mateleau-crm-frontend/ .  
 
 # Run the Angular build
-RUN npm run build -- --configuration production
+RUN npm run build -- --configuration development
 
 # Step 2: Serve with Nginx
 FROM nginx:alpine
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Copy built Angular app from the first stage

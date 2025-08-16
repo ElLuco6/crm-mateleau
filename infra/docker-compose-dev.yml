@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes:
+      - mongo-data:/data/db
+
+  mongo-seed:
+    image: mongo:7
+    depends_on: [mongo]
+    volumes:
+    - ../db/seed/mateleau-crm:/seed:ro          
+    entrypoint: [ "/bin/bash", "-lc" ]
+    command: >
+      # attendre que Mongo réponde
+      until mongosh --host mongo --quiet --eval 'db.runCommand({ ping: 1 }).ok' | grep -q 1; do
+        echo waiting for mongo...; sleep 1;
+      done;
+      # seed uniquement si la DB est vide
+      if [ "$(mongosh --host mongo --quiet --eval 'db.getMongo().getDB("mateleau-crm").getCollectionInfos().length')" -eq 0 ]; then
+        echo "[seed] restoring from /seed";
+        # accepte ton dump sous /seed/mateleau-crm OU directement /seed
+        if [ -d /seed/mateleau-crm ]; then
+          mongorestore --host mongo --drop --db mateleau-crm --dir /seed/mateleau-crm --verbose;
+        else
+          mongorestore --host mongo --drop --nsInclude 'mateleau-crm.*' --dir /seed --verbose;
+        fi;
+        echo "[seed] done";
+      else
+        echo "[seed] db not empty, skipping";
+      fi
+    restart: "no"
+
+  backend:
+    build:
+      context: ../mateleau-crm-backend
+      dockerfile: Dockerfile.dev
+    env_file:
+    - ../mateleau-crm-backend/.env
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017/mateleau-crm
+      # tes clés mailjet si tu en as besoin en dev :
+      
+    ports: ["5000:5000"]
+    volumes:
+      - ../mateleau-crm-backend:/app
+      - /app/node_modules
+    depends_on: [mongo]
+
+  frontend:
+    build:
+      context: ../mateleau-crm-frontend
+      dockerfile: Dockerfile.dev
+    environment:
+      - NG_CLI_ANALYTICS=false
+    ports: ["4200:4200"]
+    volumes:
+      - ../mateleau-crm-frontend:/app
+      - /app/node_modules
+    depends_on: [backend]
+
+volumes:
+  mongo-data:

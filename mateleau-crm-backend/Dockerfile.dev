@@ -1,0 +1,10 @@
+FROM node:20-alpine
+WORKDIR /app
+# dépendances (avec devDeps pour TS/nodemon)
+COPY package*.json ./
+RUN npm ci
+# si tu utilises nest/ts-node-dev/nodemon, ton package.json doit avoir "start:dev"
+# sinon ajuste la CMD ci-dessous.
+COPY . .
+EXPOSE 5000
+CMD ["npm","run","dev"]

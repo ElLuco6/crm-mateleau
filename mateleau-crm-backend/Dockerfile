@@ -1,23 +1,30 @@
-# Utiliser une image de base officielle Node.js
-FROM node:21
-
-# Définir le répertoire de travail dans le conteneur
-WORKDIR /usr/src/app
-
-# Copier le fichier package.json et package-lock.json
+# Déps de build (dev incluses)
+FROM node:20-alpine AS deps
+WORKDIR /app
 COPY package*.json ./
+RUN npm ci
 
-# Installer les dépendances
-RUN npm install
-
-# Copier le reste des fichiers de l'application
+# Build TypeScript -> dist
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN npm run build   # nécessite "build": "tsc" dans package.json
 
-# Compiler le code TypeScript en JavaScript
-RUN npm run build
+# Déps prod uniquement
+FROM node:20-alpine AS prod-deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Exposer le port sur lequel l'application s'exécute
-EXPOSE 3000
-
-# Démarrer l'application
+# Runtime final, léger
+FROM node:20-alpine
+WORKDIR /app
+ENV NODE_OPTIONS=--enable-source-maps
+ENV NODE_ENV=production
+ENV PORT=5000
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
+COPY package*.json ./
+EXPOSE 5000
 CMD ["node", "dist/server.js"]
